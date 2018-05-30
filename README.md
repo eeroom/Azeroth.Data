@@ -1,5 +1,5 @@
 # Azeroth.ORM
-Nalu,轻量，可扩展，纯model，结合lambda
+Nalu，一个轻量，可扩展，纯model，结合lambda的ORM类库 
 
 QQ:`1344206656`，欢迎你一起来交流
 
