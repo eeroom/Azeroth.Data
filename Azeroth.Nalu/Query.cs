@@ -13,7 +13,7 @@ namespace Azeroth.Nalu
         }
         protected List<ISelectNode> lstSelectNode = new List<ISelectNode>();
         protected List<INode> lstJoinNode = new List<INode>();
-        protected PredicateNode WH { set; get; }
+        public PredicateNode WH { set; get; }
         /// <summary>
         /// 筛选条件
         /// </summary>
@@ -24,7 +24,7 @@ namespace Azeroth.Nalu
         //public PredicateNode Having { set; get; }
 
         protected List<IColumn> lstGroupByNode = new List<IColumn>();
-        protected PredicateNode Having { set; get; }
+        public PredicateNode Having { set; get; }
         protected List<INode> lstOrderByNode = new List<INode>();
         protected List<IDbSet> lstDbSet=new List<IDbSet>();
         protected List<Query> lstCTEHandler = new List<Query>();
