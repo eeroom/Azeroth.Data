@@ -1,7 +1,7 @@
-﻿## Azeroth.ORM
-轻量，可扩展，纯model，结合lambda
+# Azeroth.ORM
+Nalu,轻量，可扩展，纯model，结合lambda
 
-QQ:1344206656，欢迎你一起来交流
+QQ:`1344206656`，欢迎你一起来交流
 
 #多表查询
 ```C#
