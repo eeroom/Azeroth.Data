@@ -1,7 +1,8 @@
-﻿# Azeroth.ORM
+﻿## Azeroth.ORM
 轻量，可扩展，纯model，结合lambda
 
-多表查询
+#多表查询
+```C#
  MssqlDbContext dbcontext = new MssqlDbContext();
  //用户表--用户角色关系表--角色表
  Azeroth.Nalu.Query myQuery= dbcontext.Query();//新建一个查询
@@ -20,3 +21,4 @@
  
  var lst= myQuery.ToList(x=>Tuple.Create((Tb_User)x[0],(Tb_Role)x[2]));//获取结果，
  var dictUserRole= lst.GroupBy(x => x.Item1.Account).ToDictionary(x => x.Key, x => x.Select(a => a.Item2.Name).ToList());//转换成字典，键-用户名，值-角色名称的List
+ ```
