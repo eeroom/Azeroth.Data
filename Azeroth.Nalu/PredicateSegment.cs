@@ -11,8 +11,8 @@ namespace Azeroth.Nalu
         const string OR = "OR";
         PredicateNode left;
         INode right;
-        AO opt;
-        public PredicateSegment(PredicateNode left, AO opt, PredicateNode right)
+        Logic opt;
+        public PredicateSegment(PredicateNode left, Logic opt, PredicateNode right)
         {
             this.left = left;
             this.opt = opt;
@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
         {
             if (left.Placeholder)
                 return right.ResolveSQL(context);
-            if (this.opt == AO.And)
+            if (this.opt == Logic.And)
                 return string.Format("{0} {1} {2}", ((ISQL)left).ResolveSQL(context), AND, right.ResolveSQL(context));
             return string.Format("({0} {1} {2})", ((ISQL)left).ResolveSQL(context), OR, right.ResolveSQL(context)); ;
         }

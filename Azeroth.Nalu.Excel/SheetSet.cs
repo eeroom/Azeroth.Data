@@ -145,14 +145,14 @@ namespace Azeroth.Nalu.Excel
             return rst;
         }
 
-        public SheetSet<T> Map<P>(System.Linq.Expressions.Expression<Func<T, P>> exp, string colName)
+        public SheetSet<T> Map<P>(Expression<Func<T, P>> exp, string colName)
         {
             MapHandler<T, P> handler = new MapHandler<T, P>(exp);
             dictMapHandler.Add(colName, handler);
             return this;
         }
 
-        public int Map<P>(System.Linq.Expressions.Expression<Func<T, P>> exp, string colName, Func<NPOI.SS.UserModel.ICell, NPOI.SS.UserModel.IFormulaEvaluator, P> getvalueFromCell)
+        public int Map<P>(Expression<Func<T, P>> exp, string colName, Func<NPOI.SS.UserModel.ICell, NPOI.SS.UserModel.IFormulaEvaluator, P> getvalueFromCell)
         {
             MapHandler<T, P> handler = new MapHandler<T, P>(exp,getvalueFromCell);
             dictMapHandler.Add(colName, handler);

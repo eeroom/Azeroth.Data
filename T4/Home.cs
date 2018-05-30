@@ -34,9 +34,10 @@ namespace T4
 
             myQuery.WH =//筛选条件
                 (tbUser.Col(x => x.CreateTime) > DateTime.Now.AddYears(-9) || tbRole.Col(x => x.Name) != "超级管理员") && tbUser.Col(x => x.Gender) > 0;
-            
-            var lst= myQuery.ToList(x=>Tuple.Create((Tb_User)x[0],(Tb_Role)x[2]));//获取结果，
-            var dictUserRole= lst.GroupBy(x => x.Item1.Account).ToDictionary(x => x.Key, x => x.Select(a => a.Item2.Name).ToList());//转换成字典，键-用户名，值-角色名称的List
+
+            string sqlstr = myQuery.ToString(new Azeroth.Nalu.ResovleContext("@",()=>new System.Data.SqlClient.SqlParameter()));
+            //var lst= myQuery.ToList(x=>Tuple.Create((Tb_User)x[0],(Tb_Role)x[2]));//获取结果，
+            //var dictUserRole= lst.GroupBy(x => x.Item1.Account).ToDictionary(x => x.Key, x => x.Select(a => a.Item2.Name).ToList());//转换成字典，键-用户名，值-角色名称的List
 
         }
     }

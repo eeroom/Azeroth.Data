@@ -25,14 +25,14 @@ namespace Azeroth.Nalu
 
         public static PredicateNode operator &(PredicateNode wh1,PredicateNode wh2)
         {
-            PredicateSegment sm = new PredicateSegment(wh1, AO.And,wh2);
+            PredicateSegment sm = new PredicateSegment(wh1, Logic.And,wh2);
             return sm;
         }
 
         public static PredicateNode operator |(PredicateNode wh1, PredicateNode wh2)
         {
             
-            PredicateSegment sm = new PredicateSegment(wh1, AO.OR, wh2);
+            PredicateSegment sm = new PredicateSegment(wh1, Logic.OR, wh2);
             return sm;
         }
 

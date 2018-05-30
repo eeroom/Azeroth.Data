@@ -112,7 +112,10 @@ namespace Azeroth.Nalu
         Exists=0x400,
     }
 
-    public enum AO
+    /// <summary>
+    /// 逻辑运算符
+    /// </summary>
+    public enum Logic
     {
         And,
         OR
