@@ -65,7 +65,7 @@ namespace Azeroth.Nalu
             return lstName.Select(x => new Column(this, x)).ToList();
         }
 
-        public virtual List<Column> AllColumn()
+        protected virtual List<Column> AllColumn()
         {
             return this.dictMapHandler.Keys.Select(x => new Column(this, x)).ToList();
         }
