@@ -33,7 +33,8 @@ namespace T4
             reUserRole.InnerJoin(tbRole).ON = reUserRole.Col(x => x.RoleId) == tbRole.Col(x=>x.Id);//用户角色关系 关联 角色表
 
             myQuery.WH =//筛选条件
-                (tbUser.Col(x => x.CreateTime) > DateTime.Now.AddYears(-9) || tbRole.Col(x => x.Name) != "超级管理员") && tbUser.Col(x => x.Gender) > 0;
+                (tbUser.Col(x => x.CreateTime) > new DateTime(2011,1,1) || !tbRole.Col(x => x.Name).Contains("sysAdmin","sys","system")) 
+                && tbUser.Col(x => x.CreateUser) =="system";
 
             string sqlstr = myQuery.ToString(new Azeroth.Nalu.ResovleContext("@",()=>new System.Data.SqlClient.SqlParameter()));
             //var lst= myQuery.ToList(x=>Tuple.Create((Tb_User)x[0],(Tb_Role)x[2]));//获取结果，

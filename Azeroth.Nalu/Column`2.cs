@@ -25,6 +25,11 @@ namespace Azeroth.Nalu
             return new PredicateNode<T, S>(this, WH.IN,value);
         }
 
+        public PredicateNode<T, S> Contains(params S[] value)
+        {
+            return new PredicateNode<T, S>(this, WH.IN, value);
+        }
+
         public PredicateNode<T, S> Range(object min,object max)
         {
             return new PredicateNode<T, S>(this, WH.IN, min,max);
