@@ -23,7 +23,7 @@ QQ:`1344206656`，欢迎你一起来交流
  reUserRole.InnerJoin(tbRole).ON = reUserRole.Col(x => x.RoleId) == tbRole.Col(x=>x.Id);
 
  myQuery.WH =//筛选条件
-     (tbUser.Col(x => x.CreateTime) > DateTime.Now.AddYears(-9) || tbRole.Col(x => x.Name) != "超级管理员") && tbUser.Col(x => x.Gender) > 0;
+       (tbUser.Col(x => x.CreateTime) > new DateTime(2011,1,1) || !tbRole.Col(x => x.Name).Contains("sysAdmin","sys","system")) && tbUser.Col(x => x.CreateUser) =="system";
  
  //ToList执行查询，得到结果，
  var lst= myQuery.ToList(x=>Tuple.Create((Tb_User)x[0],(Tb_Role)x[2]));
