@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface IDbSet
+    public interface IContainer
     {
         /// <summary>
         /// 映射处理器，把值从datareader取出赋值到对象的属性等
@@ -30,7 +30,7 @@ namespace Azeroth.Nalu
         /// 需要修改的列
         /// 需要新增值得列
         /// </summary>
-        List<ISelectNode> SelectNodes { set; get; }
+        List<IComponentSELECT> SelectNodes { set; get; }
 
         /// <summary>
         /// 创建该Set对应的实例

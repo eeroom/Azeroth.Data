@@ -13,13 +13,13 @@ namespace Azeroth.Nalu
     {
         public string Cnnstr { get; set; }
 
-        public virtual SaveChangeResult SaveChange(params ICud[] dbsets)
+        public virtual Result SaveChange(params ICud[] dbsets)
         {
             string msg;
             foreach (ICud db in dbsets)
             {
                 if (!db.Validate(out msg))
-                    return new SaveChangeResult(true, msg);
+                    return new Result(true, msg);
             }
             int rst = 0;
             using (H cnn = new H())
@@ -38,24 +38,24 @@ namespace Azeroth.Nalu
                     cmd.Transaction.Commit();
                 }
             }
-            return new SaveChangeResult(rst);
+            return new Result(rst);
         }
 
-        public virtual DbSetN<T> DbSet<T>()
+        public virtual DbCud<T> NoQuery<T>()
         {
-            return new DbSetN<T>();
+            return new DbCud<T>();
         }
 
-        public virtual Query Query()
+        public virtual DbSetContainer Query()
         {
-            return new Query(this);
+            return new DbSetContainer(this);
         }
 
         protected abstract ResovleContext GetResolvContext();
 
-        List<T> IDbContext.ExecuteQuery<T>(IQuery queryHandler, Func<object[], T> transfer)
+        List<T> IDbContext.ExecuteQuery<T>(IDbSetContainer master, Func<object[], T> transfer)
         {
-            return queryHandler.Execute<H, T>(transfer,this.Cnnstr);
+            return master.Execute<H, T>(transfer,this.Cnnstr);
         }
 
         ResovleContext IDbContext.GetResolvContext()

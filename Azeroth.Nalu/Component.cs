@@ -6,30 +6,30 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public  class Node:INode
+    public  class Component:IComponent
     {
         protected IColumn column;
-        public Node()
+        public Component()
         { 
         
         }
-        public Node(IColumn column)
+        public Component(IColumn column)
         {
             this.column = column;
         }
 
-        IColumn INode.Column
+        IColumn IComponent.Column
         {
             get { return this.column; }
         }
 
-        string ISQL.ResolveSQL(ResovleContext context) {
-            return this.ResolveSQL(context);
+        string IConvertible.ToSQL(ResovleContext context) {
+            return this.ToSQL(context);
         }
 
-        protected virtual string ResolveSQL(ResovleContext context)
+        protected virtual string ToSQL(ResovleContext context)
         {
-            return this.column.ResolveSQL(context);
+            return this.column.ToSQL(context);
         }
     }
 }

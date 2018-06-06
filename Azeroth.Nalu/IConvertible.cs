@@ -8,13 +8,14 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 解析出SQL相关的信息
     /// </summary>
-    public interface ISQL
+    public interface IConvertible
     {
+        
         /// <summary>
         /// 生成命令语句（某个node节点局部的sql语句或者完整的sql语句）
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        string ResolveSQL(ResovleContext context);
+        string ToSQL(ResovleContext context);
     }
 }

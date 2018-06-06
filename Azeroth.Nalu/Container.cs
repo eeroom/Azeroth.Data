@@ -6,24 +6,24 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public abstract class DbSet:IDbSet
+    public abstract class Container:IContainer
     {
        
         protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
         protected Func<ResovleContext, string> nameHandler;
         protected string nameNick;
-        protected List<ISelectNode> lstSelectNode = new List<ISelectNode>();
+        protected List<IComponentSELECT> lstSelectNode = new List<IComponentSELECT>();
 
         protected abstract RuntimeTypeHandle GetMetaInfo();
         protected abstract object CreateInstance(bool isCreateNull);
 
-        DictionaryWrapper<string, IMapHandler> IDbSet.DictMapHandler
+        DictionaryWrapper<string, IMapHandler> IContainer.DictMapHandler
         {
             get { return this.dictMapHandler; }
         }
 
         
-        Func<ResovleContext, string> IDbSet.NameHandler
+        Func<ResovleContext, string> IContainer.NameHandler
         {
             get
             {
@@ -36,7 +36,7 @@ namespace Azeroth.Nalu
         }
 
        
-        string IDbSet.NameNick
+        string IContainer.NameNick
         {
             get
             {
@@ -47,7 +47,7 @@ namespace Azeroth.Nalu
                 this.nameNick=value;
             }
         }
-        string IDbSet.Name
+        string IContainer.Name
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<ISelectNode> IDbSet.SelectNodes
+        List<IComponentSELECT> IContainer.SelectNodes
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        object IDbSet.CreateInstance(bool isCreateNull)
+        object IContainer.CreateInstance(bool isCreateNull)
         {
             return this.CreateInstance(isCreateNull);
         }

@@ -8,7 +8,11 @@ namespace Azeroth.Nalu
 {
     public static class Enumerable
     {
-        public static string Totxt(this WH opt)
+        public static string ParameterNameForPaginationEnd = "Num_End";
+        public static string ParameterNameForPaginationStart = "Num_Start";
+        public static string ColNameForRowCount = "theRowCount";
+
+        public static string ToSQL(this WH opt)
         {
             string rst = string.Empty;
             switch (opt)
@@ -17,7 +21,7 @@ namespace Azeroth.Nalu
                     rst = "=";
                     break;
                 case ~WH.EQ:
-                    rst = "!=";
+                    rst = "<>";
                     break;
                 case WH.LT:
                     rst = "<";
@@ -81,7 +85,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string Totxt(this JOIN opt)
+        public static string ToSQL(this JOIN opt)
         {
             string rst = string.Empty;
             switch (opt)
@@ -103,7 +107,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string Totxt(this Order opt)
+        public static string ToSQL(this Order opt)
         {
             switch (opt)
             {

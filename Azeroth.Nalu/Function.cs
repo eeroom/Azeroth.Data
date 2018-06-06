@@ -10,13 +10,20 @@ namespace Azeroth.Nalu
     /// </summary>
     public enum Function
     {
-        NONE=0,
-        SUM=1,
-        AVG=2,
-        COUNT=3,
-        MAX=4,
-        MIN=5,
-        LOWER=6,
-        UPPER=7
+        NONE,
+        Sum,
+        Avg,
+        Count,
+        Max,
+        Min,
+        Lower,
+        Upper,
+        SumOrDefault ,
+        AvgOrDefault,
+        CountOrDefault,
+        MaxOrDefault,
+        MinOrDefault,
+        LowerOrDefault,
+        UpperOrDefault
     }
 }

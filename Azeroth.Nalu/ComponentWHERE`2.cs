@@ -12,7 +12,7 @@ namespace Azeroth.Nalu
     /// </summary>
     /// <typeparam name="T">筛选条件所在表对应的class类型</typeparam>
     /// <typeparam name="P">筛选条件针对的列的数据类型--为了解决批量编辑和修改场景下，从实例数据中获取该属性对应的参数值，所以保留这个参数</typeparam>
-    public class PredicateNode<T,P> : PredicateNode
+    public class ComponentWHERE<T,P> : ComponentWHERE
     {
         /// <summary>
         /// 筛选条件的参数值列表
@@ -32,7 +32,7 @@ namespace Azeroth.Nalu
 
         bool qianTao;//是否嵌套查询
 
-        public PredicateNode(Column<T,P> column,  WH opt, object value)
+        public ComponentWHERE(Column<T,P> column,  WH opt, object value)
             : base(column)
         {
             this.opt = opt;
@@ -48,7 +48,7 @@ namespace Azeroth.Nalu
         /// <param name="column"></param>
         /// <param name="opt"></param>
         /// <param name="value"></param>
-        public PredicateNode(Column<T, P> column, WH opt, System.Collections.ICollection value)
+        public ComponentWHERE(Column<T, P> column, WH opt, System.Collections.ICollection value)
             : base(column)
         {
             this.opt = opt;
@@ -65,7 +65,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        public PredicateNode(Column<T, P> column, WH opt,object min,object max)
+        public ComponentWHERE(Column<T, P> column, WH opt,object min,object max)
             : base(column)
         {
             this.opt = opt;
@@ -81,7 +81,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        public PredicateNode(IColumn col, Expression<Func<T, P>> exp, WH opt)
+        public ComponentWHERE(IColumn col, Expression<Func<T, P>> exp, WH opt)
             : base(col)
         {
             this.opt = opt;
@@ -89,7 +89,7 @@ namespace Azeroth.Nalu
             
         }
 
-        public PredicateNode(Column<T, P> column, WH opt, IQuery handler)
+        public ComponentWHERE(Column<T, P> column, WH opt, IDbSetContainer handler)
             : base(column)
         {
             
@@ -104,7 +104,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected override string ResolveSQL(ResovleContext context)
+        protected override string ToSQL(ResovleContext context)
         {
             if (this.getParameterValueFromResolverContext != null && context.Tag != null)
                 value= this.getParameterValueFromResolverContext((T)context.Tag);
@@ -134,27 +134,27 @@ namespace Azeroth.Nalu
             DbParameter parameter = context.CreateParameter();
             parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();//参数名称
             parameter.Value = value;//参数值
-            string strwhere = string.Format("{0} {1} {2}", this.column.ResolveSQL(context), this.opt.Totxt(), parameter.ParameterName); //表别名.列1=参数1
+            string strwhere = string.Format("{0} {1} {2}", this.column.ToSQL(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
             context.Parameters.Add(parameter);
             return strwhere;
         }
 
         private string ToSQLWithExists(ResovleContext context)
         {
-            var tmp= this.value as IQuery;
-            string strwhere = string.Format("{0} {1} ({2})", this.column.ResolveSQL(context), this.opt.Totxt(),tmp.GetCommandText(context));
+            var tmp= this.value as IDbSetContainer;
+            string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.GetCommandText(context));
             return strwhere;
         }
 
         private string ToSQLWithNULL(ResovleContext context)
         {
-            string strwhere = string.Format("{0} {1}", this.column.ResolveSQL(context), this.opt.Totxt()); 
+            string strwhere = string.Format("{0} {1}", this.column.ToSQL(context), this.opt.ToSQL()); 
             return strwhere;
         }
 
         private string ToSQLWithNoParameter(ResovleContext context)
         {
-            return base.ResolveSQL(context);
+            return base.ToSQL(context);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Azeroth.Nalu
             parameter2.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();
             parameter2.Value = value2;
             context.Parameters.Add(parameter2);
-            return string.Format("{0} {3} {1} AND {2}", this.column.ResolveSQL(context), parameter.ParameterName, parameter2.ParameterName, this.opt.Totxt());
+            return string.Format("{0} {3} {1} AND {2}", this.column.ToSQL(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace Azeroth.Nalu
         {
             if (qianTao)
             {//这里是IN的嵌套查询
-                var query = value as IQuery;
-                return string.Format("{0} {1} ({2})", this.column.ResolveSQL(context), this.opt.Totxt(), query.GetCommandText(context));//where里面的子查询
+                var query = value as IDbSetContainer;
+                return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), query.GetCommandText(context));//where里面的子查询
             }
             List<string> lstName = new List<string>();
             System.Data.Common.DbParameter parameter;
@@ -197,16 +197,16 @@ namespace Azeroth.Nalu
                 parameter.Value = val;
                 context.Parameters.Add(parameter);
             }
-            return string.Format("{0} {1} ({2})", this.column.ResolveSQL(context), this.opt.Totxt(), string.Join(",", lstName));
+            return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), string.Join(",", lstName));
         }
 
-        public PredicateNode<T, P> SetPlaceholder(bool placeholder)
+        public ComponentWHERE<T, P> SetPlaceholder(bool placeholder)
         {
             this.Placeholder = placeholder;
             return this;
         }
 
-        public static PredicateNode<T,P> operator!(PredicateNode<T,P> node)
+        public static ComponentWHERE<T,P> operator!(ComponentWHERE<T,P> node)
         {
             node.opt = ~node.opt;
             return node;

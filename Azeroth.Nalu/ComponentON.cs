@@ -11,18 +11,18 @@ namespace Azeroth.Nalu
     /// </summary>
     /// <typeparam name="L"></typeparam>
     /// <typeparam name="R"></typeparam>
-    public class PredicateNode2Join : PredicateNode
+    public class ComponentON : ComponentWHERE
     {
         IColumn right;
 
-        public PredicateNode2Join(IColumn left,IColumn right):base(left)
+        public ComponentON(IColumn left,IColumn right):base(left)
         {
             this.right = right;
         }
 
-        protected override string ResolveSQL(ResovleContext context)
+        protected override string ToSQL(ResovleContext context)
         {
-            return string.Format("{0}={1}", this.column.ResolveSQL(context), this.right.ResolveSQL(context));
+            return string.Format("{0}={1}", this.column.ToSQL(context), this.right.ToSQL(context));
         }
     }
 }

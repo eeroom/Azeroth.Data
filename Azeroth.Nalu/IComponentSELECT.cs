@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface ISelectNode:INode
+    public interface IComponentSELECT:IComponent
     {
+
         /// <summary>
         /// 别名
         /// </summary>

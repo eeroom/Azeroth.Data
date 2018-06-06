@@ -8,7 +8,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 从数据的有效性角度抽象的记录属性,用于软删除
     /// </summary>
-    public enum RowState
+     enum RowState
     {
         /// <summary>
         /// 正常的记录，默认值

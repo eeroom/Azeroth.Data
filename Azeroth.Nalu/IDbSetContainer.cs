@@ -8,11 +8,11 @@ namespace Azeroth.Nalu
     /// <summary>
     /// OMT查询解析为sql语句
     /// </summary>
-    public interface IQuery
+    public interface IDbSetContainer
     {
-        List<Query> CTEHandlers {  get; }
-        List<ISelectNode> SelectNodes {  get; }
-        List<INode> JoinNode { get; }
+        List<DbSetContainer> CTEHandlers {  get; }
+        List<IComponentSELECT> SelectNodes {  get; }
+        List<IComponent> JoinNode { get; }
 
         string NameForCTE { set; get; }
 

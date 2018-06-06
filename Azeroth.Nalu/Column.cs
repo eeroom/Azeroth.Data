@@ -9,15 +9,15 @@ namespace Azeroth.Nalu
     public class Column:IColumn
     {
 
-        public Column(DbSet contianer, string columnName)
+        public Column(Container contianer, string columnName)
         {
             this.container = contianer;
             this.columnName = columnName;
         }
 
-        protected ISelectNode mapColumn;
+        protected IComponentSELECT mapColumn;
 
-        public Column(DbSet contianer, string columnName, ISelectNode mapColumn)
+        public Column(Container contianer, string columnName, IComponentSELECT mapColumn)
         {
             this.container = contianer;
             this.columnName = columnName;
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
         protected Function functionCode;
 
         protected Func<Column, string> functionHandler;
-        protected IDbSet container;
+        protected IContainer container;
 
         /// <summary>
         /// 名称
@@ -43,7 +43,7 @@ namespace Azeroth.Nalu
             return this.container.NameNick + "." + this.columnName;
         }
 
-        IDbSet IColumn.Container
+        IContainer IColumn.Container
         {
             get { return this.container; }
         }
@@ -53,7 +53,7 @@ namespace Azeroth.Nalu
             get { return this.columnName; }
         }
 
-        public string ResolveSQL(ResovleContext context)
+        public string ToSQL(ResovleContext context)
         {
             if (functionHandler != null)
                 return this.functionHandler(this);
@@ -63,25 +63,25 @@ namespace Azeroth.Nalu
                 case Azeroth.Nalu.Function.NONE:
                     rst = this.ToString();
                     break;
-                case Azeroth.Nalu.Function.SUM:
+                case Azeroth.Nalu.Function.Sum:
                     rst = string.Format("SUM({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.AVG:
+                case Azeroth.Nalu.Function.Avg:
                     rst = string.Format("AVG({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.COUNT:
+                case Azeroth.Nalu.Function.Count:
                     rst = string.Format("COUNT({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.MAX:
+                case Azeroth.Nalu.Function.Max:
                     rst = string.Format("MAX({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.MIN:
+                case Azeroth.Nalu.Function.Min:
                     rst = string.Format("MIN({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.LOWER:
+                case Azeroth.Nalu.Function.Lower:
                     rst = string.Format("LOWER({0})", this.ToString());
                     break;
-                case Azeroth.Nalu.Function.UPPER:
+                case Azeroth.Nalu.Function.Upper:
                     rst = string.Format("UPPER({0})", this.ToString());
                     break;
                 default:

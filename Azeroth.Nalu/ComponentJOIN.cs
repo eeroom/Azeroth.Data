@@ -6,25 +6,25 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class JoinNode:Node
+    public class ComponentJOIN:Component
     {
-        public PredicateNode ON { set; get; }
+        public ComponentWHERE ON { set; get; }
 
         JOIN opt;
 
-        IDbSet container;
-        public JoinNode(JOIN opt, DbSet dbr)
+        IContainer container;
+        public ComponentJOIN(JOIN opt, Container dbr)
         {
             this.opt = opt;
             this.container = dbr;
         }
 
-        protected override string ResolveSQL(ResovleContext context)
+        protected override string ToSQL(ResovleContext context)
         {
             if (opt == JOIN.None)
                 return ToSQLWithScalar(context);
-            string strwhere = ((ISQL)this.ON).ResolveSQL(context);
-            return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.Totxt(),this.container.NameHandler(context),this.container.NameNick,strwhere);
+            string strwhere = ((IConvertible)this.ON).ToSQL(context);
+            return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.ToSQL(),this.container.NameHandler(context),this.container.NameNick,strwhere);
         }
 
         private string ToSQLWithScalar(ResovleContext context)

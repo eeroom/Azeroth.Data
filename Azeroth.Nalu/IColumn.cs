@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface IColumn:ISQL
+    public interface IColumn:IConvertible
     {
-        IDbSet Container { get; }
+        IContainer Container { get; }
         string ColumnName { get; }
         Function FunctionCode { get; }
         Func<Column, string> FunctionHandler { get; }

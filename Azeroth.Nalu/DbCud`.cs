@@ -6,27 +6,27 @@ using System.Linq.Expressions;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetN<T>:DbSet<T>,ICud
+    public class DbCud<T>:Container<T>,ICud
     {
         public string CommandText {protected set; get; }
-        public System.Data.Common.DbParameterCollection CommandParameters { get;protected set; }
-        protected INode whereNode;
-        public DbSetN<T> Select(Column col)
+        public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
+        public ComponentWHERE WH{set;get;}
+        public DbCud<T> Select(Column col)
         {
-            this.lstSelectNode.Add(new SelectNode(col));
+            this.lstSelectNode.Add(new ComponentSELECT(col));
             return this;
         }
 
-        public DbSetN<T> Select(IList<Column> cols)
+        public DbCud<T> Select(IList<Column> cols)
         {
-            this.lstSelectNode.AddRange(cols.Select(x => new SelectNode(x)));
+            this.lstSelectNode.AddRange(cols.Select(x => new ComponentSELECT(x)));
             return this;
         }
 
-        public void Where(PredicateNode predicate)
-        {
-            this.whereNode = predicate;
-        }
+        //public void Where(ComponentWHERE predicate)
+        //{
+        //    this.WH = predicate;
+        //}
 
         /// <summary>
         /// 增、删、改对应的行数据
@@ -50,12 +50,12 @@ namespace Azeroth.Nalu
         {
             context.Parameters.Clear();
             context.Tag = value;
-            string strwhere =this.whereNode.ResolveSQL(context);
+            string strwhere =((IComponent)this.WH).ToSQL(context);
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
             cmd.Parameters.Clear();
             cmd.Parameters.AddRange(context.Parameters.ToArray());
             this.CommandText = cmd.CommandText;
-            this.CommandParameters = cmd.Parameters; 
+            this.DbParameters = cmd.Parameters; 
             return cmd.ExecuteNonQuery();
         }
 
@@ -72,7 +72,7 @@ namespace Azeroth.Nalu
                 this.lstSelectNode.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
                 context.Parameters.Clear();
                 context.Tag = value;
-                string strwhere = this.whereNode.ResolveSQL(context);
+                string strwhere = ((IComponent)this.WH).ToSQL(context);
                 context.Parameters.AddRange(dictParameter.Values);
                 cmd.CommandText = string.Format("UPDATE {0} SET {1} {2}", this.nameHandler(context), strSet, strwhere);
                 cmd.Parameters.Clear();
@@ -80,7 +80,7 @@ namespace Azeroth.Nalu
                 rst += cmd.ExecuteNonQuery();
             }
             this.CommandText = cmd.CommandText;
-            this.CommandParameters = cmd.Parameters; 
+            this.DbParameters = cmd.Parameters; 
             return rst;
         }
 
@@ -103,7 +103,7 @@ namespace Azeroth.Nalu
                 rst += cmd.ExecuteNonQuery();
             }
             this.CommandText = cmd.CommandText;
-            this.CommandParameters = cmd.Parameters;
+            this.DbParameters = cmd.Parameters;
             return rst;
         }
 
@@ -136,42 +136,42 @@ namespace Azeroth.Nalu
         }
 
 
-        public DbSet<T> Add(IEnumerable<T> value)
+        public Container<T> Add(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public DbSet<T> Add(params T[] value)
+        public Container<T> Add(params T[] value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public DbSet<T> Edit(IEnumerable<T> value)
+        public Container<T> Edit(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public DbSet<T> Edit(params T[] value)
+        public Container<T> Edit(params T[] value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public DbSet<T> Del(IEnumerable<T> value)
+        public Container<T> Del(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public DbSet<T> Del(params T[] value)
+        public Container<T> Del(params T[] value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;

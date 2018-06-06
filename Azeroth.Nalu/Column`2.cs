@@ -9,58 +9,58 @@ namespace Azeroth.Nalu
     {
         System.Linq.Expressions.Expression<Func<T, S>> exp;
 
-        public Column(DbSet db, System.Linq.Expressions.Expression<Func<T, S>> exp):base(db,Column.GetColumnName(exp.Body))
+        public Column(Container db, System.Linq.Expressions.Expression<Func<T, S>> exp):base(db,Column.GetColumnName(exp.Body))
         {
             this.exp = exp;
         }
 
-        public Column(DbSet db, System.Linq.Expressions.Expression<Func<T, S>> exp,ISelectNode mapcolumn)
+        public Column(Container db, System.Linq.Expressions.Expression<Func<T, S>> exp,IComponentSELECT mapcolumn)
             : base(db, Column.GetColumnName(exp.Body),mapcolumn)
         {
             this.exp = exp;
         }
 
-        public PredicateNode<T, S> Contains(System.Collections.ICollection value)
+        public ComponentWHERE<T, S> In(System.Collections.ICollection value)
         {
-            return new PredicateNode<T, S>(this, WH.IN,value);
+            return new ComponentWHERE<T, S>(this, WH.IN,value);
         }
 
-        public PredicateNode<T, S> Contains(params S[] value)
+        public ComponentWHERE<T, S> In(params S[] value)
         {
-            return new PredicateNode<T, S>(this, WH.IN, value);
+            return new ComponentWHERE<T, S>(this, WH.IN, value);
         }
 
-        public PredicateNode<T, S> Range(object min,object max)
+        public ComponentWHERE<T, S> Range(object min,object max)
         {
-            return new PredicateNode<T, S>(this, WH.IN, min,max);
+            return new ComponentWHERE<T, S>(this, WH.BT, min,max);
         }
 
-        public PredicateNode<T, S> Batch(WH opt)
+        public ComponentWHERE<T, S> BatchEdit(WH opt)
         {
-            return new PredicateNode<T, S>(this,this.exp,opt);
+            return new ComponentWHERE<T, S>(this,this.exp,opt);
         }
 
-        public PredicateNode<T, S> Null()
+        public ComponentWHERE<T, S> Null()
         {
             
-            return new PredicateNode<T, S>(this, WH.NULL,string.Empty);
+            return new ComponentWHERE<T, S>(this, WH.NULL,string.Empty);
         }
 
-        public PredicateNode<T, S> Exists(Query value)
+        public ComponentWHERE<T, S> Exists(DbSetContainer value)
         {
 
-            return new PredicateNode<T, S>(this, WH.Exists, value);
+            return new ComponentWHERE<T, S>(this, WH.Exists, value);
         }
 
-        public PredicateNode<T, S> Like(string value)
+        public ComponentWHERE<T, S> Like(string value)
         {
-            return new PredicateNode<T, S>(this, WH.LIKE, value);
+            return new ComponentWHERE<T, S>(this, WH.LIKE, value);
         }
 
-        public PredicateNode<T, S> NoParameter(Func<Column, string> handler)
+        public ComponentWHERE<T, S> NoParameter(Func<Column, string> handler)
         {
             this.functionHandler = handler;
-            return new PredicateNode<T, S>(this, WH.NoParameter, string.Empty);
+            return new ComponentWHERE<T, S>(this, WH.NoParameter, string.Empty);
         }
 
         public new Column<T, S> Function(Function value)
@@ -75,74 +75,74 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public static PredicateNode<T,S> operator >=(Column<T,S> col,S value)
+        public static ComponentWHERE<T,S> operator >=(Column<T,S> col,S value)
         {
-            return new PredicateNode<T, S>(col, WH.GTE,value);
+            return new ComponentWHERE<T, S>(col, WH.GTE,value);
         }
 
-        public static PredicateNode<T, S> operator >(Column<T, S> col, S value)
+        public static ComponentWHERE<T, S> operator >(Column<T, S> col, S value)
         {
-            return new PredicateNode<T, S>(col, WH.GT, value);
+            return new ComponentWHERE<T, S>(col, WH.GT, value);
         }
 
-        public static PredicateNode<T, S> operator <=(Column<T, S> col, S value)
+        public static ComponentWHERE<T, S> operator <=(Column<T, S> col, S value)
         {
-            return new PredicateNode<T, S>(col, WH.LTE, value);
+            return new ComponentWHERE<T, S>(col, WH.LTE, value);
         }
 
-        public static PredicateNode<T, S> operator <(Column<T, S> col, S value)
+        public static ComponentWHERE<T, S> operator <(Column<T, S> col, S value)
         {
-            return new PredicateNode<T, S>(col, WH.LT, value);
+            return new ComponentWHERE<T, S>(col, WH.LT, value);
         }
 
-        public static PredicateNode<T, S> operator ==(Column<T, S> col, S value)
+        public static ComponentWHERE<T, S> operator ==(Column<T, S> col, S value)
         {
-            return new PredicateNode<T, S>(col, WH.EQ, value);
+            return new ComponentWHERE<T, S>(col, WH.EQ, value);
         }
 
-        public static PredicateNode<T, S> operator !=(Column<T, S> col, S value)
+        public static ComponentWHERE<T, S> operator !=(Column<T, S> col, S value)
         {
-            return new PredicateNode<T, S>(col, ~WH.EQ, value);
+            return new ComponentWHERE<T, S>(col, ~WH.EQ, value);
         }
 
-        public static PredicateNode<T, S> operator >=(S value,Column<T, S> col)
+        public static ComponentWHERE<T, S> operator >=(S value,Column<T, S> col)
         {
-            return new PredicateNode<T, S>(col, WH.LTE, value);
+            return new ComponentWHERE<T, S>(col, WH.LTE, value);
         }
 
-        public static PredicateNode<T, S> operator >( S value,Column<T, S> col)
+        public static ComponentWHERE<T, S> operator >( S value,Column<T, S> col)
         {
-            return new PredicateNode<T, S>(col, WH.LT, value);
+            return new ComponentWHERE<T, S>(col, WH.LT, value);
         }
 
-        public static PredicateNode<T, S> operator <=(S value,Column<T, S> col )
+        public static ComponentWHERE<T, S> operator <=(S value,Column<T, S> col )
         {
-            return new PredicateNode<T, S>(col, WH.GTE, value);
+            return new ComponentWHERE<T, S>(col, WH.GTE, value);
         }
 
-        public static PredicateNode<T, S> operator <(S value,Column<T, S> col)
+        public static ComponentWHERE<T, S> operator <(S value,Column<T, S> col)
         {
-            return new PredicateNode<T, S>(col, WH.GT, value);
+            return new ComponentWHERE<T, S>(col, WH.GT, value);
         }
 
-        public static PredicateNode<T, S> operator ==(S value,Column<T, S> col)
+        public static ComponentWHERE<T, S> operator ==(S value,Column<T, S> col)
         {
-            return new PredicateNode<T, S>(col, WH.EQ, value);
+            return new ComponentWHERE<T, S>(col, WH.EQ, value);
         }
 
-        public static PredicateNode<T, S> operator !=(S value, Column<T, S> col)
+        public static ComponentWHERE<T, S> operator !=(S value, Column<T, S> col)
         {
-            return new PredicateNode<T, S>(col, ~WH.EQ, value);
+            return new ComponentWHERE<T, S>(col, ~WH.EQ, value);
         }
 
-        public static PredicateNode2Join operator !=(Column<T, S> col, IColumn col2)
+        public static ComponentON operator !=(Column<T, S> col, IColumn col2)
         {
             throw new ArgumentException("不支持的连接条件");
         }
 
-        public static PredicateNode2Join operator ==(Column<T, S> col, IColumn col2)
+        public static ComponentON operator ==(Column<T, S> col, IColumn col2)
         {
-            return new PredicateNode2Join(col,col2);
+            return new ComponentON(col,col2);
         }
 
         public override bool Equals(object obj)
@@ -150,9 +150,9 @@ namespace Azeroth.Nalu
             return base.Equals(obj);
         }
 
-        public PredicateNode<T, S> Equals(S value)
+        public ComponentWHERE<T, S> Equals(S value)
         {
-            return new PredicateNode<T, S>(this, WH.EQ, value);
+            return new ComponentWHERE<T, S>(this, WH.EQ, value);
         }
 
         public override int GetHashCode()

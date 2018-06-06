@@ -6,18 +6,18 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class OrderNode:Node
+    public class ComponentOrderBy:Component
     {
         protected Order opt;
 
-        public OrderNode(IColumn col,Order opt): base(col)
+        public ComponentOrderBy(IColumn col,Order opt): base(col)
         {
             this.opt = opt;
         }
 
-        protected override string ResolveSQL(ResovleContext context)
+        protected override string ToSQL(ResovleContext context)
         {
-            return this.column.ResolveSQL(context) +" "+ opt.ToString();
+            return this.column.ToSQL(context) +" "+ opt.ToString();
         }
     }
 }
