@@ -48,20 +48,81 @@
     <Compile Include="Home.cs" />
     <Compile Include="MssqlDbContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Re_User_Role.cs">
-      <DependentUpon>Re_User_Role.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tb_BasicInfo.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
     </Compile>
-    <Compile Include="Tb_Role.cs">
-      <DependentUpon>Tb_Role.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
+    <Compile Include="Tb_Category.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
     </Compile>
-    <Compile Include="Tb_User.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Tb_User.tt</DependentUpon>
+    <Compile Include="Tb_Company.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Department.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Employee.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_EvaluatedFactor.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_EvaluatedPeople.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_EvaluatedPeople2.cs" />
+    <Compile Include="Tb_EvaluatedPeopleDetail.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_EvaluatedPostion.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_EvaluatingMaster.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_IncentiveObject.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Measure.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_MeasurePartner.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_MeasureProgram.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Mechanism.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Member.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_News.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_PeopleScore.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Post.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_PostionScore.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_PostionScoreDetail.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Quota.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Shareholde.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_ShareHolding.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Structure.cs">
+      <DependentUpon>DbTable.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -76,21 +137,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Re_User_Role.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Re_User_Role.cs</LastGenOutput>
-    </Content>
-    <Content Include="Tb_Role.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Tb_Role.cs</LastGenOutput>
-    </Content>
-    <Content Include="Tb_User.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Tb_User.cs</LastGenOutput>
-    </Content>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Content Include="DbTable.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DbTable.txt</LastGenOutput>
+    </Content>
+    <Content Include="DbTable.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbTable.tt</DependentUpon>
+    </Content>
+    <Content Include="Manager.txt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Manager.cs</LastGenOutput>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
