@@ -13,7 +13,7 @@ namespace Azeroth.Nalu
     {
         public string Cnnstr { get; set; }
 
-        public virtual Result SaveChange(params ICud[] dbsets)
+        public virtual Result ExecuteNoQuery(params ICud[] dbsets)
         {
             string msg;
             foreach (ICud db in dbsets)
@@ -51,16 +51,11 @@ namespace Azeroth.Nalu
             return new DbSetContainer(this);
         }
 
-        protected abstract ResovleContext GetResolvContext();
+        public abstract ResovleContext GetResolvContext();
 
         List<T> IDbContext.ExecuteQuery<T>(IDbSetContainer master, Func<object[], T> transfer)
         {
             return master.Execute<H, T>(transfer,this.Cnnstr);
-        }
-
-        ResovleContext IDbContext.GetResolvContext()
-        {
-            return this.GetResolvContext();
         }
     }
 }
