@@ -6,9 +6,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ComponentSELECT :Component, IComponentSELECT
+    public class NodeSelect :Node, INodeSelect
     {
-        public ComponentSELECT(IColumn column):base(column)
+        public NodeSelect(IColumn column):base(column)
         {
             this.columNameNick = column.ColumnName;
             //column.Container.SelectNodes.Add(this);
@@ -24,13 +24,13 @@ namespace Azeroth.Nalu
             return this.column.ToString();
         }
 
-        string IComponentSELECT.ColumnNameNick
+        string INodeSelect.ColumnNameNick
         {
             get {return this.columNameNick; }
             set { this.columNameNick = value; }
         }
 
-        int IComponentSELECT.ColIndex
+        int INodeSelect.ColIndex
         {
             get { return this.colIndex; }
             set { this.colIndex = value; }

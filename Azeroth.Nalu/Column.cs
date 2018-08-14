@@ -15,9 +15,9 @@ namespace Azeroth.Nalu
             this.columnName = columnName;
         }
 
-        protected IComponentSELECT mapColumn;
+        protected INodeSelect mapColumn;
 
-        public Column(Container contianer, string columnName, IComponentSELECT mapColumn)
+        public Column(Container contianer, string columnName, INodeSelect mapColumn)
         {
             this.container = contianer;
             this.columnName = columnName;

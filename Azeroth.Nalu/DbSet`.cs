@@ -36,21 +36,21 @@ namespace Azeroth.Nalu
         }
 
 
-        public ComponentJOIN LeftJoin<B>(DbSet<B> dbset)
+        public NodeJOIN LeftJoin<B>(DbSet<B> dbset)
         {
-            var tmp = new ComponentJOIN(JOIN.Left, dbset);
+            var tmp = new NodeJOIN(JOIN.Left, dbset);
             this.queryHandler.JoinNode.Add(tmp);
             return tmp;
         }
-        public ComponentJOIN RightJoin<B>(DbSet<B> dbset)
+        public NodeJOIN RightJoin<B>(DbSet<B> dbset)
         {
-            var tmp = new ComponentJOIN(JOIN.Right, dbset);
+            var tmp = new NodeJOIN(JOIN.Right, dbset);
             this.queryHandler.JoinNode.Add(tmp);
             return tmp;
         }
-        public ComponentJOIN InnerJoin<B>(DbSet<B> dbset)
+        public NodeJOIN InnerJoin<B>(DbSet<B> dbset)
         {
-            var tmp = new ComponentJOIN(JOIN.Inner, dbset);
+            var tmp = new NodeJOIN(JOIN.Inner, dbset);
             this.queryHandler.JoinNode.Add(tmp);
             return tmp;
         }

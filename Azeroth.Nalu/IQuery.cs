@@ -11,8 +11,8 @@ namespace Azeroth.Nalu
     public interface IQuery
     {
         List<Query> CTEHandlers {  get; }
-        List<IComponentSELECT> SelectNodes {  get; }
-        List<IComponent> JoinNode { get; }
+        List<INodeSelect> SelectNodes {  get; }
+        List<INode> JoinNode { get; }
 
         string NameForCTE { set; get; }
 

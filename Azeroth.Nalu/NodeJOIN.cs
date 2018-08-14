@@ -6,14 +6,14 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ComponentJOIN:Component
+    public class NodeJOIN:Node
     {
-        public ComponentWHERE ON { set; get; }
+        public NodeWhere ON { set; get; }
 
         JOIN opt;
 
         IContainer container;
-        public ComponentJOIN(JOIN opt, Container dbr)
+        public NodeJOIN(JOIN opt, Container dbr)
         {
             this.opt = opt;
             this.container = dbr;

@@ -11,9 +11,9 @@ namespace Azeroth.Nalu
         {
             this.dbContex = contex;
         }
-        protected List<IComponentSELECT> lstSelectNode = new List<IComponentSELECT>();
-        protected List<IComponent> lstJoinNode = new List<IComponent>();
-        public ComponentWHERE WH { set; get; }
+        protected List<INodeSelect> lstSelectNode = new List<INodeSelect>();
+        protected List<INode> lstJoinNode = new List<INode>();
+        public NodeWhere WH { set; get; }
         /// <summary>
         /// 筛选条件
         /// </summary>
@@ -24,8 +24,8 @@ namespace Azeroth.Nalu
         //public PredicateNode Having { set; get; }
 
         protected List<IColumn> lstGroupByNode = new List<IColumn>();
-        public ComponentWHERE Having { set; get; }
-        protected List<IComponent> lstOrderByNode = new List<IComponent>();
+        public NodeWhere Having { set; get; }
+        protected List<INode> lstOrderByNode = new List<INode>();
         protected List<IContainer> lstDbSet=new List<IContainer>();
         protected List<Query> lstCTEHandler = new List<Query>();
         protected string nameForCTE;
@@ -79,8 +79,8 @@ namespace Azeroth.Nalu
 
         public Query Select(Column col)
         {
-            var tmp = new ComponentSELECT(col);
-            ((IComponentSELECT)tmp).Column.Container.SelectNodes.Add(tmp);
+            var tmp = new NodeSelect(col);
+            ((INodeSelect)tmp).Column.Container.SelectNodes.Add(tmp);
             this.lstSelectNode.Add(tmp);
             return this;
         }
@@ -89,8 +89,8 @@ namespace Azeroth.Nalu
 
         public Query Select(IList<Column> cols)
         {
-            var tmp = cols.Select(x => new ComponentSELECT(x)).ToList();
-            tmp.ForEach(x=>((IComponentSELECT)x).Column.Container.SelectNodes.Add(x));
+            var tmp = cols.Select(x => new NodeSelect(x)).ToList();
+            tmp.ForEach(x=>((INodeSelect)x).Column.Container.SelectNodes.Add(x));
             this.lstSelectNode.AddRange(tmp);
             return this;
         }
@@ -109,13 +109,13 @@ namespace Azeroth.Nalu
 
         public Query OrderBy(Column col,Order opt)
         {
-            this.lstOrderByNode.Add(new ComponentOrderBy(col, opt));
+            this.lstOrderByNode.Add(new NodeOrderBy(col, opt));
             return this;
         }
 
         public Query OrderBy(IList<Column> cols,Order opt)
         {
-            this.lstOrderByNode.AddRange(cols.Select(x => new ComponentOrderBy(x, opt)));
+            this.lstOrderByNode.AddRange(cols.Select(x => new NodeOrderBy(x, opt)));
             return this;
         }
 
@@ -137,11 +137,11 @@ namespace Azeroth.Nalu
             get { return this.lstCTEHandler; }
         }
 
-        List<IComponent> IQuery.JoinNode
+        List<INode> IQuery.JoinNode
         {
             get { return this.lstJoinNode; }
         }
-        List<IComponentSELECT> IQuery.SelectNodes
+        List<INodeSelect> IQuery.SelectNodes
         {
             get
             {
@@ -183,7 +183,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        protected virtual string ResolveComponentSELECT(ResovleContext context, IList<IComponentSELECT> component)
+        protected virtual string ResolveComponentSELECT(ResovleContext context, IList<INodeSelect> component)
         {
             if (component.Count < 1)
                 throw new ArgumentException("需要指定查询的列");
@@ -191,7 +191,7 @@ namespace Azeroth.Nalu
             return string.Join(",", lststr);
         }
 
-        protected virtual string ResolveComponentJOIN(ResovleContext context, IList<IComponent> component)
+        protected virtual string ResolveComponentJOIN(ResovleContext context, IList<INode> component)
         {
             var lststr = component.Select(x => x.ToSQL(context));
             return string.Join(" ", lststr).Trim(',');//","用于处理UnKown 的连接类型，只是把表放在一起
@@ -206,7 +206,7 @@ namespace Azeroth.Nalu
             return tmp;
         }
 
-        protected virtual string ResolveComponentOrderBy(ResovleContext context, IList<IComponent> component)
+        protected virtual string ResolveComponentOrderBy(ResovleContext context, IList<INode> component)
         {
             var lststr = component.Select(x => x.ToSQL(context));
             string strOrder = string.Join(",", lststr);
@@ -360,7 +360,7 @@ namespace Azeroth.Nalu
                     , strWithAS, p2.ParameterName, p1.ParameterName, Nalu.Enumerable.ColNameForRowCount);
         }
 
-        private string ResolveComponentWHERE(ResovleContext context, ComponentWHERE component, string verb)
+        private string ResolveComponentWHERE(ResovleContext context, NodeWhere component, string verb)
         {
             string sqlstr = string.Empty;
             if (component != null)

@@ -12,7 +12,7 @@ namespace Azeroth.Nalu
     /// </summary>
     /// <typeparam name="T">筛选条件所在表对应的class类型</typeparam>
     /// <typeparam name="P">筛选条件针对的列的数据类型--为了解决批量编辑和修改场景下，从实例数据中获取该属性对应的参数值，所以保留这个参数</typeparam>
-    public class ComponentWHERE<T,P> : ComponentWHERE
+    public class NodeWhere<T,P> : NodeWhere
     {
         /// <summary>
         /// 筛选条件的参数值列表
@@ -32,7 +32,7 @@ namespace Azeroth.Nalu
 
         bool qianTao;//是否嵌套查询
 
-        public ComponentWHERE(Column<T,P> column,  WH opt, object value)
+        public NodeWhere(Column<T,P> column,  WH opt, object value)
             : base(column)
         {
             this.opt = opt;
@@ -48,7 +48,7 @@ namespace Azeroth.Nalu
         /// <param name="column"></param>
         /// <param name="opt"></param>
         /// <param name="value"></param>
-        public ComponentWHERE(Column<T, P> column, WH opt, System.Collections.ICollection value)
+        public NodeWhere(Column<T, P> column, WH opt, System.Collections.ICollection value)
             : base(column)
         {
             this.opt = opt;
@@ -65,7 +65,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        public ComponentWHERE(Column<T, P> column, WH opt,object min,object max)
+        public NodeWhere(Column<T, P> column, WH opt,object min,object max)
             : base(column)
         {
             this.opt = opt;
@@ -81,7 +81,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        public ComponentWHERE(IColumn col, Expression<Func<T, P>> exp, WH opt)
+        public NodeWhere(IColumn col, Expression<Func<T, P>> exp, WH opt)
             : base(col)
         {
             this.opt = opt;
@@ -89,7 +89,7 @@ namespace Azeroth.Nalu
             
         }
 
-        public ComponentWHERE(Column<T, P> column, WH opt, IQuery handler)
+        public NodeWhere(Column<T, P> column, WH opt, IQuery handler)
             : base(column)
         {
             
@@ -200,13 +200,13 @@ namespace Azeroth.Nalu
             return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), string.Join(",", lstName));
         }
 
-        public ComponentWHERE<T, P> SetPlaceholder(bool placeholder)
+        public NodeWhere<T, P> SetPlaceholder(bool placeholder)
         {
             this.Placeholder = placeholder;
             return this;
         }
 
-        public static ComponentWHERE<T,P> operator!(ComponentWHERE<T,P> node)
+        public static NodeWhere<T,P> operator!(NodeWhere<T,P> node)
         {
             node.opt = ~node.opt;
             return node;

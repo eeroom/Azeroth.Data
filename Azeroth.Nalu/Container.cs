@@ -12,7 +12,7 @@ namespace Azeroth.Nalu
         protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
         protected Func<ResovleContext, string> nameHandler;
         protected string nameNick;
-        protected List<IComponentSELECT> lstSelectNode = new List<IComponentSELECT>();
+        protected List<INodeSelect> lstSelectNode = new List<INodeSelect>();
 
         protected abstract RuntimeTypeHandle GetMetaInfo();
         protected abstract object CreateInstance(bool isCreateNull);
@@ -55,7 +55,7 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<IComponentSELECT> IContainer.SelectNodes
+        List<INodeSelect> IContainer.SelectNodes
         {
             get
             {

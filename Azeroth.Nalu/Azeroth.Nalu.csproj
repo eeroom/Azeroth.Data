@@ -51,18 +51,18 @@
     <Compile Include="IDbContext.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="IMapHandler.cs" />
-    <Compile Include="IComponent.cs" />
-    <Compile Include="IComponentSELECT.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="INodeSelect.cs" />
     <Compile Include="IConvertible.cs" />
     <Compile Include="MapHandler.cs" />
     <Compile Include="MapHandlerFactory.cs" />
     <Compile Include="MapHandler`.cs" />
     <Compile Include="MapHandler`2.cs" />
     <Compile Include="Column`2.cs" />
-    <Compile Include="ComponentSELECT.cs" />
-    <Compile Include="ComponentWHERE.cs" />
-    <Compile Include="ComponentWHERE`2.cs" />
-    <Compile Include="ComponentSegment.cs" />
+    <Compile Include="NodeSelect.cs" />
+    <Compile Include="NodeWhere.cs" />
+    <Compile Include="NodeWhere`2.cs" />
+    <Compile Include="NodeWhereSegment.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="ResovleContext.cs" />
@@ -71,15 +71,15 @@
     <Compile Include="Enumerable.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Component.cs" />
-    <Compile Include="ComponentJOIN.cs" />
-    <Compile Include="ComponentOrderBy.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeJOIN.cs" />
+    <Compile Include="NodeOrderBy.cs" />
     <Compile Include="RowState.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="XStringAttribute.cs" />
     <Compile Include="XStringNullNickAttribute.cs" />
     <Compile Include="XStringMapEnumAttribute.cs" />
-    <Compile Include="ComponentON.cs" />
+    <Compile Include="NodeON.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="T4.txt" />

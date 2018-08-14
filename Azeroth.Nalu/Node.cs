@@ -6,19 +6,19 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public  class Component:IComponent
+    public  class Node:INode
     {
         protected IColumn column;
-        public Component()
+        public Node()
         { 
         
         }
-        public Component(IColumn column)
+        public Node(IColumn column)
         {
             this.column = column;
         }
 
-        IColumn IComponent.Column
+        IColumn INode.Column
         {
             get { return this.column; }
         }

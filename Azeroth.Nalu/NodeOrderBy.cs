@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ComponentOrderBy:Component
+    public class NodeOrderBy:Node
     {
         protected Order opt;
 
-        public ComponentOrderBy(IColumn col,Order opt): base(col)
+        public NodeOrderBy(IColumn col,Order opt): base(col)
         {
             this.opt = opt;
         }

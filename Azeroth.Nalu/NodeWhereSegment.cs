@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ComponentSegment : ComponentWHERE
+    public class NodeWhereSegment : NodeWhere
     {
         const string AND = "AND";
         const string OR = "OR";
-        ComponentWHERE left;
-        IComponent right;
+        NodeWhere left;
+        INode right;
         Logic opt;
-        public ComponentSegment(ComponentWHERE left, Logic opt, ComponentWHERE right)
+        public NodeWhereSegment(NodeWhere left, Logic opt, NodeWhere right)
         {
             this.left = left;
             this.opt = opt;

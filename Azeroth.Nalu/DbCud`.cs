@@ -10,16 +10,16 @@ namespace Azeroth.Nalu
     {
         public string CommandText {protected set; get; }
         public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
-        public ComponentWHERE WH{set;get;}
+        public NodeWhere WH{set;get;}
         public DbCud<T> Select(Column col)
         {
-            this.lstSelectNode.Add(new ComponentSELECT(col));
+            this.lstSelectNode.Add(new NodeSelect(col));
             return this;
         }
 
         public DbCud<T> Select(IList<Column> cols)
         {
-            this.lstSelectNode.AddRange(cols.Select(x => new ComponentSELECT(x)));
+            this.lstSelectNode.AddRange(cols.Select(x => new NodeSelect(x)));
             return this;
         }
 
@@ -50,7 +50,7 @@ namespace Azeroth.Nalu
         {
             context.Parameters.Clear();
             context.Tag = value;
-            string strwhere =((IComponent)this.WH).ToSQL(context);
+            string strwhere =((INode)this.WH).ToSQL(context);
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
             cmd.Parameters.Clear();
             cmd.Parameters.AddRange(context.Parameters.ToArray());
@@ -72,7 +72,7 @@ namespace Azeroth.Nalu
                 this.lstSelectNode.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
                 context.Parameters.Clear();
                 context.Tag = value;
-                string strwhere = ((IComponent)this.WH).ToSQL(context);
+                string strwhere = ((INode)this.WH).ToSQL(context);
                 context.Parameters.AddRange(dictParameter.Values);
                 cmd.CommandText = string.Format("UPDATE {0} SET {1} {2}", this.nameHandler(context), strSet, strwhere);
                 cmd.Parameters.Clear();

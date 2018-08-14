@@ -11,11 +11,11 @@ namespace Azeroth.Nalu
     /// </summary>
     /// <typeparam name="L"></typeparam>
     /// <typeparam name="R"></typeparam>
-    public class ComponentON : ComponentWHERE
+    public class NodeON : NodeWhere
     {
         IColumn right;
 
-        public ComponentON(IColumn left,IColumn right):base(left)
+        public NodeON(IColumn left,IColumn right):base(left)
         {
             this.right = right;
         }
