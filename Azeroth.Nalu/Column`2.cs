@@ -46,7 +46,7 @@ namespace Azeroth.Nalu
             return new ComponentWHERE<T, S>(this, WH.NULL,string.Empty);
         }
 
-        public ComponentWHERE<T, S> Exists(DbSetContainer value)
+        public ComponentWHERE<T, S> Exists(Query value)
         {
 
             return new ComponentWHERE<T, S>(this, WH.Exists, value);

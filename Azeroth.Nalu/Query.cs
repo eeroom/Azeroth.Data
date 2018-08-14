@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public  class DbSetContainer:IDbSetContainer
+    public  class Query:IQuery
     {
-        public DbSetContainer(IDbContext contex)
+        public Query(IDbContext contex)
         {
             this.dbContex = contex;
         }
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
         public ComponentWHERE Having { set; get; }
         protected List<IComponent> lstOrderByNode = new List<IComponent>();
         protected List<IContainer> lstDbSet=new List<IContainer>();
-        protected List<DbSetContainer> lstCTEHandler = new List<DbSetContainer>();
+        protected List<Query> lstCTEHandler = new List<Query>();
         protected string nameForCTE;
         protected bool isDistinct;
 
@@ -44,13 +44,13 @@ namespace Azeroth.Nalu
         /// Distinct去重
         /// </summary>
         /// <returns></returns>
-        public DbSetContainer Distinct()
+        public Query Distinct()
         {
             this.isDistinct = true;
             return this;
         }
 
-        public DbSetContainer Take(int index, int size)
+        public Query Take(int index, int size)
         {
             if (index * size <= 0)
                 throw new ArgumentException("分页参数必须为正数");
@@ -77,7 +77,7 @@ namespace Azeroth.Nalu
         //    this.havingPredicate = predicate;
         //}
 
-        public DbSetContainer Select(Column col)
+        public Query Select(Column col)
         {
             var tmp = new ComponentSELECT(col);
             ((IComponentSELECT)tmp).Column.Container.SelectNodes.Add(tmp);
@@ -87,7 +87,7 @@ namespace Azeroth.Nalu
 
 
 
-        public DbSetContainer Select(IList<Column> cols)
+        public Query Select(IList<Column> cols)
         {
             var tmp = cols.Select(x => new ComponentSELECT(x)).ToList();
             tmp.ForEach(x=>((IComponentSELECT)x).Column.Container.SelectNodes.Add(x));
@@ -95,32 +95,32 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public DbSetContainer GroupBy(Column col)
+        public Query GroupBy(Column col)
         {
             this.lstGroupByNode.Add(col);
             return this;
         }
 
-        public DbSetContainer GroupBy(IList<Column> cols)
+        public Query GroupBy(IList<Column> cols)
         {
             this.lstGroupByNode.AddRange(cols);
             return this;
         }
 
-        public DbSetContainer OrderBy(Column col,Order opt)
+        public Query OrderBy(Column col,Order opt)
         {
             this.lstOrderByNode.Add(new ComponentOrderBy(col, opt));
             return this;
         }
 
-        public DbSetContainer OrderBy(IList<Column> cols,Order opt)
+        public Query OrderBy(IList<Column> cols,Order opt)
         {
             this.lstOrderByNode.AddRange(cols.Select(x => new ComponentOrderBy(x, opt)));
             return this;
         }
 
 
-        string IDbSetContainer.NameForCTE
+        string IQuery.NameForCTE
         {
             get
             {
@@ -132,16 +132,16 @@ namespace Azeroth.Nalu
             }
         }
 
-        List<DbSetContainer> IDbSetContainer.CTEHandlers
+        List<Query> IQuery.CTEHandlers
         {
             get { return this.lstCTEHandler; }
         }
 
-        List<IComponent> IDbSetContainer.JoinNode
+        List<IComponent> IQuery.JoinNode
         {
             get { return this.lstJoinNode; }
         }
-        List<IComponentSELECT> IDbSetContainer.SelectNodes
+        List<IComponentSELECT> IQuery.SelectNodes
         {
             get
             {
@@ -150,16 +150,16 @@ namespace Azeroth.Nalu
         }
 
        
-        string IDbSetContainer.GetCommandText(ResovleContext context)
+        string IQuery.GetCommandText(ResovleContext context)
         {
             return this.GetCommandText(context);
         }
 
-        protected virtual string ResolveCTE(ResovleContext context, IList<DbSetContainer> lstCTEHandler)
+        protected virtual string ResolveCTE(ResovleContext context, IList<Query> lstCTEHandler)
         {
             if (lstCTEHandler.Count < 1 || !context.CanCTE)
                 return string.Empty;
-            List<DbSetContainer> lstCTEHandler2 = new List<DbSetContainer>();
+            List<Query> lstCTEHandler2 = new List<Query>();
             ResolveCTE(lstCTEHandler, lstCTEHandler2);
             lstCTEHandler2.ForEach(x => x.nameForCTE = "W" + context.NextSetIndex().ToString());
             context.CanCTE = false;
@@ -172,7 +172,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="resolvers"></param>
         /// <param name="resolversWithFlat"></param>
-        protected virtual void ResolveCTE(IList<DbSetContainer> resolvers, IList<DbSetContainer> resolversWithFlat)
+        protected virtual void ResolveCTE(IList<Query> resolvers, IList<Query> resolversWithFlat)
         {
             foreach (var resolver in resolvers)
             {
@@ -239,7 +239,7 @@ namespace Azeroth.Nalu
             return this.GetCommandText(context);
         }
 
-        public DbSetContainer Top(int top)
+        public Query Top(int top)
         {
             if (top <= 0)
                 throw new ArgumentException("top必须大于0");
@@ -247,7 +247,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        List<T> IDbSetContainer.Execute<H,T>(Func<object[], T> transfer,string cnnstr)
+        List<T> IQuery.Execute<H,T>(Func<object[], T> transfer,string cnnstr)
         {
             using (H cnn = new H())
             {

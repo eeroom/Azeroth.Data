@@ -89,7 +89,7 @@ namespace Azeroth.Nalu
             
         }
 
-        public ComponentWHERE(Column<T, P> column, WH opt, IDbSetContainer handler)
+        public ComponentWHERE(Column<T, P> column, WH opt, IQuery handler)
             : base(column)
         {
             
@@ -141,7 +141,7 @@ namespace Azeroth.Nalu
 
         private string ToSQLWithExists(ResovleContext context)
         {
-            var tmp= this.value as IDbSetContainer;
+            var tmp= this.value as IQuery;
             string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.GetCommandText(context));
             return strwhere;
         }
@@ -184,7 +184,7 @@ namespace Azeroth.Nalu
         {
             if (qianTao)
             {//这里是IN的嵌套查询
-                var query = value as IDbSetContainer;
+                var query = value as IQuery;
                 return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), query.GetCommandText(context));//where里面的子查询
             }
             List<string> lstName = new List<string>();

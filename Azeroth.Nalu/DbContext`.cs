@@ -41,19 +41,19 @@ namespace Azeroth.Nalu
             return new Result(rst);
         }
 
-        public virtual DbCud<T> NoQuery<T>()
+        public virtual DbCud<T> CreateNoQuery<T>()
         {
             return new DbCud<T>();
         }
 
-        public virtual DbSetContainer Query()
+        public virtual Query CreateQuery()
         {
-            return new DbSetContainer(this);
+            return new Query(this);
         }
 
         public abstract ResovleContext GetResolvContext();
 
-        List<T> IDbContext.ExecuteQuery<T>(IDbSetContainer master, Func<object[], T> transfer)
+        List<T> IDbContext.ExecuteQuery<T>(IQuery master, Func<object[], T> transfer)
         {
             return master.Execute<H, T>(transfer,this.Cnnstr);
         }

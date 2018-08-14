@@ -7,11 +7,11 @@ namespace Azeroth.Nalu
 {
     public interface IDbContext
     {
-        List<T> ExecuteQuery<T>(IDbSetContainer query, Func<object[], T> transfer);
+        List<T> ExecuteQuery<T>(IQuery query, Func<object[], T> transfer);
         Result ExecuteNoQuery(params ICud[] lstcud);
         ResovleContext GetResolvContext();
 
-        DbCud<T> NoQuery<T>();
-        DbSetContainer Query();
+        DbCud<T> CreateNoQuery<T>();
+        Query CreateQuery();
     }
 }
