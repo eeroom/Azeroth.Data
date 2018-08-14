@@ -46,10 +46,7 @@ namespace Azeroth.Nalu
             return new DbCud<T>();
         }
 
-        public virtual Query CreateQuery()
-        {
-            return new Query(this);
-        }
+        public abstract Query CreateQuery();
 
         public abstract ResovleContext GetResolvContext();
 

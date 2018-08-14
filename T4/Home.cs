@@ -11,7 +11,7 @@ namespace T4
         {
             object o = new object();
             Azeroth.Nalu.IDbContext dbContext = new MssqlDbContext();
-            var query= dbContext.Query();
+            var query= dbContext.CreateQuery();
             var tbEvaPeople= query.Set<Tb_EvaluatedPeople>();
             query.Select(tbEvaPeople.Cols());
             var lst= query.ToList<Tb_EvaluatedPeople>();
