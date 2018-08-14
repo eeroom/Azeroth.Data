@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_Mechanism(机构信息表)
+    /// <summary>
     public class Tb_Mechanism
     {
         /// <summary>
@@ -41,7 +44,7 @@ namespace T4
         /// <summary>
         ///股份数量
         /// </summary>
-        public Nullable<Int32> SharesNum {set;get;}
+        public Nullable<Int64> SharesNum {set;get;}
         /// <summary>
         ///成立时间
         /// </summary>
@@ -49,7 +52,7 @@ namespace T4
         /// <summary>
         ///备注
         /// </summary>
-        [XString(300,true)]
+        [XString(-1,true)]
         public String Remark {set;get;}
         /// <summary>
         ///上级机构ID
@@ -58,7 +61,7 @@ namespace T4
         /// <summary>
         ///上级机构
         /// </summary>
-        [XString(300,true)]
+        [XString(-1,true)]
         public String ParentBody {set;get;}
         /// <summary>
         ///上级控股比例
@@ -67,7 +70,7 @@ namespace T4
         /// <summary>
         ///上级控股数量
         /// </summary>
-        public Int32 ParentHoldCoun {set;get;}
+        public Nullable<Int64> ParentHoldCoun {set;get;}
         /// <summary>
         ///层级
         /// </summary>

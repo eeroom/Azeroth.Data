@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_Company(公司信息表)
+    /// <summary>
     public class Tb_Company
     {
         /// <summary>
@@ -82,7 +85,7 @@ namespace T4
         /// <summary>
         ///公司地址
         /// </summary>
-        [XString(500,true)]
+        [XString(-1,true)]
         public String CompanyAddress {set;get;}
         /// <summary>
         ///公司编号

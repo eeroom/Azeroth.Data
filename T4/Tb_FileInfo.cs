@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 
+    /// <summary>
     public class Tb_FileInfo
     {
         /// <summary>
@@ -33,7 +36,7 @@ namespace T4
         /// <summary>
         ///
         /// </summary>
-        [XString(500,true)]
+        [XString(-1,true)]
         public String Remark {set;get;}
     }
 }

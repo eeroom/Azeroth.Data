@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 待评估的人员的因素明细
+    /// <summary>
     public class Tb_EvaluatedPeopleDetail
     {
         /// <summary>

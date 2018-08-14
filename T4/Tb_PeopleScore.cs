@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 人员评估分数
+    /// <summary>
     public class Tb_PeopleScore
     {
         /// <summary>

@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_Shareholde(股东信息表)
+    /// <summary>
     public class Tb_Shareholde
     {
         /// <summary>
@@ -41,7 +44,7 @@ namespace T4
         /// <summary>
         ///持股数量
         /// </summary>
-        public Nullable<Int32> HoldCoun {set;get;}
+        public Nullable<Int64> HoldCoun {set;get;}
         /// <summary>
         ///股东类别ID
         /// </summary>
@@ -72,7 +75,7 @@ namespace T4
         /// <summary>
         ///股份数量
         /// </summary>
-        public Nullable<Int32> SharesCount {set;get;}
+        public Nullable<Int64> SharesCount {set;get;}
         /// <summary>
         ///入股时间
         /// </summary>
@@ -80,7 +83,7 @@ namespace T4
         /// <summary>
         ///备注
         /// </summary>
-        [XString(300,true)]
+        [XString(-1,true)]
         public String Remark {set;get;}
         /// <summary>
         ///父级ID

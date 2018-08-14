@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T4", "T4\T4.csproj", "{0476AA03-0C5F-4D28-B1D9-ADF1E2395CF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu", "Azeroth.Nalu\Azeroth.Nalu.csproj", "{503A49CF-EBB5-40E4-81F7-D1612F316E64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Excel", "Azeroth.Nalu.Excel\Azeroth.Nalu.Excel.csproj", "{58B01816-B301-41AB-9F5E-E0A71D08A52E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Mysql", "Azeroth.Nalu.Mysql\Azeroth.Nalu.Mysql.csproj", "{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,10 @@ Global
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

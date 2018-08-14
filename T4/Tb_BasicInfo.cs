@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_BasicInfo(基础信息表)
+    /// <summary>
     public class Tb_BasicInfo
     {
         /// <summary>

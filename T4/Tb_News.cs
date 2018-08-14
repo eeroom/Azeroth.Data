@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_News(新闻资讯)
+    /// <summary>
     public class Tb_News
     {
         /// <summary>
@@ -17,7 +20,7 @@ namespace T4
         /// <summary>
         ///图片URL
         /// </summary>
-        [XString(500,true)]
+        [XString(-1,true)]
         public String ImgUrl {set;get;}
         /// <summary>
         ///分类ID
@@ -36,12 +39,12 @@ namespace T4
         /// <summary>
         ///概要
         /// </summary>
-        [XString(500,true)]
+        [XString(-1,true)]
         public String Summary {set;get;}
         /// <summary>
         ///内容
         /// </summary>
-        [XString(2147483647,true)]
+        [XString(-1,true)]
         public String Content {set;get;}
         /// <summary>
         ///发布时间

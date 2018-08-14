@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_MeasureProgram(测算方案表)
+    /// <summary>
     public class Tb_MeasureProgram
     {
         /// <summary>

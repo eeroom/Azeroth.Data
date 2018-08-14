@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 评估人信息
+    /// <summary>
     public class Tb_EvaluatingMaster
     {
         /// <summary>

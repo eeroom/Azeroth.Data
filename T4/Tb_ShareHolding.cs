@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 股权分配
+    /// <summary>
     public class Tb_ShareHolding
     {
         /// <summary>
@@ -24,7 +27,7 @@ namespace T4
         /// <summary>
         ///总股数,单位是1
         /// </summary>
-        public Int32 HoldingValue {set;get;}
+        public Int64 HoldingValue {set;get;}
         /// <summary>
         ///计算方式（岗位+个人）\3p,p,pf
         /// </summary>

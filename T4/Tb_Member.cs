@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 
+    /// <summary>
     public class Tb_Member
     {
         /// <summary>

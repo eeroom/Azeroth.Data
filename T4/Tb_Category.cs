@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_Category(机构类别属性表)
+    /// <summary>
     public class Tb_Category
     {
         /// <summary>

@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_MeasurePartner(测算股东表)
+    /// <summary>
     public class Tb_MeasurePartner
     {
         /// <summary>
@@ -12,7 +15,7 @@ namespace T4
         /// <summary>
         ///股份数量
         /// </summary>
-        public Nullable<Int32> SharesCount {set;get;}
+        public Nullable<Int64> SharesCount {set;get;}
         /// <summary>
         ///股东ID
         /// </summary>

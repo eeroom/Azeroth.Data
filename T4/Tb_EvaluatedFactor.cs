@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 评估中考虑的因素
+    /// <summary>
     public class Tb_EvaluatedFactor
     {
         /// <summary>
@@ -36,7 +39,7 @@ namespace T4
         /// <summary>
         ///描述
         /// </summary>
-        [XString(2000,true)]
+        [XString(-1,true)]
         public String Remark {set;get;}
     }
 }

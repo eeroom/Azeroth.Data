@@ -35,6 +35,10 @@
     <StartupObject>T4.Default</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.12.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <HintPath>..\packages\MySql.Data.6.9.12\lib\net40\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
@@ -45,97 +49,177 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsultRecord.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DbContextMysql.cs" />
     <Compile Include="Home.cs" />
-    <Compile Include="MssqlDbContext.cs" />
+    <Compile Include="DbContextMssqlserver.cs" />
     <Compile Include="MultipleOutputHelper.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MultipleOutputHelper.txt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="R_Advertinfo_Channel.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="R_Content_Flag.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="R_VideoInfoVideoTag.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="R_VideoInfoVideoTopic.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Activity.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_ActivityClass.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_AdvertInfo.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_ArticleInfo.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_ArticleTopic.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
     <Compile Include="Tb_BasicInfo.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Category.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Comment.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_CommentVote.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Company.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Department.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Employee.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_EvaluatedFactor.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_EvaluatedPeople.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_EvaluatedPeopleDetail.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_EvaluatedPostion.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_EvaluatingMaster.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Favorite.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Feedback.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_FileInfo.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_IncentiveObject.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Measure.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_MeasurePartner.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_MeasureProgram.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Mechanism.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Member.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Message.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_News.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Opinion.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_OpinionDraft.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_OpinionRelation.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_OpinionTag.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_PeopleScore.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Post.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_PostionScore.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_PostionScoreDetail.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Problem.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Quota.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Shareholde.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_ShareHolding.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="Tb_Structure.cs">
-      <DependentUpon>StockOnline.tt</DependentUpon>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_Trial.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_User.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_VideoInfo.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_VideoTag.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_VideoTopic.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Tb_WatchHistory.cs">
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="StockOnline.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>StockOnline.txt</LastGenOutput>
@@ -149,6 +233,15 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
     </Content>
+    <None Include="StockOnlineMysql.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockOnlineMysql.txt</LastGenOutput>
+    </None>
+    <Content Include="StockOnlineMysql.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
+    </Content>
     <Content Include="StockOnline.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -156,6 +249,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Azeroth.Nalu.Mysql\Azeroth.Nalu.Mysql.csproj">
+      <Project>{f0f10eae-ef96-49e7-b7c3-f602483eeb00}</Project>
+      <Name>Azeroth.Nalu.Mysql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Azeroth.Nalu\Azeroth.Nalu.csproj">
       <Project>{503a49cf-ebb5-40e4-81f7-d1612f316e64}</Project>
       <Name>Azeroth.Nalu</Name>

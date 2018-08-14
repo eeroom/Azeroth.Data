@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_Structure(股权结构表)
+    /// <summary>
     public class Tb_Structure
     {
         /// <summary>
@@ -50,7 +53,7 @@ namespace T4
         /// <summary>
         ///股份数量
         /// </summary>
-        public Int32 SharesNum {set;get;}
+        public Int64 SharesNum {set;get;}
         /// <summary>
         ///预测时间
         /// </summary>
@@ -79,7 +82,7 @@ namespace T4
         /// <summary>
         ///实际控股人股数
         /// </summary>
-        public Nullable<Int32> ActualHoldNum {set;get;}
+        public Nullable<Int64> ActualHoldNum {set;get;}
     }
 }
 // It's the end

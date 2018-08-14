@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// 岗位评估分数
+    /// <summary>
     public class Tb_PostionScore
     {
         /// <summary>

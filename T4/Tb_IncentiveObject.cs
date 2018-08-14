@@ -3,6 +3,9 @@ using System;
 using Azeroth.Nalu;
 namespace T4
 {
+    /// <summary>
+    /// Tb_IncentiveObject(激励对象持股平台)
+    /// <summary>
     public class Tb_IncentiveObject
     {
         /// <summary>
