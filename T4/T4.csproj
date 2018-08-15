@@ -217,7 +217,9 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -227,15 +229,15 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
     </Content>
-    <None Include="StockOnlineMysql.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StockOnlineMysql.txt</LastGenOutput>
-    </None>
     <Content Include="StockOnlineMysql.txt">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Content>
+    <None Include="StockOnlineMysql.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockOnlineMysql.txt</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Azeroth.Nalu.Mysql\Azeroth.Nalu.Mysql.csproj">
