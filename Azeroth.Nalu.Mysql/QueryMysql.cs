@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
             string strCol = ResolveComponentSELECT(context, this.lstSelectNode);//查询的列
             string strfrom = this.lstDbSet[0].NameHandler(context) + " AS " + this.lstDbSet[0].NameNick;
             string strjn = ResolveComponentJOIN(context, this.lstJoinNode);
-            string strwhere = ResolveComponentWHERE(context, this.WH, "WHERE");
+            string strwhere = ResolveComponentWHERE(context, this.Where, "WHERE");
             string strgroup = ResolverComponentGroupBy(context, this.lstGroupByNode);
             string strhaving = ResolveComponentWHERE(context, this.Having, "HAVING");
             string strOrder = ResolveComponentOrderBy(context, this.lstOrderByNode);//排序
@@ -53,7 +53,7 @@ namespace Azeroth.Nalu
                     ,(this.pageSize*this.pageIndex-this.pageSize).ToString()
                     ,this.pageSize.ToString()
                     ,cmdstrCount
-                    ,Enumerable.ColNameForRowCount);
+                    ,RowsCountNike);
             return cmdstr;
         }
     }

@@ -7,13 +7,15 @@ namespace Azeroth.Nalu
 {
     public abstract  class Query:IQuery
     {
+        protected static string RowsCountNike = "theRowCount";
+
         public Query(IDbContext contex)
         {
             this.dbContex = contex;
         }
         protected List<INodeSelect> lstSelectNode = new List<INodeSelect>();
         protected List<INode> lstJoinNode = new List<INode>();
-        public NodeWhere WH { set; get; }
+        public NodeWhere Where { set; get; }
         /// <summary>
         /// 筛选条件
         /// </summary>
@@ -324,7 +326,7 @@ namespace Azeroth.Nalu
             reader.Read();
             if (this.pageIndex * this.pageSize > 0)
             {//分页特别处理
-                this.rowsCount = System.Convert.ToInt32(reader[Nalu.Enumerable.ColNameForRowCount]);
+                this.rowsCount = System.Convert.ToInt32(reader[RowsCountNike]);
                 lstEntity.Capacity = this.pageSize;
             }
             for (int i = 0; i < this.lstDbSet.Count; i++)

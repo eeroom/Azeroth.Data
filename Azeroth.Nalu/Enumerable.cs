@@ -8,9 +8,9 @@ namespace Azeroth.Nalu
 {
     public static class Enumerable
     {
-        public static string ParameterNameForPaginationEnd = "Num_End";
-        public static string ParameterNameForPaginationStart = "Num_Start";
-        public static string ColNameForRowCount = "theRowCount";
+        //public static string ParameterNameForPaginationEnd = "Num_End";
+        //public static string ParameterNameForPaginationStart = "Num_Start";
+        
 
         public static string ToSQL(this WH opt)
         {

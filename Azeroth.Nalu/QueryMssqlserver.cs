@@ -24,7 +24,7 @@ namespace Azeroth.Nalu
             string strCol = ResolveComponentSELECT(context, this.lstSelectNode);//查询的列
             string strfrom = this.lstDbSet[0].NameHandler(context) + " AS " + this.lstDbSet[0].NameNick;
             string strjn = ResolveComponentJOIN(context, this.lstJoinNode);
-            string strwhere = ResolveComponentWHERE(context, this.WH, "WHERE");
+            string strwhere = ResolveComponentWHERE(context, this.Where, "WHERE");
             string strgroup = ResolverComponentGroupBy(context, this.lstGroupByNode);
             string strhaving = ResolveComponentWHERE(context, this.Having, "HAVING");
             string strOrder = ResolveComponentOrderBy(context, this.lstOrderByNode);//排序
@@ -38,30 +38,23 @@ namespace Azeroth.Nalu
                 , strfrom, strjn, strOrder, strwhere, strgroup, strhaving
                 , this.isDistinct ? "DISTINCT" : string.Empty);
             int numEnd = this.pageIndex * this.pageSize;
-            var p1 = context.CreateParameter();
-            p1.ParameterName = context.Symbol + Nalu.Enumerable.ParameterNameForPaginationEnd;
-            p1.Value = numEnd;
-            context.Parameters.Add(p1);
-            var p2 = context.CreateParameter();
-            p2.ParameterName = context.Symbol + Nalu.Enumerable.ParameterNameForPaginationStart;
-            p2.Value = numEnd + 1 - this.pageSize;
-            context.Parameters.Add(p2);
+            int numStart = numEnd + 1 - this.pageSize;
             if (string.IsNullOrEmpty(strWithAS))
                 return string.Format(@"WITH HTT AS ({0}
                                                      ),HBB AS (
                                                      SELECT COUNT(0) AS {3} FROM HTT)
                                                      SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {1} AND {2}", tmp
-                                                         , p2.ParameterName
-                                                         , p1.ParameterName
-                                                         , Nalu.Enumerable.ColNameForRowCount);
+                                                         , numStart.ToString()
+                                                         , numEnd.ToString()
+                                                         , RowsCountNike);
             else
                 return string.Format(@"{1},HTT AS ({0}
                                                         ),HBB AS (SELECT COUNT(0) AS {4} FROM HTT)
                                                         SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {2} AND {3}", tmp
                                                          , strWithAS
-                                                         , p2.ParameterName
-                                                         , p1.ParameterName
-                                                         , Nalu.Enumerable.ColNameForRowCount);
+                                                          , numStart.ToString()
+                                                         , numEnd.ToString()
+                                                         , RowsCountNike);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace T4
             query.Select(dbset.Cols());
             //query.Select(dbset.Col(x => x.ContentType));
             //query.Select(dbset.Col(x => x.Clicks).Function(Azeroth.Nalu.Function.Sum));
-            query.WH = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
+            query.Where = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
                 && dbset.Col(x => x.Content).Like("%股权%") || dbset.Col(x => x.ContentType).In(1, 2);
             //query.Distinct();
             //query.Top(4);
