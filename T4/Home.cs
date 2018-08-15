@@ -32,10 +32,10 @@ namespace T4
             lst.ForEach(x=>x.Id=Guid.NewGuid());
 
             var addArticle= dbContext.CreateNoQuery<Tb_ArticleInfo>();
-            //addArticle.Del();
-            //addArticle.WH = addArticle.Col(x => x.ContentType) == 888;
-            addArticle.Add(lst);
-            addArticle.Select(addArticle.Cols());
+            addArticle.Del();
+            addArticle.WH = addArticle.Col(x => x.ContentType) == 999;
+            //addArticle.Add(lst);
+            //addArticle.Select(addArticle.Cols());
 
             //addArticle.Edit(new Tb_ArticleInfo() {  ContentType=888});
             //addArticle.WH = addArticle.Col(x => x.ContentType) == 999;

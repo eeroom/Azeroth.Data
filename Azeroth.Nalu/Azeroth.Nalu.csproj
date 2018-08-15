@@ -64,7 +64,7 @@
     <Compile Include="NodeWhere.cs" />
     <Compile Include="NodeWhere`2.cs" />
     <Compile Include="NodeWhereSegment.cs" />
-    <Compile Include="Operator.cs" />
+    <Compile Include="OPT.cs" />
     <Compile Include="Query.cs" />
     <Compile Include="QueryMssqlserver.cs" />
     <Compile Include="ResovleContext.cs" />
