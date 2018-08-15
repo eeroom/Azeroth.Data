@@ -56,7 +56,7 @@ manager.StartNewFile(nameClass+".cs");
 			string cmdstrForColDescription=string.Format("with htt as({0}),gmm as ({1}) select htt.name,gmm.value from htt left join gmm on htt.column_id=gmm.minor_id",
                              "select * from sys.columns where object_id=OBJECT_ID('"+nameClass+"')",
                              "select * from sys.extended_properties where sys.extended_properties.major_id=OBJECT_ID('"+nameClass+"')");
-    this.WriteLine(string.Format("{1}public class {0}",nameClass,new String(' ',4)));
+    this.WriteLine(string.Format("{1}public partial class {0}",nameClass,new String(' ',4)));
     this.WriteLine(new String(' ',4)+"{");
     List<string> lstEnum=new List<string>();
      
@@ -75,7 +75,7 @@ manager.StartNewFile(nameClass+".cs");
                         {
                             string colName = row["ColumnName"].ToString();
                             if(colName.EndsWith("Enum"))
-                                  lstEnum.Add(colName.Substring(0,colName.Length-4));
+                                  lstEnum.Add(colName.Substring(0,colName.Length-4)+"s");
                             string colType = row["DataType"].ToString().Substring(7);
 							bool allowDBNull=Convert.ToBoolean(row["AllowDBNull"]);
                             if(allowDBNull && !colType.Equals("String")&& !colType.Equals("Byte[]"))

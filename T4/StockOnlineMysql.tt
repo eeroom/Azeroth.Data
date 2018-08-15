@@ -65,7 +65,7 @@ manager.StartNewFile(kv.Key+".cs");
   this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
 												this.WriteLine(string.Format("{0}/// {1}",new String(' ',4),kv.Value));
 			  this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
-    this.WriteLine(string.Format("{1}public class {0}",kv.Key,new String(' ',4)));
+    this.WriteLine(string.Format("{1}public partial class {0}",kv.Key,new String(' ',4)));
     this.WriteLine(new String(' ',4)+"{");
     List<string> lstEnum=new List<string>();
      
