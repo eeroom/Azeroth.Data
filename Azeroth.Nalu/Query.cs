@@ -52,6 +52,8 @@ namespace Azeroth.Nalu
 
         public Query Take(int index, int size)
         {
+            if (this.top > 0)
+                throw new ArgumentException("top后不能进行分页查询");
             if (index * size <= 0)
                 throw new ArgumentException("分页参数必须为正数");
             this.pageIndex = index;
@@ -250,6 +252,8 @@ namespace Azeroth.Nalu
 
         public Query Top(int top)
         {
+            if (this.pageIndex * this.pageSize > 0)
+                throw new ArgumentException("分页后不能再进行top查询");
             if (top <= 0)
                 throw new ArgumentException("top必须大于0");
             this.top = top;
@@ -278,8 +282,13 @@ namespace Azeroth.Nalu
                     if (this.pageIndex * this.pageSize <= 0)
                         return new List<T>();//没有分页，或者第一页都没有数据
                     this.pageIndex = 1;//回到第一页
-                    cmd.Parameters[Nalu.Enumerable.ParameterNameForPaginationEnd].Value = this.pageIndex * this.pageSize;
-                    cmd.Parameters[Nalu.Enumerable.ParameterNameForPaginationStart].Value = this.pageIndex * this.pageSize + 1 - this.pageSize;
+                    context = this.dbContex.GetResolvContext();
+                    this.ComandText = this.GetCommandText(context);
+                    cmd.CommandText = this.ComandText;
+                    this.DbParameters = context.Parameters;
+                    cmd.Parameters.Clear();
+                    if (context.Parameters.Count > 0)
+                        cmd.Parameters.AddRange(context.Parameters.ToArray());
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (!reader.HasRows)
@@ -289,8 +298,13 @@ namespace Azeroth.Nalu
                             return lst;
                         this.pageIndex = (int)Math.Ceiling(1.0 * rowsCount / pageSize);//跳到最后一页
                     }
-                    cmd.Parameters[Nalu.Enumerable.ParameterNameForPaginationEnd].Value = this.pageIndex * this.pageSize;
-                    cmd.Parameters[Nalu.Enumerable.ParameterNameForPaginationStart].Value = this.pageIndex * this.pageSize + 1 - this.pageSize;
+                    context = this.dbContex.GetResolvContext();
+                    this.ComandText = this.GetCommandText(context);
+                    cmd.CommandText = this.ComandText;
+                    this.DbParameters = context.Parameters;
+                    cmd.Parameters.Clear();
+                    if (context.Parameters.Count > 0)
+                        cmd.Parameters.AddRange(context.Parameters.ToArray());
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)

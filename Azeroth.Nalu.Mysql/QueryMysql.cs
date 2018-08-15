@@ -39,19 +39,19 @@ namespace Azeroth.Nalu
                     ,this.isDistinct ? "DISTINCT" : string.Empty
                     //,top > 0 ? "TOP " + top.ToString() : string.Empty
                     ,string.Empty
-                   // ,strCol
-                    ,"COUNT(0)"
+                   ,strCol
                     ,strfrom, strjn, strwhere, strgroup, strhaving, strOrder
                     ,top > 0 ? "limit " + top.ToString() : string.Empty);
-
+            cmdstrCount = string.Format(@"select count(0)
+                                                                from({0}) _avatar",cmdstrCount);
             string cmdstr = string.Format("{0}SELECT {1} {2} {3} ,({12}) as {13} \r\nFROM {4} {5} {6} {7} {8} {9} limit {10},{11}", strWithAS
                     ,this.isDistinct ? "DISTINCT" : string.Empty
                     //top > 0 ? "TOP " + top.ToString() : string.Empty
                     ,string.Empty
                     ,strCol
                     , strfrom , strjn, strwhere, strgroup, strhaving, strOrder
-                    ,(this.pageSize*this.pageIndex-this.pageSize+1).ToString()
-                    ,(this.pageSize*this.pageIndex).ToString()
+                    ,(this.pageSize*this.pageIndex-this.pageSize).ToString()
+                    ,this.pageSize.ToString()
                     ,cmdstrCount
                     ,Enumerable.ColNameForRowCount);
             return cmdstr;
