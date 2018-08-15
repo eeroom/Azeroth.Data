@@ -7,7 +7,7 @@
     <ProjectGuid>{F0F10EAE-EF96-49E7-B7C3-F602483EEB00}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Azeroth.Nalu.Mysql</RootNamespace>
+    <RootNamespace>Azeroth.Nalu</RootNamespace>
     <AssemblyName>Azeroth.Nalu.Mysql</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DbContextMysql.cs" />
     <Compile Include="QueryMysql.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -55,6 +56,9 @@
       <Project>{503a49cf-ebb5-40e4-81f7-d1612f316e64}</Project>
       <Name>Azeroth.Nalu</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="T4Batch.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

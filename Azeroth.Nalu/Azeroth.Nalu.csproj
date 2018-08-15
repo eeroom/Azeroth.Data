@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Column.cs" />
     <Compile Include="DateTimeWrapper.cs" />
+    <Compile Include="DbContextMssqlserver.cs" />
     <Compile Include="DbContext`.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="DbCud`.cs" />

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Azeroth.Nalu.Mysql
+namespace Azeroth.Nalu
 {
     public class QueryMysql : Query
     {

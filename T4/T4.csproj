@@ -52,16 +52,14 @@
     <Compile Include="ConsultRecord.cs">
       <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
-    <Compile Include="DbContextMysql.cs" />
     <Compile Include="Home.cs" />
-    <Compile Include="DbContextMssqlserver.cs" />
     <Compile Include="MultipleOutputHelper.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MultipleOutputHelper.txt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="R_Advertinfo_Channel.cs">
+    <Compile Include="R_AdvertInfo_Channel.cs">
       <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
     <Compile Include="R_Content_Flag.cs">
@@ -220,10 +218,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.config" />
-    <None Include="StockOnline.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>StockOnline.txt</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -241,11 +235,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>StockOnlineMysql.tt</DependentUpon>
-    </Content>
-    <Content Include="StockOnline.txt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StockOnline.tt</DependentUpon>
     </Content>
   </ItemGroup>
   <ItemGroup>
