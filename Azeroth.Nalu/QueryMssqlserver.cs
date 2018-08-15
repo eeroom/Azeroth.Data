@@ -29,8 +29,14 @@ namespace Azeroth.Nalu
             string strhaving = ResolveComponentWHERE(context, this.Having, "HAVING");
             string strOrder = ResolveComponentOrderBy(context, this.lstOrderByNode);//排序
             if (this.pageIndex * this.pageSize <= 0)//不分页
-                return string.Format("{7}SELECT {8} {9} {0} \r\nFROM {1} {2} {3} {4} {5} {6}", strCol, strfrom, strjn, strwhere, strgroup, strhaving, strOrder, strWithAS, this.isDistinct ? "DISTINCT" : string.Empty, top > 0 ? "TOP " + top.ToString() : string.Empty);
-            string tmp = string.Format("SELECT {7} {0},ROW_NUMBER() OVER({3}) AS theRowIndex FROM {1} {2} {4} {5} {6}", strCol, strfrom, strjn, strOrder, strwhere, strgroup, strhaving, this.isDistinct ? "DISTINCT" : string.Empty);
+                return string.Format("{0}SELECT {1} {2} {3} \r\nFROM {4} {5} {6} {7} {8} {9}",  strWithAS
+                    , this.isDistinct ? "DISTINCT" : string.Empty
+                    , top > 0 ? "TOP " + top.ToString() : string.Empty
+                    ,strCol
+                    , strfrom, strjn, strwhere, strgroup, strhaving, strOrder);
+            string tmp = string.Format("SELECT {7} {0},ROW_NUMBER() OVER({3}) AS theRowIndex FROM {1} {2} {4} {5} {6}", strCol
+                , strfrom, strjn, strOrder, strwhere, strgroup, strhaving
+                , this.isDistinct ? "DISTINCT" : string.Empty);
             int numEnd = this.pageIndex * this.pageSize;
             var p1 = context.CreateParameter();
             p1.ParameterName = context.Symbol + Nalu.Enumerable.ParameterNameForPaginationEnd;
@@ -41,11 +47,21 @@ namespace Azeroth.Nalu
             p2.Value = numEnd + 1 - this.pageSize;
             context.Parameters.Add(p2);
             if (string.IsNullOrEmpty(strWithAS))
-                return string.Format("WITH HTT AS ({0})\r\n,\r\nHBB AS (\r\nSELECT COUNT(0) AS {3} FROM HTT)\r\n\r\nSELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {1} AND {2}", tmp
-                    , p2.ParameterName, p1.ParameterName, Nalu.Enumerable.ColNameForRowCount);
+                return string.Format(@"WITH HTT AS ({0}
+                                                     ),HBB AS (
+                                                     SELECT COUNT(0) AS {3} FROM HTT)
+                                                     SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {1} AND {2}", tmp
+                                                         , p2.ParameterName
+                                                         , p1.ParameterName
+                                                         , Nalu.Enumerable.ColNameForRowCount);
             else
-                return string.Format("{1},HTT AS ({0})\r\n,\r\nHBB AS (\r\nSELECT COUNT(0) AS {4} FROM HTT)\r\n\r\nSELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {2} AND {3}", tmp
-                    , strWithAS, p2.ParameterName, p1.ParameterName, Nalu.Enumerable.ColNameForRowCount);
+                return string.Format(@"{1},HTT AS ({0}
+                                                        ),HBB AS (SELECT COUNT(0) AS {4} FROM HTT)
+                                                        SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {2} AND {3}", tmp
+                                                         , strWithAS
+                                                         , p2.ParameterName
+                                                         , p1.ParameterName
+                                                         , Nalu.Enumerable.ColNameForRowCount);
         }
     }
 }
