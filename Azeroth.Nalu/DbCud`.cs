@@ -64,6 +64,8 @@ namespace Azeroth.Nalu
         private int Edit(System.Data.Common.DbCommand cmd, ResovleContext context)
         {
             int rst = 0;
+            if (this.lstSelectNode.Count <= 0)
+                throw new ArithmeticException("必须指定修改要赋值的列");
             List<string> lstSet = this.lstSelectNode.Select(col => col.Column.ColumnName + "=" + context.Symbol + col.Column.ColumnName).ToList();
             string strSet = string.Join(",", lstSet);
             var dictParameter = this.lstSelectNode.ToDictionary(col => col.Column.ColumnName, col => cmd.CreateParameter());
@@ -113,6 +115,8 @@ namespace Azeroth.Nalu
 
         private string Add(System.Data.Common.DbCommand cmd, ResovleContext context, out List<string> lstcolName)
         {
+            if (this.lstSelectNode.Count <= 0)
+                throw new ArgumentException("必须指定要新增赋值的列");
            lstcolName = this.lstSelectNode.Select(x => x.Column.ColumnName).ToList();
             string strCol = string.Join(",", lstcolName);
             string strParamter = context.Symbol + string.Join("," + context.Symbol, lstcolName);

@@ -13,13 +13,13 @@ namespace Azeroth.Nalu
     {
         public string Cnnstr { get; set; }
 
-        public virtual Result ExecuteNoQuery(params ICud[] dbsets)
+        public virtual RT ExecuteNoQuery(params ICud[] dbsets)
         {
             string msg;
             foreach (ICud db in dbsets)
             {
                 if (!db.Validate(out msg))
-                    return new Result(true, msg);
+                    return new RT(true, msg);
             }
             int rst = 0;
             using (H cnn = new H())
@@ -38,7 +38,7 @@ namespace Azeroth.Nalu
                     cmd.Transaction.Commit();
                 }
             }
-            return new Result(rst);
+            return new RT(rst);
         }
 
         public virtual DbCud<T> CreateNoQuery<T>()

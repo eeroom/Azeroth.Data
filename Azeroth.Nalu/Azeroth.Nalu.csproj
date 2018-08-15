@@ -77,7 +77,7 @@
     <Compile Include="NodeJOIN.cs" />
     <Compile Include="NodeOrderBy.cs" />
     <Compile Include="RowState.cs" />
-    <Compile Include="Result.cs" />
+    <Compile Include="RT.cs" />
     <Compile Include="XStringAttribute.cs" />
     <Compile Include="XStringNullNickAttribute.cs" />
     <Compile Include="XStringMapEnumAttribute.cs" />

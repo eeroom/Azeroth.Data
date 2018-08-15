@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class Result
+    /// <summary>
+    /// NoQuery的执行结果
+    /// </summary>
+    public class RT
     {
         /// <summary>
         /// 执行成功
@@ -14,19 +17,19 @@ namespace Azeroth.Nalu
         /// <summary>
         /// 受影响行数
         /// </summary>
-        public int Effect { get; set; }
+        public int Effected { get; set; }
         /// <summary>
         /// 消息提示
         /// </summary>
         public string Message { get; set; }
 
-        public Result(int effect)
+        public RT(int effected)
         {
-            this.Effect = effect;
+            this.Effected = effected;
             this.Success = true;
         }
 
-        public Result(bool success, string msg)
+        public RT(bool success, string msg)
         {
             this.Success = success;
             this.Message = msg;
