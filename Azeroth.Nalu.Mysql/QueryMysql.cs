@@ -9,7 +9,7 @@ namespace Azeroth.Nalu
     {
         public QueryMysql(IDbContext dbcontext):base(dbcontext)
         {
-
+            
         }
         protected override string GetCommandText(ResovleContext context)
         {
@@ -53,7 +53,7 @@ namespace Azeroth.Nalu
                     ,(this.pageSize*this.pageIndex-this.pageSize).ToString()
                     ,this.pageSize.ToString()
                     ,cmdstrCount
-                    ,RowsCountNike);
+                    ,CountAuxiliaryColumn);
             return cmdstr;
         }
     }

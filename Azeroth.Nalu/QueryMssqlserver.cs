@@ -46,7 +46,7 @@ namespace Azeroth.Nalu
                                                      SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {1} AND {2}", tmp
                                                          , numStart.ToString()
                                                          , numEnd.ToString()
-                                                         , RowsCountNike);
+                                                         , CountAuxiliaryColumn);
             else
                 return string.Format(@"{1},HTT AS ({0}
                                                         ),HBB AS (SELECT COUNT(0) AS {4} FROM HTT)
@@ -54,7 +54,7 @@ namespace Azeroth.Nalu
                                                          , strWithAS
                                                           , numStart.ToString()
                                                          , numEnd.ToString()
-                                                         , RowsCountNike);
+                                                         , CountAuxiliaryColumn);
         }
     }
 }

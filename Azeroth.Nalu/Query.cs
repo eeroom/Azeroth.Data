@@ -7,7 +7,10 @@ namespace Azeroth.Nalu
 {
     public abstract  class Query:IQuery
     {
-        protected static string RowsCountNike = "theRowCount";
+        /// <summary>
+        /// 总记录数的辅助列
+        /// </summary>
+        protected const string CountAuxiliaryColumn = "_CountAuxiliaryColumn";
 
         public Query(IDbContext contex)
         {
@@ -326,7 +329,7 @@ namespace Azeroth.Nalu
             reader.Read();
             if (this.pageIndex * this.pageSize > 0)
             {//分页特别处理
-                this.rowsCount = System.Convert.ToInt32(reader[RowsCountNike]);
+                this.rowsCount = System.Convert.ToInt32(reader[CountAuxiliaryColumn]);
                 lstEntity.Capacity = this.pageSize;
             }
             for (int i = 0; i < this.lstDbSet.Count; i++)
