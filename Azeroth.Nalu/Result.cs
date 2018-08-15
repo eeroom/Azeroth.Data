@@ -7,19 +7,29 @@ namespace Azeroth.Nalu
 {
     public class Result
     {
+        /// <summary>
+        /// 执行成功
+        /// </summary>
         public bool Success { get; set; }
-        public int Value { get; set; }
-        public string Msg { get; set; }
+        /// <summary>
+        /// 受影响行数
+        /// </summary>
+        public int Effect { get; set; }
+        /// <summary>
+        /// 消息提示
+        /// </summary>
+        public string Message { get; set; }
 
-        public Result(int value)
+        public Result(int effect)
         {
-            this.Value = value;
+            this.Effect = effect;
+            this.Success = true;
         }
 
         public Result(bool success, string msg)
         {
             this.Success = success;
-            this.Msg = msg;
+            this.Message = msg;
         }
     }
 }

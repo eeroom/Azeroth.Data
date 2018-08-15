@@ -190,7 +190,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        protected virtual string ResolveComponentSELECT(ResovleContext context, IList<INodeSelect> component)
+        protected virtual string ResolveNodeSelect(ResovleContext context, IList<INodeSelect> component)
         {
             if (component.Count < 1)
                 throw new ArgumentException("需要指定查询的列");
@@ -198,13 +198,13 @@ namespace Azeroth.Nalu
             return string.Join(",", lststr);
         }
 
-        protected virtual string ResolveComponentJOIN(ResovleContext context, IList<INode> component)
+        protected virtual string ResolveNodeJOIN(ResovleContext context, IList<INode> component)
         {
             var lststr = component.Select(x => x.ToSQL(context));
             return string.Join(" ", lststr).Trim(',');//","用于处理UnKown 的连接类型，只是把表放在一起
         }
 
-        protected virtual string ResolverComponentGroupBy(ResovleContext context, IList<IColumn> component)
+        protected virtual string ResolverNodeGroupBy(ResovleContext context, IList<IColumn> component)
         {
             var lst = component.Select(x => x.ToSQL(context));
             var tmp = string.Join(",", lst);
@@ -213,7 +213,7 @@ namespace Azeroth.Nalu
             return tmp;
         }
 
-        protected virtual string ResolveComponentOrderBy(ResovleContext context, IList<INode> component)
+        protected virtual string ResolveNodeOrderBy(ResovleContext context, IList<INode> component)
         {
             var lststr = component.Select(x => x.ToSQL(context));
             string strOrder = string.Join(",", lststr);
@@ -343,7 +343,7 @@ namespace Azeroth.Nalu
             {
                 for (int i = 0; i < lstDbSet.Count; i++)
                 {
-                    values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNodes.Count <= 0);//如果没有选择任何列，就返回null实例，避免浪费
+                    values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNodes.Count <= 0);//如果没有选择任何列，就返回null，避免浪费
                     lstDbSet[i].SelectNodes.ForEach(col => lstDbSet[i].DictMapHandler[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
                 }
                 lstEntity.Add(transfer(values));
@@ -354,7 +354,7 @@ namespace Azeroth.Nalu
 
         protected abstract string GetCommandText(ResovleContext context);
 
-        protected string ResolveComponentWHERE(ResovleContext context, NodeWhere component, string verb)
+        protected string ResolveNodeWhere(ResovleContext context, NodeWhere component, string verb)
         {
             string sqlstr = string.Empty;
             if (component != null)

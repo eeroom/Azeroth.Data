@@ -51,6 +51,8 @@ namespace Azeroth.Nalu
             context.Parameters.Clear();
             context.Tag = value;
             string strwhere =((INode)this.WH).ToSQL(context);
+            if (!string.IsNullOrEmpty(strwhere))
+                strwhere = " WHERE " + strwhere;
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
             cmd.Parameters.Clear();
             cmd.Parameters.AddRange(context.Parameters.ToArray());
@@ -73,6 +75,8 @@ namespace Azeroth.Nalu
                 context.Parameters.Clear();
                 context.Tag = value;
                 string strwhere = ((INode)this.WH).ToSQL(context);
+                if (!string.IsNullOrEmpty(strwhere))
+                    strwhere = " WHERE " + strwhere;
                 context.Parameters.AddRange(dictParameter.Values);
                 cmd.CommandText = string.Format("UPDATE {0} SET {1} {2}", this.nameHandler(context), strSet, strwhere);
                 cmd.Parameters.Clear();
@@ -152,28 +156,28 @@ namespace Azeroth.Nalu
 
         public Container<T> Edit(IEnumerable<T> value)
         {
-            this.OptCmd = Cmd.Add;
+            this.OptCmd = Cmd.Edit;
             this.values = value;
             return this;
         }
 
         public Container<T> Edit(params T[] value)
         {
-            this.OptCmd = Cmd.Add;
+            this.OptCmd = Cmd.Edit;
             this.values = value;
             return this;
         }
 
         public Container<T> Del(IEnumerable<T> value)
         {
-            this.OptCmd = Cmd.Add;
+            this.OptCmd = Cmd.Del;
             this.values = value;
             return this;
         }
 
         public Container<T> Del(params T[] value)
         {
-            this.OptCmd = Cmd.Add;
+            this.OptCmd = Cmd.Del;
             this.values = value;
             return this;
         }

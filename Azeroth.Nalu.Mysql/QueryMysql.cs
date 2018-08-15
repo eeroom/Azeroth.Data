@@ -20,13 +20,13 @@ namespace Azeroth.Nalu
             //因为会出现重复的列名，所以要使用别名，比如表1和表2都使用A列
             this.lstSelectNode.GroupBy(x => x.Column.ColumnName, (k, v) => v.ToList()).Where(v => v.Count > 1).ToList()
                 .ForEach(x => x.ForEach(a => a.ColumnNameNick = a.Column.ColumnName + context.NextColIndex().ToString()));
-            string strCol = ResolveComponentSELECT(context, this.lstSelectNode);//查询的列
+            string strCol = ResolveNodeSelect(context, this.lstSelectNode);//查询的列
             string strfrom = this.lstDbSet[0].NameHandler(context) + " AS " + this.lstDbSet[0].NameNick;
-            string strjn = ResolveComponentJOIN(context, this.lstJoinNode);
-            string strwhere = ResolveComponentWHERE(context, this.Where, "WHERE");
-            string strgroup = ResolverComponentGroupBy(context, this.lstGroupByNode);
-            string strhaving = ResolveComponentWHERE(context, this.Having, "HAVING");
-            string strOrder = ResolveComponentOrderBy(context, this.lstOrderByNode);//排序
+            string strjn = ResolveNodeJOIN(context, this.lstJoinNode);
+            string strwhere = ResolveNodeWhere(context, this.Where, "WHERE");
+            string strgroup = ResolverNodeGroupBy(context, this.lstGroupByNode);
+            string strhaving = ResolveNodeWhere(context, this.Having, "HAVING");
+            string strOrder = ResolveNodeOrderBy(context, this.lstOrderByNode);//排序
             if (this.pageIndex * this.pageSize <= 0)//不分页
                 return string.Format("{0}SELECT {1} {2} {3} \r\nFROM {4} {5} {6} {7} {8} {9} {10}", strWithAS
                     ,this.isDistinct ? "DISTINCT" : string.Empty

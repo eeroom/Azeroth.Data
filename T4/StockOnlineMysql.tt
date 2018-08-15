@@ -93,7 +93,7 @@ manager.StartNewFile(kv.Key+".cs");
                             this.WriteLine(string.Format("{3}///{4}",colType,colName,"{set;get;}",new String(' ',8),tableDesp.Select("Field='"+colName+"'")[0]["Comment"].ToString().Replace("\r\n"," ").Replace("\n"," ").Replace("\n"," ")));
                             this.WriteLine(string.Format("{3}/// </summary>",colType,colName,"{set;get;}",new String(' ',8)));
 							if(allowDBNull && colType.Equals("String") &&!colName.EndsWith("Enum"))
-							         this.WriteLine(string.Format("{2}[XString({0},{1})]",row["ColumnSize"],allowDBNull.ToString().ToLower(),new String(' ',8)));
+							         this.WriteLine(string.Format("{2}[XString({0},{1})]",((int)row["ColumnSize"])<=0?int.MaxValue:row["ColumnSize"],allowDBNull.ToString().ToLower(),new String(' ',8)));
                             if(colType.Equals("String") &&colName.EndsWith("Enum"))
 							         this.WriteLine(string.Format("{2}[XStringMapEnum]",row["ColumnSize"],allowDBNull.ToString().ToLower(),new String(' ',8)));
 							this.WriteLine(string.Format("{3}public {0} {1} {2}",colName.EndsWith("Enum")?lstEnum[lstEnum.Count-1]:colType,colName,"{set;get;}",new String(' ',8)));
