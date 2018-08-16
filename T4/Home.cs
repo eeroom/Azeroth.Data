@@ -17,8 +17,11 @@ namespace T4
             //query.Where = dbset.Col(x => x.ContentType) == 888;
             //query.Select(dbset.Col(x => x.ContentType));
             //query.Select(dbset.Col(x => x.Clicks).Function(Azeroth.Nalu.Function.Sum));
-            //query.Where = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
-            //    && dbset.Col(x => x.Content).Like("%股权%") || dbset.Col(x => x.ContentType).In(1, 2);
+            var dbTopic = query.Set<Tb_ArticleTopic>();
+            dbset.InnerJoin(dbTopic).ON = dbset.Col(x => x.ArticleTopicId) == dbTopic.Col(x=>x.Id);
+            query.Select(dbTopic.Cols());
+            query.Where = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
+                && dbset.Col(x => x.Content).Like("%股权%") || dbset.Col(x => x.ContentType).In(1, 2);
             //query.Distinct();
             //query.Top(4);
             //query.GroupBy(dbset.Col(x => x.ContentType));
@@ -26,21 +29,22 @@ namespace T4
             //query.Take(1,10);
             query.OrderBy(dbset.Col(x => x.ContentType), Azeroth.Nalu.Order.ASC);
             int rowscount;
-            var lst= query.ToList<Tb_ArticleInfo>(out rowscount);
+            var lst= query.ToList<Tb_ArticleInfo,Tb_ArticleTopic>();
+            var lst2= query.ToList<Tb_ArticleInfo,Tb_ArticleTopic>()
+                .Select(x=> new { x.Item1.Name,x.Item1.Id,TopicName=x.Item2.Name}).ToList();
+            //lst.ForEach(x=>x.ContentType=999);
+            //lst.ForEach(x=>x.Id=Guid.NewGuid());
 
-            lst.ForEach(x=>x.ContentType=999);
-            lst.ForEach(x=>x.Id=Guid.NewGuid());
-
-            var addArticle= dbContext.CreateNoQuery<Tb_ArticleInfo>();
-            addArticle.Del();
-            addArticle.WH = addArticle.Col(x => x.ContentType) == 999;
-            //addArticle.Add(lst);
-            //addArticle.Select(addArticle.Cols());
-
-            //addArticle.Edit(new Tb_ArticleInfo() {  ContentType=888});
+            //var addArticle= dbContext.CreateNoQuery<Tb_ArticleInfo>();
+            //addArticle.Del();
             //addArticle.WH = addArticle.Col(x => x.ContentType) == 999;
-            //addArticle.Select(addArticle.Col(x=>x.ContentType));
-            var m= dbContext.ExecuteNoQuery(addArticle);
+            ////addArticle.Add(lst);
+            ////addArticle.Select(addArticle.Cols());
+
+            ////addArticle.Edit(new Tb_ArticleInfo() {  ContentType=888});
+            ////addArticle.WH = addArticle.Col(x => x.ContentType) == 999;
+            ////addArticle.Select(addArticle.Col(x=>x.ContentType));
+            //var m= dbContext.ExecuteNoQuery(addArticle);
         }
 
     }

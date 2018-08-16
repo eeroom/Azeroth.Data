@@ -227,18 +227,32 @@ namespace Azeroth.Nalu
             return this.dbContex.ExecuteQuery(this,x=>(S)x[0]);
         }
 
-        public  List<S> ToList<S>(Func<object[], S> transfer)
-        {
-            return this.dbContex.ExecuteQuery(this, transfer);
-        }
-
         public List<S> ToList<S>(out int rowscount)
         {
-            var lst = this.dbContex.ExecuteQuery(this, x=>(S)x[0]);
+            var lst = this.dbContex.ExecuteQuery(this, x => (S)x[0]);
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
             return lst;
+        }
+
+        public List<Tuple<A,B>> ToList<A,B>()
+        {
+            return this.dbContex.ExecuteQuery(this, x =>Tuple.Create((A)x[0],(B)x[1]));
+        }
+
+        public List<Tuple<A, B>> ToList<A, B>(out int rowscount)
+        {
+            var lst= this.dbContex.ExecuteQuery(this, x => Tuple.Create((A)x[0], (B)x[1])); 
+            rowscount = this.rowsCount;
+            if (pageIndex * pageSize <= 0)
+                rowscount = lst.Count;
+            return lst;
+        }
+
+        public  List<S> ToList<S>(Func<object[], S> transfer)
+        {
+            return this.dbContex.ExecuteQuery(this, transfer);
         }
 
         public  List<S> ToList<S>(Func<object[], S> transfer, out int rowscount)

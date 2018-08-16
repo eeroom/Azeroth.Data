@@ -52,9 +52,6 @@
     <Compile Include="ConsultRecord.cs">
       <DependentUpon>StockOnlineMysql.tt</DependentUpon>
     </Compile>
-    <Compile Include="dcq2008.cs">
-      <DependentUpon>StockOnlineMysql.tt</DependentUpon>
-    </Compile>
     <Compile Include="Home.cs" />
     <Compile Include="MultipleOutputHelper.cs">
       <AutoGen>True</AutoGen>
