@@ -51,11 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enumerable2.cs" />
-    <Compile Include="IMapHandler.cs" />
-    <Compile Include="ListWrapper.cs" />
-    <Compile Include="MapHandler.cs" />
-    <Compile Include="CellHandlerFactory.cs" />
+    <Compile Include="ExportResult.cs" />
     <Compile Include="SheetSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

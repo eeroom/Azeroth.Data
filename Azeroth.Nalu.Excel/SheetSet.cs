@@ -8,50 +8,41 @@ namespace Azeroth.Nalu.Excel
 {
     public class SheetSet<T> where T : class,new()
     {
-        Dictionary<string, IMapHandler> dictMapHandler = new Dictionary<string, IMapHandler>();
+        Dictionary<string, Action<NPOI.SS.UserModel.ICell, T>> dictMapHandlerByColName = new Dictionary<string, Action<NPOI.SS.UserModel.ICell, T>>();
 
+        Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>> dictMapHandlerByColIndex = new Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>>();
 
-
-        public ListWrapper<T> ToList(NPOI.SS.UserModel.ISheet sheet)
+        public ExportResult<T> ToListByColIndex(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
-            sheet.Workbook.MissingCellPolicy = NPOI.SS.UserModel.MissingCellPolicy.CREATE_NULL_AS_BLANK;
-            List<T> lst = new List<T>();
-            NPOI.SS.UserModel.IFormulaEvaluator eva= NPOI.SS.UserModel.WorkbookFactory.CreateFormulaEvaluator(sheet.Workbook);
-            foreach (var kv in dictMapHandler)
-                kv.Value.SetEvaHandler(eva);
+            ExportResult<T> rt = new ExportResult<T>();
+            if (dictMapHandlerByColIndex.Count < 1)
+                throw new ArgumentException("必须指定列索引和model之间的映射");
+            //sheet.Workbook.MissingCellPolicy = NPOI.SS.UserModel.MissingCellPolicy.CREATE_NULL_AS_BLANK;
+            //NPOI.SS.UserModel.IFormulaEvaluator eva= NPOI.SS.UserModel.WorkbookFactory.CreateFormulaEvaluator(sheet.Workbook);
+            //foreach (var kv in dictMapHandler)
+            //    kv.Value.SetEvaHandler(eva);
             System.Collections.IEnumerator reader = sheet.GetRowEnumerator();
-            reader.MoveNext();
-            NPOI.SS.UserModel.IRow row = (NPOI.SS.UserModel.IRow)reader.Current;
-            Dictionary<int, string> dictIndexAndColName;
-            try
+            while (reader.MoveNext())
             {
-                dictIndexAndColName = dictMapHandler.ToDictionary(kv =>
-                    row.First(cell => cell.CellType == NPOI.SS.UserModel.CellType.String && kv.Key.Equals(cell.StringCellValue)).ColumnIndex, kv => kv.Key);
-            }
-            catch (Exception ex)
-            {
-                return new ListWrapper<T>(lst, true, "第一行标题名称和模版不一致！无法确定要获取数据所在的列。错误信息：" + ex.Message);
-            }
-            KeyValuePair<int, string> kvtmp = new KeyValuePair<int, string>();
-            try
-            {//为了知道错误发生在第几行第几列，包括callback中的异常，所以这么try,
-                while (reader.MoveNext())
+                var row= (NPOI.SS.UserModel.IRow)reader.Current;
+                if (row.RowNum < startrow)
+                    continue;
+                T value = new T();
+                foreach (var kv in dictMapHandlerByColIndex)
                 {
-                    row = (NPOI.SS.UserModel.IRow)reader.Current;
-                    T instance = new T();
-                    foreach (var kv in dictIndexAndColName)
+                    try
                     {
-                        kvtmp = kv;
-                        dictMapHandler[kv.Value].SetValueToInstance(instance, row.GetCell(kv.Key));
+                        kv.Value(row.GetCell(kv.Key), value);
                     }
-                    lst.Add(instance);
+                    catch (Exception ex)
+                    {
+                        string msg=string.Format("第 {0} 行第 {1} 列附近发生错误，错误信息：{2}",row.RowNum,kv.Key,ex.Message);
+                        rt.AddMessage(msg);
+                    }
                 }
+                rt.Value.Add(value);
             }
-            catch (Exception ex)
-            {
-                return new ListWrapper<T>(lst, true, string.Format("第 {0} 行第 {1} 列 {3} 附近发生错误，错误信息：{2}", row == null ? 2 : row.RowNum + 1, kvtmp.Key+1, ex.Message,kvtmp.Value));
-            }
-            return new ListWrapper<T>(lst, false, null);
+            return rt;
         }
 
         /// <summary>
@@ -60,117 +51,117 @@ namespace Azeroth.Nalu.Excel
         /// <param name="sheet"></param>
         /// <param name="callback">典型场景，数据校验</param>
         /// <returns></returns>
-        public ListWrapper<T> ToList(NPOI.SS.UserModel.ISheet sheet, Action<T, NPOI.SS.UserModel.IRow> callback)
+        public ExportResult<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
-            if (callback == null)
-                return ToList(sheet);
-            sheet.Workbook.MissingCellPolicy = NPOI.SS.UserModel.MissingCellPolicy.CREATE_NULL_AS_BLANK;
-            List<T> lst = new List<T>();
-            NPOI.SS.UserModel.IFormulaEvaluator eva = NPOI.SS.UserModel.WorkbookFactory.CreateFormulaEvaluator(sheet.Workbook);
-            foreach (var kv in dictMapHandler)
-                kv.Value.SetEvaHandler(eva);
+            ExportResult<T> rt = new ExportResult<T>();
+            var row= sheet.GetRow(startrow);
+            var lstIndexName = System.Linq.Enumerable.Range(0, row.Cells.Count).Select(x => new { Index=x,Name=row.GetCell(x).StringCellValue})
+                .Where(x=>dictMapHandlerByColName.Keys.Contains(x.Name));
+            var cf= lstIndexName.GroupBy(x => x.Name).Count(gp=>gp.Count()>1);
+            if (cf > 0)
+                return rt.AddMessage("Excel中存在重复的列名称");
+            var dictTmp= lstIndexName.ToDictionary(x=>x.Name,x=>x.Index);
+            var lose = dictMapHandlerByColName.Count(x=>!dictTmp.ContainsKey(x.Key));
+            if (lose > 0)
+                return rt.AddMessage("Excel中缺少必须的列");
+            var dictNameIndex= dictMapHandlerByColName.ToDictionary(kv=>kv.Key,kv=>dictTmp[kv.Key]);
             System.Collections.IEnumerator reader = sheet.GetRowEnumerator();
-            reader.MoveNext();
-            NPOI.SS.UserModel.IRow row = (NPOI.SS.UserModel.IRow)reader.Current;
-            Dictionary<int, string> dictIndexAndColName;
-            try
+            while (reader.MoveNext())
             {
-                dictIndexAndColName = dictMapHandler.ToDictionary(kv =>
-                    row.First(cell => cell.CellType == NPOI.SS.UserModel.CellType.String && kv.Key.Equals(cell.StringCellValue)).ColumnIndex, kv => kv.Key);
-            }
-            catch (Exception ex)
-            {
-                return new ListWrapper<T>(lst, true, "第一行标题名称和模版不一致！无法确定要获取数据所在的列。错误信息：" + ex.Message);
-            }
-            KeyValuePair<int, string> kvtmp=new KeyValuePair<int,string>();
-            try
-            {//为了知道错误发生在第几行第几列，包括callback中的异常，所以这么try,
-                while (reader.MoveNext())
+                row = (NPOI.SS.UserModel.IRow)reader.Current;
+                if (row.RowNum < startrow+1)
+                    continue;
+                T value = new T();
+                foreach (var kv in dictMapHandlerByColName)
                 {
-                    row = (NPOI.SS.UserModel.IRow)reader.Current;
-                    T instance = new T();
-                    foreach (var kv in dictIndexAndColName)
+                    try
                     {
-                        kvtmp = kv;
-                        dictMapHandler[kv.Value].SetValueToInstance(instance, row.GetCell(kv.Key));
+                        kv.Value(row.GetCell(dictNameIndex[kv.Key]), value);
                     }
-                    callback(instance,row);
-                    lst.Add(instance);
+                    catch (Exception ex)
+                    {
+                        string msg = string.Format("第 {0} 行第 {1} 列附近发生错误，错误信息：{2}", row.RowNum, kv.Key, ex.Message);
+                        rt.AddMessage(msg);
+                    }
                 }
+                rt.Value.Add(value);
             }
-            catch (Exception ex)
-            {
-                return new ListWrapper<T>(lst, true, string.Format("第 {0} 行第 {1} 列 {3} 附近发生错误，错误信息：{2}", row == null ? 2 : row.RowNum+1, kvtmp.Key+1, ex.Message,kvtmp.Value));
-            }
-            return new ListWrapper<T>(lst, false, null);
+            return rt;
         }
 
         /// <summary>
         /// 把数据写入到工作表
         /// </summary>
         /// <param name="workbook"></param>
-        /// <param name="value"></param>
+        /// <param name="lst"></param>
         /// <returns></returns>
-        public bool Add(NPOI.SS.UserModel.IWorkbook workbook, IEnumerable<T> value,string sheetName)
+        public void InsertByColName(NPOI.SS.UserModel.ISheet sheet, IEnumerable<T> lst)
         {
-            if (string.IsNullOrEmpty(sheetName))
-                return false;
-            NPOI.SS.UserModel.ISheet sheet = workbook.GetSheet(sheetName);
-            if (sheet != null)
-                return false;
-            sheet = workbook.CreateSheet(sheetName);
+            if (sheet == null)
+                throw new ArgumentException("sheet不能为Null");
+            if (lst == null)
+                throw new ArgumentException("value不能为Null");
+            if (dictMapHandlerByColName == null)
+                throw new ArgumentException("必须指定列名称和model之间的映射");
             int colIndex = 0;
             int rowIndex = 0;
-            Dictionary<int,string> dictIndexAndColName = dictMapHandler.ToDictionary(kv => colIndex++, kv => kv.Key);
             NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex++);
-            foreach (var kv in dictIndexAndColName)
-                row.CreateCell(kv.Key).SetCellValue(kv.Value);
-            if (value == null)
-                return true;
-            foreach (var instance in value)
+            foreach (var kv in dictMapHandlerByColName)
+            {
+                row.CreateCell(colIndex++).SetCellValue(kv.Key);
+            }
+            foreach (var value in lst)
             {
                 row = sheet.CreateRow(rowIndex++);
-                foreach (var kv in dictIndexAndColName)
-                    dictMapHandler[kv.Value].SetValueToCell(instance, row.CreateCell(kv.Key));
+                colIndex = 0;
+                foreach (var kv in dictMapHandlerByColName)
+                {
+                    //dictMapHandler[kv.Value].SetValueToCell(value, row.CreateCell(kv.Key));
+                    kv.Value(row.CreateCell(colIndex++),value);
+                }
+
             }
-            return true;
         }
 
-        public bool AddWithFreezeHeadrow(NPOI.SS.UserModel.IWorkbook workbook, IEnumerable<T> value, string sheetName)
+
+        public void InsertByColIndex(NPOI.SS.UserModel.ISheet sheet, IEnumerable<T> lst,int startrow)
         {
-            var rst = this.Add(workbook,value,sheetName);
-            if (!rst)
-                return rst;
-            workbook.GetSheet(sheetName).CreateFreezePane(0,1);
-            return rst;
+            if (sheet == null)
+                throw new ArgumentException("sheet不能为Null");
+            if (lst == null)
+                throw new ArgumentException("value不能为Null");
+            if (dictMapHandlerByColIndex == null)
+                throw new ArgumentException("必须指定列索引和model之间的映射");
+            //int colIndex = 0;
+            int rowIndex = startrow;
+            //NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex++);
+            //foreach (var kv in dictMapHandlerByColName)
+            //{
+            //    row.CreateCell(colIndex++).SetCellValue(kv.Key);
+            //}
+            foreach (var value in lst)
+            {
+                var  row = sheet.CreateRow(rowIndex++);
+                //colIndex = 0;
+                foreach (var kv in dictMapHandlerByColIndex)
+                {
+                    //dictMapHandler[kv.Value].SetValueToCell(value, row.CreateCell(kv.Key));
+                    kv.Value(row.CreateCell(kv.Key), value);
+                }
+
+            }
         }
 
-        public SheetSet<T> Map<P>(Expression<Func<T, P>> exp, string colName)
+        public SheetSet<T> Map(Action<NPOI.SS.UserModel.ICell,T> handler)
         {
-            MapHandler<T, P> handler = new MapHandler<T, P>(exp);
-            dictMapHandler.Add(colName, handler);
+            dictMapHandlerByColIndex.Add(dictMapHandlerByColIndex.Count,handler);
             return this;
         }
 
-        public int Map<P>(Expression<Func<T, P>> exp, string colName, Func<NPOI.SS.UserModel.ICell, NPOI.SS.UserModel.IFormulaEvaluator, P> getvalueFromCell)
+        public SheetSet<T> Map(Action<NPOI.SS.UserModel.ICell, T> handler,string colName)
         {
-            MapHandler<T, P> handler = new MapHandler<T, P>(exp,getvalueFromCell);
-            dictMapHandler.Add(colName, handler);
-            return dictMapHandler.Count-1;
-        }
-
-        public int Map<P>(Expression<Func<T, P>> exp, string colName, Action<NPOI.SS.UserModel.ICell, P> setvalueToCell)
-        {
-            MapHandler<T, P> handler = new MapHandler<T, P>(exp, setvalueToCell);
-            dictMapHandler.Add(colName, handler);
-            return dictMapHandler.Count - 1;
-        }
-
-        public int Map<P>(Expression<Func<T, P>> exp, string colName, Action<NPOI.SS.UserModel.ICell, P> setvalueToCell, Func<NPOI.SS.UserModel.ICell, NPOI.SS.UserModel.IFormulaEvaluator, P> getvalueFromCell)
-        {
-            MapHandler<T, P> handler = new MapHandler<T, P>(exp, getvalueFromCell,setvalueToCell);
-            dictMapHandler.Add(colName, handler);
-            return dictMapHandler.Count - 1;
+            dictMapHandlerByColName.Add(colName,handler);
+            return this;
         }
     }
 
