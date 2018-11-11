@@ -10,27 +10,27 @@ namespace T4
         static void Main(string[] args)
         {
             var cnnstr= System.Configuration.ConfigurationManager.ConnectionStrings["mysqlmaster"].ConnectionString;
-            Azeroth.Nalu.DbContextMysql dbContext = new Azeroth.Nalu.DbContextMysql() {  Cnnstr=cnnstr};
-            var query= dbContext.CreateQuery();
-            var dbset= query.Set<Tb_ArticleInfo>();
-            query.Select(dbset.Cols());
+            Azeroth.Nalu.MySqlDbContext dbContext = new Azeroth.Nalu.MySqlDbContext() {  Cnnstr=cnnstr};
+            var container= dbContext.CreateContainer();
+            var dbset= container.Set<Tb_ArticleInfo>();
+            container.Select(dbset.Cols());
             //query.Where = dbset.Col(x => x.ContentType) == 888;
             //query.Select(dbset.Col(x => x.ContentType));
             //query.Select(dbset.Col(x => x.Clicks).Function(Azeroth.Nalu.Function.Sum));
-            var dbTopic = query.Set<Tb_ArticleTopic>();
+            var dbTopic = container.Set<Tb_ArticleTopic>();
             dbset.InnerJoin(dbTopic).ON = dbset.Col(x => x.ArticleTopicId) == dbTopic.Col(x=>x.Id);
-            query.Select(dbTopic.Cols());
-            query.Where = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
+            container.Select(dbTopic.Cols());
+            container.Where = dbset.Col(x => x.Clicks) >= 5 && dbset.Col(x => x.ContentBody) == 1
                 && dbset.Col(x => x.Content).Like("%股权%") || dbset.Col(x => x.ContentType).In(1, 2);
             //query.Distinct();
             //query.Top(4);
             //query.GroupBy(dbset.Col(x => x.ContentType));
             //query.Having = dbset.Col(x => x.Clicks).Function(Azeroth.Nalu.Function.Max) > 10;
             //query.Take(1,10);
-            query.OrderBy(dbset.Col(x => x.ContentType), Azeroth.Nalu.Order.ASC);
+            container.OrderBy(dbset.Col(x => x.ContentType), Azeroth.Nalu.Order.ASC);
             int rowscount;
-            var lst= query.ToList<Tb_ArticleInfo,Tb_ArticleTopic>();
-            var lst2= query.ToList<Tb_ArticleInfo,Tb_ArticleTopic>()
+            var lst= container.ToList<Tb_ArticleInfo,Tb_ArticleTopic>();
+            var lst2= container.ToList<Tb_ArticleInfo,Tb_ArticleTopic>()
                 .Select(x=> new { x.Item1.Name,x.Item1.Id,TopicName=x.Item2.Name}).ToList();
             //lst.ForEach(x=>x.ContentType=999);
             //lst.ForEach(x=>x.Id=Guid.NewGuid());
