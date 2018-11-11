@@ -9,7 +9,7 @@ namespace Azeroth.Nalu
     public class Column:IColumn
     {
 
-        public Column(Container contianer, string columnName)
+        public Column(Table contianer, string columnName)
         {
             this.container = contianer;
             this.columnName = columnName;
@@ -17,7 +17,7 @@ namespace Azeroth.Nalu
 
         protected INodeSelect mapColumn;
 
-        public Column(Container contianer, string columnName, INodeSelect mapColumn)
+        public Column(Table contianer, string columnName, INodeSelect mapColumn)
         {
             this.container = contianer;
             this.columnName = columnName;
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
         protected Function functionCode;
 
         protected Func<Column, string> functionHandler;
-        protected IContainer container;
+        protected ITable container;
 
         /// <summary>
         /// 名称
@@ -43,7 +43,7 @@ namespace Azeroth.Nalu
             return this.container.NameNick + "." + this.columnName;
         }
 
-        IContainer IColumn.Container
+        ITable IColumn.Container
         {
             get { return this.container; }
         }

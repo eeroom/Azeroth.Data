@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public abstract class Container:IContainer
+    public abstract class Table:ITable
     {
        
         protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
@@ -17,13 +17,13 @@ namespace Azeroth.Nalu
         protected abstract RuntimeTypeHandle GetMetaInfo();
         protected abstract object CreateInstance(bool isCreateNull);
 
-        DictionaryWrapper<string, IMapHandler> IContainer.DictMapHandler
+        DictionaryWrapper<string, IMapHandler> ITable.DictMapHandler
         {
             get { return this.dictMapHandler; }
         }
 
         
-        Func<ResovleContext, string> IContainer.NameHandler
+        Func<ResovleContext, string> ITable.NameHandler
         {
             get
             {
@@ -36,7 +36,7 @@ namespace Azeroth.Nalu
         }
 
        
-        string IContainer.NameNick
+        string ITable.NameNick
         {
             get
             {
@@ -47,7 +47,7 @@ namespace Azeroth.Nalu
                 this.nameNick=value;
             }
         }
-        string IContainer.Name
+        string ITable.Name
         {
             get
             {
@@ -55,7 +55,7 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<INodeSelect> IContainer.SelectNodes
+        List<INodeSelect> ITable.SelectNodes
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        object IContainer.CreateInstance(bool isCreateNull)
+        object ITable.CreateInstance(bool isCreateNull)
         {
             return this.CreateInstance(isCreateNull);
         }

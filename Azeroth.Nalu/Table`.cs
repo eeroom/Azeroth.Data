@@ -11,7 +11,7 @@ namespace Azeroth.Nalu
     /// 对应数据库中某个表
     /// </summary>
     /// <typeparam name="T">返回的数据放到T类型的集合中</typeparam>
-    public abstract class Container<T> : Container
+    public abstract class Table<T> : Table
     {
         /// <summary>
         /// 表对应的Class的元数据
@@ -29,7 +29,7 @@ namespace Azeroth.Nalu
             return new DictionaryWrapper<string, IMapHandler>(DictMapHandlerInternal);
         }
 
-        public Container()
+        public Table()
         {
             this.nameHandler = context => Type.GetTypeFromHandle(MetaT).Name;
             this.dictMapHandler = new DictionaryWrapper<string, IMapHandler>(DictMapHandlerInternal);

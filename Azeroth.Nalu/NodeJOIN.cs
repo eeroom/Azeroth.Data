@@ -12,8 +12,8 @@ namespace Azeroth.Nalu
 
         JOIN opt;
 
-        IContainer container;
-        public NodeJOIN(JOIN opt, Container dbr)
+        ITable container;
+        public NodeJOIN(JOIN opt, Table dbr)
         {
             this.opt = opt;
             this.container = dbr;

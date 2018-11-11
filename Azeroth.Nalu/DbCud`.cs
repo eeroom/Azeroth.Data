@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Azeroth.Nalu
 {
-    public class DbCud<T>:Container<T>,ICud
+    public class DbCud<T>:Table<T>,ICud
     {
         public string CommandText {protected set; get; }
         public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
@@ -144,42 +144,42 @@ namespace Azeroth.Nalu
         }
 
 
-        public Container<T> Add(IEnumerable<T> value)
+        public Table<T> Add(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public Container<T> Add(params T[] value)
+        public Table<T> Add(params T[] value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public Container<T> Edit(IEnumerable<T> value)
+        public Table<T> Edit(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Edit;
             this.values = value;
             return this;
         }
 
-        public Container<T> Edit(params T[] value)
+        public Table<T> Edit(params T[] value)
         {
             this.OptCmd = Cmd.Edit;
             this.values = value;
             return this;
         }
 
-        public Container<T> Del(IEnumerable<T> value)
+        public Table<T> Del(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Del;
             this.values = value;
             return this;
         }
 
-        public Container<T> Del(params T[] value)
+        public Table<T> Del(params T[] value)
         {
             this.OptCmd = Cmd.Del;
             this.values = value;

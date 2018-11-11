@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface IContainer
+    public interface ITable
     {
         /// <summary>
         /// 映射处理器，把值从datareader取出赋值到对象的属性等

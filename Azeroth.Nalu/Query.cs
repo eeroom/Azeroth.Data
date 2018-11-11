@@ -31,7 +31,7 @@ namespace Azeroth.Nalu
         protected List<IColumn> lstNodeGroupBy = new List<IColumn>();
         public NodeWhere Having { set; get; }
         protected List<INode> lstNodeOrderBy = new List<INode>();
-        protected List<IContainer> lstDbSet=new List<IContainer>();
+        protected List<ITable> lstDbSet=new List<ITable>();
         protected List<Query> lstCTEHandler = new List<Query>();
         protected string nameForCTE;
         protected bool isDistinct;

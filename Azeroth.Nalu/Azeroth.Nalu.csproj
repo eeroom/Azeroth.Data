@@ -43,14 +43,14 @@
     <Compile Include="DateTimeWrapper.cs" />
     <Compile Include="DbContextMssqlserver.cs" />
     <Compile Include="DbContext`.cs" />
-    <Compile Include="Container.cs" />
+    <Compile Include="Table.cs" />
     <Compile Include="DbCud`.cs" />
     <Compile Include="DbSet`.cs" />
-    <Compile Include="Container`.cs" />
+    <Compile Include="Table`.cs" />
     <Compile Include="DictionaryWrapper.cs" />
     <Compile Include="IColumn.cs" />
     <Compile Include="IDbContext.cs" />
-    <Compile Include="IContainer.cs" />
+    <Compile Include="ITable.cs" />
     <Compile Include="IMapHandler.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="INodeSelect.cs" />

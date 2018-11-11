@@ -7,7 +7,7 @@ namespace Azeroth.Nalu
 {
     public interface IColumn:IConvertible
     {
-        IContainer Container { get; }
+        ITable Container { get; }
         string ColumnName { get; }
         Function FunctionCode { get; }
         Func<Column, string> FunctionHandler { get; }
