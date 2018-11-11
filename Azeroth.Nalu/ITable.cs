@@ -30,7 +30,7 @@ namespace Azeroth.Nalu
         /// 需要修改的列
         /// 需要新增值得列
         /// </summary>
-        List<INodeSelect> SelectNodes { set; get; }
+        List<INodeSelect> SelectNode { set; get; }
 
         /// <summary>
         /// 创建该Set对应的实例

@@ -87,7 +87,7 @@ namespace Azeroth.Nalu
         public Container Select(Column col)
         {
             var tmp = new NodeSelect(col);
-            ((INodeSelect)tmp).Column.Table.SelectNodes.Add(tmp);
+            ((INodeSelect)tmp).Column.Table.SelectNode.Add(tmp);
             this.lstNodeSelect.Add(tmp);
             return this;
         }
@@ -97,7 +97,7 @@ namespace Azeroth.Nalu
         public Container Select(IList<Column> cols)
         {
             var tmp = cols.Select(x => new NodeSelect(x)).ToList();
-            tmp.ForEach(x=>((INodeSelect)x).Column.Table.SelectNodes.Add(x));
+            tmp.ForEach(x=>((INodeSelect)x).Column.Table.SelectNode.Add(x));
             this.lstNodeSelect.AddRange(tmp);
             return this;
         }
@@ -339,7 +339,7 @@ namespace Azeroth.Nalu
             List<T> lstEntity = new List<T>();
             object[] values = new object[this.lstDbSet.Count];
             DictionaryWrapper<string, IMapHandler> dict;
-            this.lstDbSet.ForEach(dbset => dbset.SelectNodes.ForEach(col => col.ColIndex = reader.GetOrdinal(col.ColumnNameNick)));
+            this.lstDbSet.ForEach(dbset => dbset.SelectNode.ForEach(col => col.ColIndex = reader.GetOrdinal(col.ColumnNameNick)));
             reader.Read();
             if (this.pageIndex * this.pageSize > 0)
             {//分页特别处理
@@ -348,17 +348,17 @@ namespace Azeroth.Nalu
             }
             for (int i = 0; i < this.lstDbSet.Count; i++)
             {
-                values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNodes.Count <= 0);//如果没有选择任何列，就返回null实例，避免浪费
+                values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNode.Count <= 0);//如果没有选择任何列，就返回null实例，避免浪费
                 dict = lstDbSet[i].DictMapHandler;
-                lstDbSet[i].SelectNodes.ForEach(col => dict[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
+                lstDbSet[i].SelectNode.ForEach(col => dict[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
             }
             lstEntity.Add(transfer(values));
             while (reader.Read())
             {
                 for (int i = 0; i < lstDbSet.Count; i++)
                 {
-                    values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNodes.Count <= 0);//如果没有选择任何列，就返回null，避免浪费
-                    lstDbSet[i].SelectNodes.ForEach(col => lstDbSet[i].DictMapHandler[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
+                    values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNode.Count <= 0);//如果没有选择任何列，就返回null，避免浪费
+                    lstDbSet[i].SelectNode.ForEach(col => lstDbSet[i].DictMapHandler[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
                 }
                 lstEntity.Add(transfer(values));
             }

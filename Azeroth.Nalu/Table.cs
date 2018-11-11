@@ -55,7 +55,7 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<INodeSelect> ITable.SelectNodes
+        List<INodeSelect> ITable.SelectNode
         {
             get
             {
