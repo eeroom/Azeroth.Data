@@ -8,7 +8,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 解析出SQL相关的信息
     /// </summary>
-    public interface IConvertible
+    public interface IResolver
     {
         
         /// <summary>

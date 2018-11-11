@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface IColumn:IConvertible
+    public interface IColumn:IResolver
     {
         ITable Container { get; }
         string ColumnName { get; }

@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
         {
             if (opt == JOIN.None)
                 return ToSQLWithScalar(context);
-            string strwhere = ((IConvertible)this.ON).ToSQL(context);
+            string strwhere = ((IResolver)this.ON).ToSQL(context);
             return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.ToSQL(),this.container.NameHandler(context),this.container.NameNick,strwhere);
         }
 

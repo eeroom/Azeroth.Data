@@ -372,7 +372,7 @@ namespace Azeroth.Nalu
         {
             string sqlstr = string.Empty;
             if (lstNode != null)
-                sqlstr = ((IConvertible)lstNode).ToSQL(context);//筛选条件
+                sqlstr = ((IResolver)lstNode).ToSQL(context);//筛选条件
             if (!string.IsNullOrEmpty(sqlstr))
                 sqlstr =string.Format(" \r\n{0} {1}",verb,sqlstr);
             return sqlstr;
