@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class DbContextMysql : DbContext<MySql.Data.MySqlClient.MySqlConnection>
+    public class MySqlDbContext : DbContext<MySql.Data.MySqlClient.MySqlConnection>
     {
-        public override Query CreateQuery()
+        public override Container CreateContainer()
         {
-            return new QueryMysql(this);
+            return new MySqlContainer(this);
         }
 
-        public override ResovleContext GetResolvContext()
+        public override ResovleContext GetResolveContext()
         {
             return new ResovleContext("@",()=>new MySql.Data.MySqlClient.MySqlParameter());
         }

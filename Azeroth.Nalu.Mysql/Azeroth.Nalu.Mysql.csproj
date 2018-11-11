@@ -43,8 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbContextMysql.cs" />
-    <Compile Include="QueryMysql.cs" />
+    <Compile Include="MySqlDbContext.cs" />
+    <Compile Include="MySqlContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
