@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class QueryMssqlserver:Query
+    public class QueryMssqlserver:Container
     {
         public QueryMssqlserver(IDbContext dbcontext):base(dbcontext)
         {

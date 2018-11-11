@@ -46,11 +46,11 @@ namespace Azeroth.Nalu
             return new DbCud<T>();
         }
 
-        public abstract Query CreateQuery();
+        public abstract Container CreateQuery();
 
         public abstract ResovleContext GetResolvContext();
 
-        List<T> IDbContext.ExecuteQuery<T>(IQuery master, Func<object[], T> transfer)
+        List<T> IDbContext.ExecuteQuery<T>(IContainer master, Func<object[], T> transfer)
         {
             return master.Execute<H, T>(transfer,this.Cnnstr);
         }

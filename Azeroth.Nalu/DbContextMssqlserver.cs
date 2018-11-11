@@ -7,7 +7,7 @@ namespace Azeroth.Nalu
 {
     public class DbContextMssqlserver : DbContext<System.Data.SqlClient.SqlConnection>
     {
-        public override Query CreateQuery()
+        public override Container CreateQuery()
         {
             return new QueryMssqlserver(this);
         }

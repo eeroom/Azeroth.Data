@@ -9,13 +9,13 @@ namespace Azeroth.Nalu
     public class DbSet<T>:Table<T>
     {
 
-        public DbSet(IQuery master)
+        public DbSet(IContainer master)
         {
             this.master = master;
         }
 
-        protected IQuery master;
-        protected IQuery sub;
+        protected IContainer master;
+        protected IContainer sub;
 
         string viewName;//也可能是表名称，泛指和class名称不一致的表名称
         public DbSet<T> From(string name)
@@ -25,7 +25,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public DbSet<T> From(Query sub)
+        public DbSet<T> From(Container sub)
         {
             //因为这个时候 dbset.SQLResolver.NameForCTE这个值还没有，所有需要解析的时候去取，
             //所有把Name定义成委托，解析开始后再去取这个名称

@@ -46,7 +46,7 @@ namespace Azeroth.Nalu
             return new NodeWhere<T, S>(this, WH.NULL,string.Empty);
         }
 
-        public NodeWhere<T, S> Exists(Query value)
+        public NodeWhere<T, S> Exists(Container value)
         {
 
             return new NodeWhere<T, S>(this, WH.Exists, value);

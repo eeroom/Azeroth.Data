@@ -65,11 +65,11 @@
     <Compile Include="NodeWhere`2.cs" />
     <Compile Include="NodeWhereSegment.cs" />
     <Compile Include="OPT.cs" />
-    <Compile Include="Query.cs" />
+    <Compile Include="Container.cs" />
     <Compile Include="QueryMssqlserver.cs" />
     <Compile Include="ResovleContext.cs" />
     <Compile Include="ICud.cs" />
-    <Compile Include="IQuery.cs" />
+    <Compile Include="IContainer.cs" />
     <Compile Include="Enumerable.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
