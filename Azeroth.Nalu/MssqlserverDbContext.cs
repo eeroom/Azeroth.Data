@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class DbContextMssqlserver : DbContext<System.Data.SqlClient.SqlConnection>
+    public class MssqlserverDbContext : DbContext<System.Data.SqlClient.SqlConnection>
     {
-        public override Container CreateQuery()
+        public override Container CreateContainer()
         {
-            return new QueryMssqlserver(this);
+            return new MssqlserverContainer(this);
         }
 
-        public override ResovleContext GetResolvContext()
+        public override ResovleContext GetResolveContext()
         {
             return new ResovleContext("@",()=>new System.Data.SqlClient.SqlParameter());
         }

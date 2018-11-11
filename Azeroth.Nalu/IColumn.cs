@@ -7,7 +7,7 @@ namespace Azeroth.Nalu
 {
     public interface IColumn:IResolver
     {
-        ITable Container { get; }
+        ITable Table { get; }
         string ColumnName { get; }
         Function FunctionCode { get; }
         Func<Column, string> FunctionHandler { get; }

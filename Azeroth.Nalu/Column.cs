@@ -9,17 +9,17 @@ namespace Azeroth.Nalu
     public class Column:IColumn
     {
 
-        public Column(Table contianer, string columnName)
+        public Column(Table table, string columnName)
         {
-            this.container = contianer;
+            this.table = table;
             this.columnName = columnName;
         }
 
         protected INodeSelect mapColumn;
 
-        public Column(Table contianer, string columnName, INodeSelect mapColumn)
+        public Column(Table table, string columnName, INodeSelect mapColumn)
         {
-            this.container = contianer;
+            this.table = table;
             this.columnName = columnName;
             this.mapColumn = mapColumn;
         }
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
         protected Function functionCode;
 
         protected Func<Column, string> functionHandler;
-        protected ITable container;
+        protected ITable table;
 
         /// <summary>
         /// 名称
@@ -36,16 +36,16 @@ namespace Azeroth.Nalu
 
         public override string ToString()
         {
-            if (string.IsNullOrEmpty(this.container.NameNick))
+            if (string.IsNullOrEmpty(this.table.NameNick))
                 return this.columnName;
             if (mapColumn != null)
-                return this.container.NameNick + "." + mapColumn.ColumnNameNick;
-            return this.container.NameNick + "." + this.columnName;
+                return this.table.NameNick + "." + mapColumn.ColumnNameNick;
+            return this.table.NameNick + "." + this.columnName;
         }
 
-        ITable IColumn.Container
+        ITable IColumn.Table
         {
-            get { return this.container; }
+            get { return this.table; }
         }
 
         string IColumn.ColumnName
@@ -117,14 +117,14 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="expBody"></param>
         /// <returns></returns>
-        public static string GetColumnName(Expression expBody)
+        public static string GetName(Expression expBody)
         {
             MemberExpression memExp = expBody as MemberExpression;
             if (memExp != null)
                 return memExp.Member.Name;
             UnaryExpression unaExp = expBody as UnaryExpression;
             if (unaExp != null)
-                return GetColumnName(unaExp.Operand);
+                return GetName(unaExp.Operand);
             throw new ArgumentException("必须使用返回单个属性值的表达式，例如：x=>x.Name");
         }
 
@@ -133,12 +133,12 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="expBody"></param>
         /// <returns></returns>
-        public static List<string> GetColumnNames(Expression expBody)
+        public static List<string> GetNameCollection(Expression expBody)
         {
             NewExpression newExp = expBody as NewExpression;
             if (newExp != null)
                 return newExp.Members.Select(x => x.Name).ToList();
-            string tmp = GetColumnName(expBody);
+            string tmp = GetName(expBody);
             return new List<string>() { tmp };
         }
     }

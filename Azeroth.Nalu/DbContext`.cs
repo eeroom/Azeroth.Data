@@ -13,24 +13,17 @@ namespace Azeroth.Nalu
     {
         public string Cnnstr { get; set; }
 
-        public virtual RT ExecuteNoQuery(params ICud[] dbsets)
+        public virtual int SaveChange(params ICud[] dbsets)
         {
-            string msg;
-            foreach (ICud db in dbsets)
-            {
-                if (!db.Validate(out msg))
-                    return new RT(true, msg);
-            }
             int rst = 0;
             using (H cnn = new H())
             {
-                
                 cnn.ConnectionString = this.Cnnstr;
                 cnn.Open();
                 using (var cmd = cnn.CreateCommand())
                 {
                     cmd.Transaction = cnn.BeginTransaction();
-                    var context = this.GetResolvContext();
+                    var context = this.GetResolveContext();
                     foreach (ICud dbset in dbsets)
                     {
                         rst += dbset.Execute(cmd, context);
@@ -38,21 +31,21 @@ namespace Azeroth.Nalu
                     cmd.Transaction.Commit();
                 }
             }
-            return new RT(rst);
+            return rst;
         }
 
-        public virtual DbCud<T> CreateNoQuery<T>()
+        public virtual DbCud<T> CreateCud<T>()
         {
             return new DbCud<T>();
         }
 
-        public abstract Container CreateQuery();
+        public abstract Container CreateContainer();
 
-        public abstract ResovleContext GetResolvContext();
+        public abstract ResovleContext GetResolveContext();
 
-        List<T> IDbContext.ExecuteQuery<T>(IContainer master, Func<object[], T> transfer)
+        List<T> IDbContext.ToList<T>(IContainer container, Func<object[], T> transfer)
         {
-            return master.Execute<H, T>(transfer,this.Cnnstr);
+            return container.ToList<H, T>(transfer,this.Cnnstr);
         }
     }
 }

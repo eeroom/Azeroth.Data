@@ -9,13 +9,13 @@ namespace Azeroth.Nalu
     {
         System.Linq.Expressions.Expression<Func<T, S>> exp;
 
-        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp):base(db,Column.GetColumnName(exp.Body))
+        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp):base(db,Column.GetName(exp.Body))
         {
             this.exp = exp;
         }
 
         public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp,INodeSelect mapcolumn)
-            : base(db, Column.GetColumnName(exp.Body),mapcolumn)
+            : base(db, Column.GetName(exp.Body),mapcolumn)
         {
             this.exp = exp;
         }

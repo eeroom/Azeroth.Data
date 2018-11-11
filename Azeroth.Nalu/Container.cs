@@ -32,7 +32,7 @@ namespace Azeroth.Nalu
         public NodeWhere Having { set; get; }
         protected List<INode> lstNodeOrderBy = new List<INode>();
         protected List<ITable> lstDbSet=new List<ITable>();
-        protected List<IContainer> lstCTEHandler = new List<IContainer>();
+        protected List<IContainer> lstCETContainer = new List<IContainer>();
         protected string nameForCTE;
         protected bool isDistinct;
 
@@ -87,7 +87,7 @@ namespace Azeroth.Nalu
         public Container Select(Column col)
         {
             var tmp = new NodeSelect(col);
-            ((INodeSelect)tmp).Column.Container.SelectNodes.Add(tmp);
+            ((INodeSelect)tmp).Column.Table.SelectNodes.Add(tmp);
             this.lstNodeSelect.Add(tmp);
             return this;
         }
@@ -97,7 +97,7 @@ namespace Azeroth.Nalu
         public Container Select(IList<Column> cols)
         {
             var tmp = cols.Select(x => new NodeSelect(x)).ToList();
-            tmp.ForEach(x=>((INodeSelect)x).Column.Container.SelectNodes.Add(x));
+            tmp.ForEach(x=>((INodeSelect)x).Column.Table.SelectNodes.Add(x));
             this.lstNodeSelect.AddRange(tmp);
             return this;
         }
@@ -139,16 +139,16 @@ namespace Azeroth.Nalu
             }
         }
 
-        List<IContainer> IContainer.CTEHandlers
+        List<IContainer> IContainer.CTEContainer
         {
-            get { return this.lstCTEHandler; }
+            get { return this.lstCETContainer; }
         }
 
         List<INode> IContainer.JoinNode
         {
             get { return this.lstJoinNode; }
         }
-        List<INodeSelect> IContainer.SelectNodes
+        List<INodeSelect> IContainer.SelectNode
         {
             get
             {
@@ -157,9 +157,9 @@ namespace Azeroth.Nalu
         }
 
        
-        string IContainer.GetCommandText(ResovleContext context)
+        string IResolver.ToSQL(ResovleContext context)
         {
-            return this.GetCommandText(context);
+            return this.ToSQL(context);
         }
 
         protected virtual string ResolveCTE(ResovleContext context, IList<IContainer> lstCTEHandler)
@@ -170,7 +170,7 @@ namespace Azeroth.Nalu
             ResolveCTE(lstCTEHandler, lstCTEHandler2);
             lstCTEHandler2.ForEach(x => x.NameForCTE = "W" + context.NextSetIndex().ToString());
             context.CanCTE = false;
-            var lst2 = lstCTEHandler2.Select(x => string.Format("{0} AS ({1})\r\n", x.NameForCTE, x.GetCommandText(context))).ToList();
+            var lst2 = lstCTEHandler2.Select(x => string.Format("{0} AS ({1})\r\n", x.NameForCTE, x.ToSQL(context))).ToList();
             return "WITH " + string.Join(",\r\n", lst2);
         }
 
@@ -183,8 +183,8 @@ namespace Azeroth.Nalu
         {
             foreach (var resolver in resolvers)
             {
-                if (resolver.CTEHandlers.Count > 0)
-                    ResolveCTE(resolver.CTEHandlers, resolversWithFlat);
+                if (resolver.CTEContainer.Count > 0)
+                    ResolveCTE(resolver.CTEContainer, resolversWithFlat);
                 if (!resolversWithFlat.Contains(resolver))
                     resolversWithFlat.Add(resolver);
             }
@@ -224,12 +224,12 @@ namespace Azeroth.Nalu
 
         public  List<S> ToList<S>()
         {
-            return this.dbContex.ExecuteQuery(this,x=>(S)x[0]);
+            return this.dbContex.ToList(this,x=>(S)x[0]);
         }
 
         public List<S> ToList<S>(out int rowscount)
         {
-            var lst = this.dbContex.ExecuteQuery(this, x => (S)x[0]);
+            var lst = this.dbContex.ToList(this, x => (S)x[0]);
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
@@ -238,12 +238,12 @@ namespace Azeroth.Nalu
 
         public List<Tuple<A,B>> ToList<A,B>()
         {
-            return this.dbContex.ExecuteQuery(this, x =>Tuple.Create((A)x[0],(B)x[1]));
+            return this.dbContex.ToList(this, x =>Tuple.Create((A)x[0],(B)x[1]));
         }
 
         public List<Tuple<A, B>> ToList<A, B>(out int rowscount)
         {
-            var lst= this.dbContex.ExecuteQuery(this, x => Tuple.Create((A)x[0], (B)x[1])); 
+            var lst= this.dbContex.ToList(this, x => Tuple.Create((A)x[0], (B)x[1])); 
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
@@ -252,12 +252,12 @@ namespace Azeroth.Nalu
 
         public  List<S> ToList<S>(Func<object[], S> transfer)
         {
-            return this.dbContex.ExecuteQuery(this, transfer);
+            return this.dbContex.ToList(this, transfer);
         }
 
         public  List<S> ToList<S>(Func<object[], S> transfer, out int rowscount)
         {
-            var lst = this.dbContex.ExecuteQuery(this, transfer);
+            var lst = this.dbContex.ToList(this, transfer);
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
@@ -266,7 +266,7 @@ namespace Azeroth.Nalu
 
         public string ToString(Azeroth.Nalu.ResovleContext context)
         {
-            return this.GetCommandText(context);
+            return this.ToSQL(context);
         }
 
         public Container Top(int top)
@@ -279,7 +279,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        List<T> IContainer.Execute<H,T>(Func<object[], T> transfer,string cnnstr)
+        List<T> IContainer.ToList<H,T>(Func<object[], T> transfer,string cnnstr)
         {
             using (H cnn = new H())
             {
@@ -287,8 +287,8 @@ namespace Azeroth.Nalu
                 using (var cmd = cnn.CreateCommand())
                 {
                     cnn.Open();
-                    var context = this.dbContex.GetResolvContext();
-                    this.ComandText = this.GetCommandText(context);
+                    var context = this.dbContex.GetResolveContext();
+                    this.ComandText = this.ToSQL(context);
                     cmd.CommandText = this.ComandText;
                     this.DbParameters = context.Parameters;
                     if (context.Parameters.Count > 0)
@@ -301,8 +301,8 @@ namespace Azeroth.Nalu
                     if (this.pageIndex * this.pageSize <= 0)
                         return new List<T>();//没有分页，或者第一页都没有数据
                     this.pageIndex = 1;//回到第一页
-                    context = this.dbContex.GetResolvContext();
-                    this.ComandText = this.GetCommandText(context);
+                    context = this.dbContex.GetResolveContext();
+                    this.ComandText = this.ToSQL(context);
                     cmd.CommandText = this.ComandText;
                     this.DbParameters = context.Parameters;
                     cmd.Parameters.Clear();
@@ -317,8 +317,8 @@ namespace Azeroth.Nalu
                             return lst;
                         this.pageIndex = (int)Math.Ceiling(1.0 * rowsCount / pageSize);//跳到最后一页
                     }
-                    context = this.dbContex.GetResolvContext();
-                    this.ComandText = this.GetCommandText(context);
+                    context = this.dbContex.GetResolveContext();
+                    this.ComandText = this.ToSQL(context);
                     cmd.CommandText = this.ComandText;
                     this.DbParameters = context.Parameters;
                     cmd.Parameters.Clear();
@@ -366,7 +366,7 @@ namespace Azeroth.Nalu
         }
 
 
-        protected abstract string GetCommandText(ResovleContext context);
+        protected abstract string ToSQL(ResovleContext context);
 
         protected string ResolveNodeWhere(ResovleContext context, NodeWhere lstNode, string verb)
         {

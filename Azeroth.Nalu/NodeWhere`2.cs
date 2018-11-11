@@ -36,7 +36,7 @@ namespace Azeroth.Nalu
             : base(column)
         {
             this.opt = opt;
-            if (this.column.Container.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
                 this.value = value.ToString();
             else
                 this.value = value;
@@ -53,7 +53,7 @@ namespace Azeroth.Nalu
         {
             this.opt = opt;
             this.lstValue = new List<object>();
-            if (this.column.Container.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
             {
                 foreach (var tmp in value)
                     this.lstValue.Add(tmp.ToString());
@@ -69,7 +69,7 @@ namespace Azeroth.Nalu
             : base(column)
         {
             this.opt = opt;
-            if (this.column.Container.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
             {
                 this.value = min.ToString();
                 this.value2 = max.ToString();
@@ -142,7 +142,7 @@ namespace Azeroth.Nalu
         private string ToSQLWithExists(ResovleContext context)
         {
             var tmp= this.value as IContainer;
-            string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.GetCommandText(context));
+            string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.ToSQL(context));
             return strwhere;
         }
 
@@ -184,8 +184,8 @@ namespace Azeroth.Nalu
         {
             if (qianTao)
             {//这里是IN的嵌套查询
-                var query = value as IContainer;
-                return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), query.GetCommandText(context));//where里面的子查询
+                var container = value as IContainer;
+                return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), container.ToSQL(context));//where里面的子查询
             }
             List<string> lstName = new List<string>();
             System.Data.Common.DbParameter parameter;

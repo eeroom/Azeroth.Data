@@ -5,16 +5,16 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class QueryMssqlserver:Container
+    public class MssqlserverContainer:Container
     {
-        public QueryMssqlserver(IDbContext dbcontext):base(dbcontext)
+        public MssqlserverContainer(IDbContext dbcontext):base(dbcontext)
         {
 
         }
 
-        protected override string GetCommandText(ResovleContext context)
+        protected override string ToSQL(ResovleContext context)
         {
-            string strWithAS = ResolveCTE(context, this.lstCTEHandler);
+            string strWithAS = ResolveCTE(context, this.lstCETContainer);
             if (!string.IsNullOrEmpty(strWithAS))
                 strWithAS = strWithAS + " \r\n";
             this.lstDbSet.ForEach(x => x.NameNick = "T" + context.NextSetIndex().ToString());//表的别名

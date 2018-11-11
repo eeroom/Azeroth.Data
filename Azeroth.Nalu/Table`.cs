@@ -61,7 +61,7 @@ namespace Azeroth.Nalu
 
         public virtual List<Column> Cols<S>(System.Linq.Expressions.Expression<Func<T, S>> exp)
         {
-            var lstName = Column.GetColumnNames(exp.Body);
+            var lstName = Column.GetNameCollection(exp.Body);
             return lstName.Select(x => new Column(this, x)).ToList();
         }
 
