@@ -53,10 +53,12 @@ namespace Azeroth.Nalu.Excel
         /// <returns></returns>
         public ExportResult<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
+            if (dictMapHandlerByColName == null)
+                throw new ArgumentException("必须指定列名称和model之间的映射");
             ExportResult<T> rt = new ExportResult<T>();
             var row= sheet.GetRow(startrow);
             var lstIndexName = System.Linq.Enumerable.Range(0, row.Cells.Count).Select(x => new { Index=x,Name=row.GetCell(x).StringCellValue})
-                .Where(x=>dictMapHandlerByColName.Keys.Contains(x.Name));
+                .Where(x=>dictMapHandlerByColName.Keys.Contains(x.Name)).ToList();
             var cf= lstIndexName.GroupBy(x => x.Name).Count(gp=>gp.Count()>1);
             if (cf > 0)
                 return rt.AddMessage("Excel中存在重复的列名称");
@@ -95,7 +97,7 @@ namespace Azeroth.Nalu.Excel
         /// <param name="workbook"></param>
         /// <param name="lst"></param>
         /// <returns></returns>
-        public void InsertByColName(NPOI.SS.UserModel.ISheet sheet, IEnumerable<T> lst)
+        public void InsertByColName(NPOI.SS.UserModel.ISheet sheet, IEnumerable<T> lst,int startrow=0)
         {
             if (sheet == null)
                 throw new ArgumentException("sheet不能为Null");
@@ -104,7 +106,7 @@ namespace Azeroth.Nalu.Excel
             if (dictMapHandlerByColName == null)
                 throw new ArgumentException("必须指定列名称和model之间的映射");
             int colIndex = 0;
-            int rowIndex = 0;
+            int rowIndex = startrow;
             NPOI.SS.UserModel.IRow row = sheet.CreateRow(rowIndex++);
             foreach (var kv in dictMapHandlerByColName)
             {
@@ -158,9 +160,9 @@ namespace Azeroth.Nalu.Excel
             return this;
         }
 
-        public SheetSet<T> Map(Action<NPOI.SS.UserModel.ICell, T> handler,string colName)
+        public SheetSet<T> Map(Action<NPOI.SS.UserModel.ICell, T> handler,string excelColName)
         {
-            dictMapHandlerByColName.Add(colName,handler);
+            dictMapHandlerByColName.Add(excelColName,handler);
             return this;
         }
     }
