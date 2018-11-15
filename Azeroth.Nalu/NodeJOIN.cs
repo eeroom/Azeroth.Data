@@ -19,7 +19,7 @@ namespace Azeroth.Nalu
             this.container = dbr;
         }
 
-        protected override string ToSQL(ResovleContext context)
+        protected override string ToSQL(ResolveContext context)
         {
             if (opt == JOIN.None)
                 return ToSQLWithScalar(context);
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
             return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.ToSQL(),this.container.NameHandler(context),this.container.NameNick,strwhere);
         }
 
-        private string ToSQLWithScalar(ResovleContext context)
+        private string ToSQLWithScalar(ResolveContext context)
         {
             throw new NotImplementedException();
         }

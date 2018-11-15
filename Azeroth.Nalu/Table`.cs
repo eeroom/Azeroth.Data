@@ -59,15 +59,15 @@ namespace Azeroth.Nalu
             //return new Column<T, S>(this, exp, mapColumn);
         }
 
-        public virtual List<Column> Cols<S>(System.Linq.Expressions.Expression<Func<T, S>> exp)
+        protected virtual  List<Column> Cols<S>(System.Linq.Expressions.Expression<Func<T, S>> exp)
         {
             var lstName = Column.GetNameCollection(exp.Body);
             return lstName.Select(x => new Column(this, x)).ToList();
         }
 
-        public virtual List<Column> Cols()
-        {
-            return this.dictMapHandler.Keys.Select(x => new Column(this, x)).ToList();
-        }
+        //public virtual List<Column> Cols()
+        //{
+        //    return this.dictMapHandler.Keys.Select(x => new Column(this, x)).ToList();
+        //}
     }
 }

@@ -11,7 +11,7 @@ namespace Azeroth.Nalu
     /// <typeparam name="H"></typeparam>
     public abstract  class DbContext<H>:IDbContext where H : System.Data.Common.DbConnection, new()
     {
-        public string Cnnstr { get; set; }
+        protected string Cnnstr { get; set; }
 
         public virtual int SaveChange(params ICud[] dbsets)
         {
@@ -34,18 +34,41 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public virtual DbCud<T> CreateCud<T>()
+        public virtual DbCud<T> Cud<T>()
         {
             return new DbCud<T>();
         }
 
-        public abstract Container CreateContainer();
+        public virtual Container CreateContainer() 
+        {
+            return new Container(this);
+        }
 
-        public abstract ResovleContext GetResolveContext();
+        ResolveContext IDbContext.GetResolveContext()
+        {
+            return this.GetResolveContext();
+        }
+
+        protected virtual ResolveContext GetResolveContext() 
+        {
+            return new ResolveContext("@",()=>new System.Data.SqlClient.SqlParameter());
+        }
 
         List<T> IDbContext.ToList<T>(IContainer container, Func<object[], T> transfer)
         {
             return container.ToList<H, T>(transfer,this.Cnnstr);
+        }
+
+
+
+
+        public DbSet<T> Set<T>(IContainer container)
+        {
+            return new DbSet<T>(container);
+
+            //DbSet<B> tmp = new DbSet<B>(this);
+            //this.lstDbSet.Add(tmp);
+            //return tmp;
         }
     }
 }

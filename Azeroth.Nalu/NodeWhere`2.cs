@@ -104,7 +104,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected override string ToSQL(ResovleContext context)
+        protected override string ToSQL(ResolveContext context)
         {
             if (this.getParameterValueFromResolverContext != null && context.Tag != null)
                 value= this.getParameterValueFromResolverContext((T)context.Tag);
@@ -139,20 +139,20 @@ namespace Azeroth.Nalu
             return strwhere;
         }
 
-        private string ToSQLWithExists(ResovleContext context)
+        private string ToSQLWithExists(ResolveContext context)
         {
             var tmp= this.value as IContainer;
             string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.ToSQL(context));
             return strwhere;
         }
 
-        private string ToSQLWithNULL(ResovleContext context)
+        private string ToSQLWithNULL(ResolveContext context)
         {
             string strwhere = string.Format("{0} {1}", this.column.ToSQL(context), this.opt.ToSQL()); 
             return strwhere;
         }
 
-        private string ToSQLWithNoParameter(ResovleContext context)
+        private string ToSQLWithNoParameter(ResolveContext context)
         {
             return base.ToSQL(context);
         }
@@ -162,7 +162,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private string ToSQLWithBetween(ResovleContext context)
+        private string ToSQLWithBetween(ResolveContext context)
         {
             System.Data.Common.DbParameter parameter = context.CreateParameter();
             parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();
@@ -180,7 +180,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private string ToSQLWithIN(ResovleContext context)
+        private string ToSQLWithIN(ResolveContext context)
         {
             if (qianTao)
             {//这里是IN的嵌套查询

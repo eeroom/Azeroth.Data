@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ResovleContext
+    public class ResolveContext
     {
-        public ResovleContext(string symbol,Func<System.Data.Common.DbParameter> createParameter)
+        public ResolveContext(string symbol,Func<System.Data.Common.DbParameter> createParameter)
         {
             this.Symbol = symbol;
             this.Parameters = new List<System.Data.Common.DbParameter>(8);

@@ -9,9 +9,11 @@ namespace Azeroth.Nalu
     {
         List<T> ToList<T>(IContainer container, Func<object[], T> transfer);
         int SaveChange(params ICud[] lstcud);
-        ResovleContext GetResolveContext();
+        ResolveContext GetResolveContext();
 
-        DbCud<T> CreateCud<T>();
+        DbCud<T> Cud<T>();
         Container CreateContainer();
+
+        DbSet<T> Set<T>(IContainer container);
     }
 }

@@ -41,7 +41,6 @@
   <ItemGroup>
     <Compile Include="Column.cs" />
     <Compile Include="DateTimeWrapper.cs" />
-    <Compile Include="MssqlserverDbContext.cs" />
     <Compile Include="DbContext`.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="DbCud`.cs" />
@@ -66,8 +65,7 @@
     <Compile Include="NodeWhereSegment.cs" />
     <Compile Include="OPT.cs" />
     <Compile Include="Container.cs" />
-    <Compile Include="MssqlserverContainer.cs" />
-    <Compile Include="ResovleContext.cs" />
+    <Compile Include="ResolveContext.cs" />
     <Compile Include="ICud.cs" />
     <Compile Include="IContainer.cs" />
     <Compile Include="Enumerable.cs" />

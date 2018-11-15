@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public abstract  class Container:IContainer
+    public   class Container:IContainer
     {
         /// <summary>
         /// 总记录数的辅助列
@@ -16,9 +16,9 @@ namespace Azeroth.Nalu
         {
             this.dbContex = contex;
         }
-        protected List<INodeSelect> lstNodeSelect = new List<INodeSelect>();
-        protected List<INode> lstJoinNode = new List<INode>();
-        public NodeWhere Where { set; get; }
+        protected List<INodeSelect> lstSelect = new List<INodeSelect>();
+        protected List<INode> lstJoin = new List<INode>();
+        public NodeWhere WHERE { set; get; }
         /// <summary>
         /// 筛选条件
         /// </summary>
@@ -28,11 +28,11 @@ namespace Azeroth.Nalu
         ///// </summary>
         //public PredicateNode Having { set; get; }
 
-        protected List<IColumn> lstNodeGroupBy = new List<IColumn>();
+        protected List<IColumn> lstGroupBy = new List<IColumn>();
         public NodeWhere Having { set; get; }
-        protected List<INode> lstNodeOrderBy = new List<INode>();
-        protected List<ITable> lstDbSet=new List<ITable>();
-        protected List<IContainer> lstCETContainer = new List<IContainer>();
+        protected List<INode> lstOrderBy = new List<INode>();
+        protected List<ITable> lstItem=new List<ITable>();
+        protected List<IContainer> lstSubContainer = new List<IContainer>();
         protected string nameForCTE;
         protected bool isDistinct;
 
@@ -66,12 +66,12 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public DbSet<B> Set<B>()
-        {
-             DbSet<B> tmp=new DbSet<B>(this);
-             this.lstDbSet.Add(tmp);
-             return tmp;
-        }
+        //public DbSet<B> Set<B>()
+        //{
+        //     DbSet<B> tmp=new DbSet<B>(this);
+        //     this.lstDbSet.Add(tmp);
+        //     return tmp;
+        //}
 
         //public void Where(PredicateNode predicate)
         //{
@@ -84,47 +84,25 @@ namespace Azeroth.Nalu
         //    this.havingPredicate = predicate;
         //}
 
-        public Container Select(Column col)
-        {
-            var tmp = new NodeSelect(col);
-            ((INodeSelect)tmp).Column.Table.SelectNode.Add(tmp);
-            this.lstNodeSelect.Add(tmp);
-            return this;
-        }
+        //public Container Select(Column col)
+        //{
+        //    var tmp = new NodeSelect(col);
+        //    ((INodeSelect)tmp).Column.Table.SelectNode.Add(tmp);
+        //    this.lstNodeSelect.Add(tmp);
+        //    return this;
+        //}
 
 
 
-        public Container Select(IList<Column> cols)
-        {
-            var tmp = cols.Select(x => new NodeSelect(x)).ToList();
-            tmp.ForEach(x=>((INodeSelect)x).Column.Table.SelectNode.Add(x));
-            this.lstNodeSelect.AddRange(tmp);
-            return this;
-        }
+        //public Container Select(IList<Column> cols)
+        //{
+        //    var tmp = cols.Select(x => new NodeSelect(x)).ToList();
+        //    tmp.ForEach(x=>((INodeSelect)x).Column.Table.SelectNode.Add(x));
+        //    this.lstNodeSelect.AddRange(tmp);
+        //    return this;
+        //}
 
-        public Container GroupBy(Column col)
-        {
-            this.lstNodeGroupBy.Add(col);
-            return this;
-        }
-
-        public Container GroupBy(IList<Column> cols)
-        {
-            this.lstNodeGroupBy.AddRange(cols);
-            return this;
-        }
-
-        public Container OrderBy(Column col,Order opt)
-        {
-            this.lstNodeOrderBy.Add(new NodeOrderBy(col, opt));
-            return this;
-        }
-
-        public Container OrderBy(IList<Column> cols,Order opt)
-        {
-            this.lstNodeOrderBy.AddRange(cols.Select(x => new NodeOrderBy(x, opt)));
-            return this;
-        }
+       
 
 
         string IContainer.NameForCTE
@@ -139,30 +117,30 @@ namespace Azeroth.Nalu
             }
         }
 
-        List<IContainer> IContainer.CTEContainer
+        List<IContainer> IContainer.SubContainer
         {
-            get { return this.lstCETContainer; }
+            get { return this.lstSubContainer; }
         }
 
-        List<INode> IContainer.JoinNode
+        List<INode> IContainer.JOIN
         {
-            get { return this.lstJoinNode; }
+            get { return this.lstJoin; }
         }
-        List<INodeSelect> IContainer.SelectNode
+        List<INodeSelect> IContainer.Select
         {
             get
             {
-                return this.lstNodeSelect;
+                return this.lstSelect;
             }
         }
 
        
-        string IResolver.ToSQL(ResovleContext context)
+        string IResolver.ToSQL(ResolveContext context)
         {
             return this.ToSQL(context);
         }
 
-        protected virtual string ResolveCTE(ResovleContext context, IList<IContainer> lstCTEHandler)
+        protected virtual string ResolveCTE(ResolveContext context, IList<IContainer> lstCTEHandler)
         {
             if (lstCTEHandler.Count < 1 || !context.CanCTE)
                 return string.Empty;
@@ -183,14 +161,14 @@ namespace Azeroth.Nalu
         {
             foreach (var resolver in resolvers)
             {
-                if (resolver.CTEContainer.Count > 0)
-                    ResolveCTE(resolver.CTEContainer, resolversWithFlat);
+                if (resolver.SubContainer.Count > 0)
+                    ResolveCTE(resolver.SubContainer, resolversWithFlat);
                 if (!resolversWithFlat.Contains(resolver))
                     resolversWithFlat.Add(resolver);
             }
         }
 
-        protected virtual string ResolveNodeSelect(ResovleContext context, IList<INodeSelect> lstNode)
+        protected virtual string ResolveNodeSelect(ResolveContext context, IList<INodeSelect> lstNode)
         {
             if (lstNode.Count < 1)
                 throw new ArgumentException("需要指定查询的列");
@@ -198,13 +176,13 @@ namespace Azeroth.Nalu
             return string.Join(",", lststr);
         }
 
-        protected virtual string ResolveNodeJOIN(ResovleContext context, IList<INode> lstNode)
+        protected virtual string ResolveNodeJOIN(ResolveContext context, IList<INode> lstNode)
         {
             var lststr = lstNode.Select(x => x.ToSQL(context));
             return string.Join(" ", lststr).Trim(',');//","用于处理UnKown 的连接类型，只是把表放在一起
         }
 
-        protected virtual string ResolverNodeGroupBy(ResovleContext context, IList<IColumn> lstNode)
+        protected virtual string ResolverNodeGroupBy(ResolveContext context, IList<IColumn> lstNode)
         {
             var lst = lstNode.Select(x => x.ToSQL(context));
             var tmp = string.Join(",", lst);
@@ -213,7 +191,7 @@ namespace Azeroth.Nalu
             return tmp;
         }
 
-        protected virtual string ResolveNodeOrderBy(ResovleContext context, IList<INode> lstNode)
+        protected virtual string ResolveNodeOrderBy(ResolveContext context, IList<INode> lstNode)
         {
             var lststr = lstNode.Select(x => x.ToSQL(context));
             string strOrder = string.Join(",", lststr);
@@ -236,20 +214,6 @@ namespace Azeroth.Nalu
             return lst;
         }
 
-        public List<Tuple<A,B>> ToList<A,B>()
-        {
-            return this.dbContex.ToList(this, x =>Tuple.Create((A)x[0],(B)x[1]));
-        }
-
-        public List<Tuple<A, B>> ToList<A, B>(out int rowscount)
-        {
-            var lst= this.dbContex.ToList(this, x => Tuple.Create((A)x[0], (B)x[1])); 
-            rowscount = this.rowsCount;
-            if (pageIndex * pageSize <= 0)
-                rowscount = lst.Count;
-            return lst;
-        }
-
         public  List<S> ToList<S>(Func<object[], S> transfer)
         {
             return this.dbContex.ToList(this, transfer);
@@ -264,10 +228,10 @@ namespace Azeroth.Nalu
             return lst;
         }
 
-        public string ToString(Azeroth.Nalu.ResovleContext context)
-        {
-            return this.ToSQL(context);
-        }
+        //public string ToString(Azeroth.Nalu.ResovleContext context)
+        //{
+        //    return this.ToSQL(context);
+        //}
 
         public Container Top(int top)
         {
@@ -296,7 +260,7 @@ namespace Azeroth.Nalu
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
-                            return Execute(transfer, reader);
+                            return ToList(transfer, reader);
                     }
                     if (this.pageIndex * this.pageSize <= 0)
                         return new List<T>();//没有分页，或者第一页都没有数据
@@ -312,7 +276,7 @@ namespace Azeroth.Nalu
                     {
                         if (!reader.HasRows)
                             return new List<T>();//第一页都没数据
-                        var lst = Execute(transfer, reader);
+                        var lst = ToList(transfer, reader);
                         if (this.rowsCount <= this.pageSize)//总行数只够第一页
                             return lst;
                         this.pageIndex = (int)Math.Ceiling(1.0 * rowsCount / pageSize);//跳到最后一页
@@ -327,38 +291,38 @@ namespace Azeroth.Nalu
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
-                            return Execute(transfer, reader);
+                            return ToList(transfer, reader);
                         throw new ArgumentException("分页处理发生异常");
                     }
                 }
             }
         }
 
-        List<T> Execute<T>(Func<object[], T> transfer, System.Data.Common.DbDataReader reader)
+        List<T> ToList<T>(Func<object[], T> transfer, System.Data.Common.DbDataReader reader)
         {
             List<T> lstEntity = new List<T>();
-            object[] values = new object[this.lstDbSet.Count];
+            object[] values = new object[this.lstItem.Count];
             DictionaryWrapper<string, IMapHandler> dict;
-            this.lstDbSet.ForEach(dbset => dbset.SelectNode.ForEach(col => col.ColIndex = reader.GetOrdinal(col.ColumnNameNick)));
+            this.lstItem.ForEach(dbset => dbset.Select.ForEach(col => col.ColIndex = reader.GetOrdinal(col.ColumnNameNick)));
             reader.Read();
             if (this.pageIndex * this.pageSize > 0)
             {//分页特别处理
                 this.rowsCount = System.Convert.ToInt32(reader[CountAuxiliaryColumn]);
                 lstEntity.Capacity = this.pageSize;
             }
-            for (int i = 0; i < this.lstDbSet.Count; i++)
+            for (int i = 0; i < this.lstItem.Count; i++)
             {
-                values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNode.Count <= 0);//如果没有选择任何列，就返回null实例，避免浪费
-                dict = lstDbSet[i].DictMapHandler;
-                lstDbSet[i].SelectNode.ForEach(col => dict[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
+                values[i] = lstItem[i].CreateInstance(lstItem[i].Select.Count <= 0);//如果没有选择任何列，就返回null实例，避免浪费
+                dict = lstItem[i].DictMapHandler;
+                lstItem[i].Select.ForEach(col => dict[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
             }
             lstEntity.Add(transfer(values));
             while (reader.Read())
             {
-                for (int i = 0; i < lstDbSet.Count; i++)
+                for (int i = 0; i < lstItem.Count; i++)
                 {
-                    values[i] = lstDbSet[i].CreateInstance(lstDbSet[i].SelectNode.Count <= 0);//如果没有选择任何列，就返回null，避免浪费
-                    lstDbSet[i].SelectNode.ForEach(col => lstDbSet[i].DictMapHandler[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
+                    values[i] = lstItem[i].CreateInstance(lstItem[i].Select.Count <= 0);//如果没有选择任何列，就返回null，避免浪费
+                    lstItem[i].Select.ForEach(col => lstItem[i].DictMapHandler[col.Column.ColumnName].SetValueToInstance(values[i], reader, col.ColIndex));
                 }
                 lstEntity.Add(transfer(values));
             }
@@ -366,9 +330,52 @@ namespace Azeroth.Nalu
         }
 
 
-        protected abstract string ToSQL(ResovleContext context);
+        protected virtual string ToSQL(ResolveContext context)
+        {
+            string strWithAS = ResolveCTE(context, this.lstSubContainer);
+            if (!string.IsNullOrEmpty(strWithAS))
+                strWithAS = strWithAS + " \r\n";
+            this.lstItem.ForEach(x => x.NameNick = "T" + context.NextSetIndex().ToString());//表的别名
+            //因为会出现重复的列名，所以要使用别名，比如表1和表2都使用A列
+            this.lstSelect.GroupBy(x => x.Column.ColumnName, (k, v) => v.ToList()).Where(v => v.Count > 1).ToList()
+                .ForEach(x => x.ForEach(a => a.ColumnNameNick = a.Column.ColumnName + context.NextColIndex().ToString()));
+            string strCol = ResolveNodeSelect(context, this.lstSelect);//查询的列
+            string strfrom = this.lstItem[0].NameHandler(context) + " AS " + this.lstItem[0].NameNick;
+            string strjn = ResolveNodeJOIN(context, this.lstJoin);
+            string strwhere = ResolveNodeWhere(context, this.WHERE, "WHERE");
+            string strgroup = ResolverNodeGroupBy(context, this.lstGroupBy);
+            string strhaving = ResolveNodeWhere(context, this.Having, "HAVING");
+            string strOrder = ResolveNodeOrderBy(context, this.lstOrderBy);//排序
+            if (this.pageIndex * this.pageSize <= 0)//不分页
+                return string.Format("{0}SELECT {1} {2} {3} \r\nFROM {4} {5} {6} {7} {8} {9}", strWithAS
+                    , this.isDistinct ? "DISTINCT" : string.Empty
+                    , top > 0 ? "TOP " + top.ToString() : string.Empty
+                    , strCol
+                    , strfrom, strjn, strwhere, strgroup, strhaving, strOrder);
+            string tmp = string.Format("SELECT {7} {0},ROW_NUMBER() OVER({3}) AS theRowIndex FROM {1} {2} {4} {5} {6}", strCol
+                , strfrom, strjn, strOrder, strwhere, strgroup, strhaving
+                , this.isDistinct ? "DISTINCT" : string.Empty);
+            int numEnd = this.pageIndex * this.pageSize;
+            int numStart = numEnd + 1 - this.pageSize;
+            if (string.IsNullOrEmpty(strWithAS))
+                return string.Format(@"WITH HTT AS ({0}
+                                                     ),HBB AS (
+                                                     SELECT COUNT(0) AS {3} FROM HTT)
+                                                     SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {1} AND {2}", tmp
+                                                         , numStart.ToString()
+                                                         , numEnd.ToString()
+                                                         , CountAuxiliaryColumn);
+            else
+                return string.Format(@"{1},HTT AS ({0}
+                                                        ),HBB AS (SELECT COUNT(0) AS {4} FROM HTT)
+                                                        SELECT HTT.*,HBB.* FROM HTT,HBB WHERE HTT.theRowIndex BETWEEN {2} AND {3}", tmp
+                                                         , strWithAS
+                                                          , numStart.ToString()
+                                                         , numEnd.ToString()
+                                                         , CountAuxiliaryColumn);
+        }
 
-        protected string ResolveNodeWhere(ResovleContext context, NodeWhere lstNode, string verb)
+        protected string ResolveNodeWhere(ResolveContext context, NodeWhere lstNode, string verb)
         {
             string sqlstr = string.Empty;
             if (lstNode != null)
@@ -376,6 +383,22 @@ namespace Azeroth.Nalu
             if (!string.IsNullOrEmpty(sqlstr))
                 sqlstr =string.Format(" \r\n{0} {1}",verb,sqlstr);
             return sqlstr;
+        }
+
+
+        List<ITable> IContainer.Items
+        {
+            get { return this.lstItem; }
+        }
+
+        List<IColumn> IContainer.GroupBy
+        {
+            get { return this.lstGroupBy; }
+        }
+
+        List<INode> IContainer.OrderBy
+        {
+            get { return this.lstOrderBy; }
         }
     }
 }

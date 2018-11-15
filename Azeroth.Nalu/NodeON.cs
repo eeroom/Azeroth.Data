@@ -20,7 +20,7 @@ namespace Azeroth.Nalu
             this.right = right;
         }
 
-        protected override string ToSQL(ResovleContext context)
+        protected override string ToSQL(ResolveContext context)
         {
             return string.Format("{0}={1}", this.column.ToSQL(context), this.right.ToSQL(context));
         }

@@ -16,6 +16,6 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        string ToSQL(ResovleContext context);
+        string ToSQL(ResolveContext context);
     }
 }

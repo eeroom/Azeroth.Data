@@ -12,9 +12,9 @@ namespace Azeroth.Nalu
             return new MySqlContainer(this);
         }
 
-        public override ResovleContext GetResolveContext()
+        protected override ResolveContext GetResolveContext()
         {
-            return new ResovleContext("@",()=>new MySql.Data.MySqlClient.MySqlParameter());
+            return new ResolveContext("@",()=>new MySql.Data.MySqlClient.MySqlParameter());
         }
     }
 }

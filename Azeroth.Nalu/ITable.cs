@@ -16,7 +16,7 @@ namespace Azeroth.Nalu
         /// 获取该set对应的from语句的名称
         /// 为了支持from嵌套查询，这里从静态字符串改成运行时委托
         /// </summary>
-        Func<ResovleContext, string> NameHandler { set; get; }
+        Func<ResolveContext, string> NameHandler { set; get; }
         /// <summary>
         /// 别名
         /// </summary>
@@ -30,7 +30,7 @@ namespace Azeroth.Nalu
         /// 需要修改的列
         /// 需要新增值得列
         /// </summary>
-        List<INodeSelect> SelectNode { set; get; }
+        List<INodeSelect> Select { set; get; }
 
         /// <summary>
         /// 创建该Set对应的实例

@@ -13,13 +13,14 @@ namespace Azeroth.Nalu
         public NodeWhere WH{set;get;}
         public DbCud<T> Select(Column col)
         {
-            this.lstSelectNode.Add(new NodeSelect(col));
+            this.lstSelect.Add(new NodeSelect(col));
             return this;
         }
 
-        public DbCud<T> Select(IList<Column> cols)
+        public DbCud<T> Select<S>(Expression<Func<T,S>> exp)
         {
-            this.lstSelectNode.AddRange(cols.Select(x => new NodeSelect(x)));
+            var lstcol= this.Cols(exp);
+            this.lstSelect.AddRange(lstcol.Select(x => new NodeSelect(x)));
             return this;
         }
 
@@ -35,7 +36,7 @@ namespace Azeroth.Nalu
 
         protected Cmd OptCmd { set; get; }
 
-        private int Del(System.Data.Common.DbCommand cmd, ResovleContext context)
+        private int Del(System.Data.Common.DbCommand cmd, ResolveContext context)
         {
             int rst = 0;
             if (values == null||values.Count()<1)
@@ -46,7 +47,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        private int Del(System.Data.Common.DbCommand cmd, ResovleContext context, object value)
+        private int Del(System.Data.Common.DbCommand cmd, ResolveContext context, object value)
         {
             context.Parameters.Clear();
             context.Tag = value;
@@ -61,19 +62,19 @@ namespace Azeroth.Nalu
             return cmd.ExecuteNonQuery();
         }
 
-        private int Edit(System.Data.Common.DbCommand cmd, ResovleContext context)
+        private int Edit(System.Data.Common.DbCommand cmd, ResolveContext context)
         {
             int rst = 0;
-            if (this.lstSelectNode.Count <= 0)
+            if (this.lstSelect.Count <= 0)
                 throw new ArithmeticException("必须指定修改要赋值的列");
-            List<string> lstSet = this.lstSelectNode.Select(col => col.Column.ColumnName + "=" + context.Symbol + col.Column.ColumnName).ToList();
+            List<string> lstSet = this.lstSelect.Select(col => col.Column.ColumnName + "=" + context.Symbol + col.Column.ColumnName).ToList();
             string strSet = string.Join(",", lstSet);
-            var dictParameter = this.lstSelectNode.ToDictionary(col => col.Column.ColumnName, col => cmd.CreateParameter());
+            var dictParameter = this.lstSelect.ToDictionary(col => col.Column.ColumnName, col => cmd.CreateParameter());
             foreach (var kv in dictParameter)
                 kv.Value.ParameterName = context.Symbol + kv.Key;
             foreach (var value in this.values)
             {
-                this.lstSelectNode.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
+                this.lstSelect.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
                 context.Parameters.Clear();
                 context.Tag = value;
                 string strwhere = ((INode)this.WH).ToSQL(context);
@@ -90,7 +91,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        private int Add(System.Data.Common.DbCommand cmd, ResovleContext context)
+        private int Add(System.Data.Common.DbCommand cmd, ResolveContext context)
         {
             int rst = 0;
             List<string> lstcolName;
@@ -113,17 +114,17 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        private string Add(System.Data.Common.DbCommand cmd, ResovleContext context, out List<string> lstcolName)
+        private string Add(System.Data.Common.DbCommand cmd, ResolveContext context, out List<string> lstcolName)
         {
-            if (this.lstSelectNode.Count <= 0)
+            if (this.lstSelect.Count <= 0)
                 throw new ArgumentException("必须指定要新增赋值的列");
-           lstcolName = this.lstSelectNode.Select(x => x.Column.ColumnName).ToList();
+           lstcolName = this.lstSelect.Select(x => x.Column.ColumnName).ToList();
             string strCol = string.Join(",", lstcolName);
             string strParamter = context.Symbol + string.Join("," + context.Symbol, lstcolName);
             return string.Format("INSERT INTO {0} ({1}) VALUES ({2})", this.nameHandler(context), strCol, strParamter);
         }
 
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ResovleContext context)
+        int ICud.Execute(System.Data.Common.DbCommand cmd, ResolveContext context)
         {
             int rst = 0;
             switch (this.OptCmd)
@@ -193,7 +194,7 @@ namespace Azeroth.Nalu
                 return true;
             foreach (object value in this.values)
             {
-                foreach (var node in this.lstSelectNode)
+                foreach (var node in this.lstSelect)
                 {
                     if (!this.dictMapHandler[node.Column.ColumnName].ValidateInstance(value, out msg))
                     {

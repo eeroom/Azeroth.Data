@@ -17,7 +17,7 @@ namespace Azeroth.Nalu
         protected string columNameNick;
         protected int colIndex;
 
-        protected override string ToSQL(ResovleContext context)
+        protected override string ToSQL(ResolveContext context)
         {
             if (this.column.FunctionCode != Azeroth.Nalu.Function.NONE || this.column.FunctionHandler != null || this.column.ColumnName != this.columNameNick)
                 return string.Format("{0} AS {1}", this.column.ToSQL(context), this.columNameNick);//特殊情况的select

@@ -10,9 +10,9 @@ namespace Azeroth.Nalu
     {
        
         protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
-        protected Func<ResovleContext, string> nameHandler;
+        protected Func<ResolveContext, string> nameHandler;
         protected string nameNick;
-        protected List<INodeSelect> lstSelectNode = new List<INodeSelect>();
+        protected List<INodeSelect> lstSelect = new List<INodeSelect>();
 
         protected abstract RuntimeTypeHandle GetMetaInfo();
         protected abstract object CreateInstance(bool isCreateNull);
@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
         }
 
         
-        Func<ResovleContext, string> ITable.NameHandler
+        Func<ResolveContext, string> ITable.NameHandler
         {
             get
             {
@@ -55,15 +55,15 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<INodeSelect> ITable.SelectNode
+        List<INodeSelect> ITable.Select
         {
             get
             {
-                return this.lstSelectNode;
+                return this.lstSelect;
             }
             set
             {
-                this.lstSelectNode=value;
+                this.lstSelect=value;
             }
         }
 

@@ -15,7 +15,7 @@ namespace Azeroth.Nalu
             this.opt = opt;
         }
 
-        protected override string ToSQL(ResovleContext context)
+        protected override string ToSQL(ResolveContext context)
         {
             return this.column.ToSQL(context) +" "+ opt.ToString();
         }

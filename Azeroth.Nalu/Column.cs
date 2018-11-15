@@ -53,7 +53,7 @@ namespace Azeroth.Nalu
             get { return this.columnName; }
         }
 
-        public string ToSQL(ResovleContext context)
+        public string ToSQL(ResolveContext context)
         {
             if (functionHandler != null)
                 return this.functionHandler(this);
@@ -125,7 +125,7 @@ namespace Azeroth.Nalu
             UnaryExpression unaExp = expBody as UnaryExpression;
             if (unaExp != null)
                 return GetName(unaExp.Operand);
-            throw new ArgumentException("必须使用返回单个属性值的表达式，例如：x=>x.Name");
+            throw new ArgumentException("不支持的表达式，正确示例：x=>x.Name");
         }
 
         /// <summary>
