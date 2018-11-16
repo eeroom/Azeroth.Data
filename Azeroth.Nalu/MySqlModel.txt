@@ -1,0 +1,108 @@
+﻿<#@ template language="C#" hostspecific="True" debug="True" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Configuration" #>
+<#@ assembly name="$(SolutionDir)\packages\MySql.Data.6.9.12\lib\net45\MySql.Data.dll"  #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Data" #>
+
+<#@include file="MultipleOutputHelper.txt"#>
+<#@ output extension=".txt" #>
+<# var manager = Manager.Create(Host, GenerationEnvironment); #>
+<# manager.StartHeader(); #>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace T4
+{
+<# manager.EndBlock(); #>
+ 
+<# manager.StartFooter(); #>
+}
+<# manager.EndBlock(); #>
+
+<#
+	 //System.Diagnostics.Debugger.Launch();//---进入调试
+     string cnnstrName="EquitySaas";
+    string configPath=Host.ResolveAssemblyReference("$(ProjectDir)")+"app.config";
+    var configPathMap=new System.Configuration.ExeConfigurationFileMap(){ExeConfigFilename=configPath};
+    var appConfig=System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configPathMap, System.Configuration.ConfigurationUserLevel.None);
+    var connSection= appConfig.GetSection("connectionStrings") as System.Configuration.ConnectionStringsSection;  
+    string cnnstr= connSection.ConnectionStrings[cnnstrName].ConnectionString;
+    using (var cnn = new MySql.Data.MySqlClient.MySqlConnection(cnnstr))
+    {
+        cnn.Open();
+        Dictionary<string,string> dictTableName=new Dictionary<string,string>();
+        using (var cmd = cnn.CreateCommand())
+        {
+            string catalog=cnnstr.Split(new char[] { ';','='},StringSplitOptions.RemoveEmptyEntries).Select(x=>x.ToLower()).SkipWhile(x=>x!= "initial catalog").ToArray()[1];
+            cmd.CommandText=string.Format(@"select * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE='BASE TABLE' and table_schema='{0}'", catalog);
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    dictTableName.Add(reader["TABLE_NAME"].ToString(),reader["TABLE_COMMENT"].ToString());
+                }
+            }
+        }
+        foreach (var kv in dictTableName)
+        {
+            manager.StartNewFile(kv.Key + ".cs");
+           this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
+            this.WriteLine(string.Format("{0}/// {1}",new String(' ',4),kv.Value.Replace("\r\n"," ").Replace("\r"," ").Replace("\n"," ")));
+            this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
+            //this.WriteLine(string.Format("{0}[Table(\"{1}\")]",new String(' ',4),kv.Key));
+            this.WriteLine(string.Format("{0}public partial class {1}", new String(' ', 4),kv.Key ));
+            this.WriteLine(new String(' ', 4) + "{");
+            System.Data.DataTable schemaTable;
+            using (var cmd = cnn.CreateCommand())
+            {
+                cmd.CommandText = string.Format("select * from {0}",kv.Key);
+                using (var reader = cmd.ExecuteReader(System.Data.CommandBehavior.KeyInfo | System.Data.CommandBehavior.SchemaOnly))
+                {
+                    schemaTable = reader.GetSchemaTable();
+                }
+            }
+            System.Data.DataTable commentTable=new System.Data.DataTable();
+            using (var cmd = cnn.CreateCommand())
+            {
+                cmd.CommandText = string.Format(@"show full fields from {0}", kv.Key);
+                using (var adapter=new MySql.Data.MySqlClient.MySqlDataAdapter(cmd))
+                {
+                    adapter.Fill(commentTable);
+                }
+            }
+            foreach (System.Data.DataRow row in schemaTable.Select())
+            {
+                string colName = row["ColumnName"].ToString();
+                int columnSize = Convert.ToInt32(row["ColumnSize"]);
+                string colType = row["DataType"].ToString().Substring("System.".Length);
+                bool allowDBNull = Convert.ToBoolean(row["AllowDBNull"]);
+                bool isKey=Convert.ToBoolean(row["IsKey"]);
+                if (allowDBNull && !colType.Equals("String") && !colType.Equals("Byte[]"))
+                    colType = "Nullable<" + colType + ">";
+                if (colName.EndsWith("Enum"))
+                    colType = colName.Substring(0, colName.Length - "Enum".Length) + "Index";
+                string comment = commentTable.Select("Field='"+colName+"'")[0]["Comment"].ToString().Replace("\r\n"," ").Replace("\r"," ").Replace("\n"," ");
+                this.WriteLine(string.Format("{0}/// <summary>",new String(' ', 8)));
+                this.WriteLine(string.Format("{0}///{1}", new String(' ', 8), comment));
+                this.WriteLine(string.Format("{0}/// </summary>", new String(' ', 8)));
+                //if(!allowDBNull && colType.Equals("String"))
+                    //this.WriteLine(string.Format("{0}[Required]",new String(' ',8)));
+                //if(colType.Equals("String") && columnSize<int.MaxValue && columnSize>0)
+                    //this.WriteLine(string.Format("{0}[StringLength({1})]",new String(' ',8),columnSize));
+                //if(isKey)
+                    //this.WriteLine(string.Format("{0}[Key]",new String(' ',8)));    
+                this.WriteLine(string.Format("{0}public {1} {2} {3}", new String(' ', 8), colType, colName, "{set;get;}"));
+            }
+            this.WriteLine(new String(' ', 4) + "}");
+            manager.EndBlock();
+        }
+    }
+#>
+<# manager.Process(true); #> 
