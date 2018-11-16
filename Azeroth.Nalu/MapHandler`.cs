@@ -26,15 +26,15 @@ namespace Azeroth.Nalu
       
         System.RuntimeTypeHandle propertyRTH;
 
-        XStringMapEnumAttribute xStringMapEnumAttr;
+        //XStringMapEnumAttribute xStringMapEnumAttr;
 
-        static readonly System.RuntimeTypeHandle METAXStringToEnumAttr=typeof(XStringMapEnumAttribute).TypeHandle;
+        //static readonly System.RuntimeTypeHandle METAXStringToEnumAttr=typeof(XStringMapEnumAttribute).TypeHandle;
 
         public MapHandler(PropertyInfo pmeta)
         {
             this.setvalueToInstance = (Action<T, int>)System.Delegate.CreateDelegate(typeof(Action<T,int>),pmeta.GetSetMethod());
             this.getvalueFromInstance = (Func<T, int>)System.Delegate.CreateDelegate(typeof(Func<T, int>), pmeta.GetGetMethod());
-            this.xStringMapEnumAttr = pmeta.GetCustomAttributes(System.Type.GetTypeFromHandle(METAXStringToEnumAttr),false).Cast<XStringMapEnumAttribute>().FirstOrDefault();
+            //this.xStringMapEnumAttr = pmeta.GetCustomAttributes(System.Type.GetTypeFromHandle(METAXStringToEnumAttr),false).Cast<XStringMapEnumAttribute>().FirstOrDefault();
             this.propertyRTH = pmeta.PropertyType.TypeHandle;
         }
 
@@ -46,26 +46,28 @@ namespace Azeroth.Nalu
         public object GetValueFromInstance(object instance, object[] index)
         {
             int value = getvalueFromInstance((T)instance);
-            if (this.xStringMapEnumAttr == null)
-                return value;
-            return System.Enum.GetName(System.Type.GetTypeFromHandle(propertyRTH),value);//返回枚举的名称
+            return value;
+            //if (this.xStringMapEnumAttr == null)
+                
+            //return System.Enum.GetName(System.Type.GetTypeFromHandle(propertyRTH),value);//返回枚举的名称
         }
 
         public void SetValueToInstance(object instance, IDataReader reader, int index)
         {
             if (reader.IsDBNull(index))
                 return;
-            if (this.xStringMapEnumAttr == null)
-                setvalueToInstance((T)instance, reader.GetInt32(index));
-            else
-                setvalueToInstance((T)instance,(int)System.Enum.Parse(System.Type.GetTypeFromHandle(propertyRTH),reader.GetString(index)));
+            setvalueToInstance((T)instance, reader.GetInt32(index));
+            //if (this.xStringMapEnumAttr == null)
+                
+            //else
+            //    setvalueToInstance((T)instance,(int)System.Enum.Parse(System.Type.GetTypeFromHandle(propertyRTH),reader.GetString(index)));
         }
 
-        public bool ValidateInstance(object instance, out string msg)
-        {
-            msg = string.Empty;
-            return true;
-        }
+        //public bool ValidateInstance(object instance, out string msg)
+        //{
+        //    msg = string.Empty;
+        //    return true;
+        //}
 
         public void SetValueToInstance(object instance, string value)
         {
@@ -74,9 +76,9 @@ namespace Azeroth.Nalu
                 this.setvalueToInstance((T)instance,tmp);
         }
 
-        public bool IsMapStringToEnum()
-        {
-            return this.xStringMapEnumAttr != null;
-        }
+        //public bool IsMapStringToEnum()
+        //{
+        //    return this.xStringMapEnumAttr != null;
+        //}
     }
 }

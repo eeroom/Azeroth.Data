@@ -36,10 +36,11 @@ namespace Azeroth.Nalu
             : base(column)
         {
             this.opt = opt;
-            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
-                this.value = value.ToString();
-            else
-                this.value = value;
+            this.value = value;
+            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            //    this.value = value.ToString();
+            //else
+            //    this.value = value;
         }
 
         /// <summary>
@@ -53,32 +54,38 @@ namespace Azeroth.Nalu
         {
             this.opt = opt;
             this.lstValue = new List<object>();
-            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            foreach (var tmp in value)
             {
-                foreach (var tmp in value)
-                    this.lstValue.Add(tmp.ToString());
-            }
-            else
-            {
-                foreach (var tmp in value)
-                    this.lstValue.Add(tmp);
-            }
+                this.lstValue.Add(tmp);
+            }     
+            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            //{
+            //    foreach (var tmp in value)
+            //        this.lstValue.Add(tmp.ToString());
+            //}
+            //else
+            //{
+            //    foreach (var tmp in value)
+            //        this.lstValue.Add(tmp);
+            //}
         }
 
         public NodeWhere(Column<T, P> column, WH opt,object min,object max)
             : base(column)
         {
             this.opt = opt;
-            if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
-            {
-                this.value = min.ToString();
-                this.value2 = max.ToString();
-            }
-            else
-            {
-                this.value = min;
-                this.value2 = max;
-            }
+            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
+            //{
+            //    this.value = min.ToString();
+            //    this.value2 = max.ToString();
+            //}
+            //else
+            //{
+            //    this.value = min;
+            //    this.value2 = max;
+            //}
+            this.value = min;
+            this.value2 = max;
         }
 
         public NodeWhere(IColumn col, Expression<Func<T, P>> exp, WH opt)

@@ -47,11 +47,11 @@ namespace Azeroth.Nalu
             setvalueHandler(instance, reader.GetValue(index),null);
         }
 
-        public bool ValidateInstance(object instance, out string msg)
-        {
-            msg = string.Empty;
-            return true;
-        }
+        //public bool ValidateInstance(object instance, out string msg)
+        //{
+        //    msg = string.Empty;
+        //    return true;
+        //}
 
         public void SetValueToInstance(object instance, string value)
         {
@@ -66,9 +66,9 @@ namespace Azeroth.Nalu
         }
 
 
-        public bool IsMapStringToEnum()
-        {
-            return false;
-        }
+        //public bool IsMapStringToEnum()
+        //{
+        //    return false;
+        //}
     }
 }

@@ -50,13 +50,13 @@ namespace Azeroth.Nalu
         /// <param name="value"></param>
         /// <param name="msg"></param>
         /// <returns></returns>
-        bool ValidateInstance(object instance, out string msg);
+        //bool ValidateInstance(object instance, out string msg);
 
-        /// <summary>
-        /// 把数据库中string的列映射为enum的属性
-        /// </summary>
-        /// <returns></returns>
-        bool IsMapStringToEnum();
+        ///// <summary>
+        ///// 把数据库中string的列映射为enum的属性
+        ///// </summary>
+        ///// <returns></returns>
+        //bool IsMapStringToEnum();
 
     }
 }

@@ -27,12 +27,12 @@ namespace Azeroth.Nalu
         /// </summary>
         Func<String, M> getvalueFromString;
 
-        XStringAttribute xStringAttr;
+        //XStringAttribute xStringAttr;
 
-        static readonly System.RuntimeTypeHandle METAXStringNullableAttr = typeof(Azeroth.Nalu.XStringAttribute).TypeHandle;
-        static readonly System.RuntimeTypeHandle METAXStringNullNickAttr=typeof(Azeroth.Nalu.XStringNullNickAttribute).TypeHandle;
+        //static readonly System.RuntimeTypeHandle METAXStringNullableAttr = typeof(Azeroth.Nalu.XStringAttribute).TypeHandle;
+        //static readonly System.RuntimeTypeHandle METAXStringNullNickAttr=typeof(Azeroth.Nalu.XStringNullNickAttribute).TypeHandle;
 
-        XStringNullNickAttribute xStringNullNickAttr;
+        //XStringNullNickAttribute xStringNullNickAttr;
 
         public MapHandler(Expression<Func<T, M>> selector)
         {
@@ -52,8 +52,8 @@ namespace Azeroth.Nalu
             this.setvalueToInstance = (Action<T, M>)System.Delegate.CreateDelegate(typeof(Action<T, M>), pmeta.GetSetMethod());
             this.getvalueFromDataReader = getvalueFromDataReader;
             this.getvalueFromString = getvalueFromString;
-            this.xStringAttr = pmeta.GetCustomAttributes(Type.GetTypeFromHandle(METAXStringNullableAttr), false).Cast<XStringAttribute>().FirstOrDefault();
-            this.xStringNullNickAttr = pmeta.GetCustomAttributes(Type.GetTypeFromHandle(METAXStringNullNickAttr), false).Cast<XStringNullNickAttribute>().FirstOrDefault();
+            //this.xStringAttr = pmeta.GetCustomAttributes(Type.GetTypeFromHandle(METAXStringNullableAttr), false).Cast<XStringAttribute>().FirstOrDefault();
+            //this.xStringNullNickAttr = pmeta.GetCustomAttributes(Type.GetTypeFromHandle(METAXStringNullNickAttr), false).Cast<XStringNullNickAttribute>().FirstOrDefault();
         }
 
         public void SetValueToInstance(object instance, object value, object[] index)
@@ -63,37 +63,31 @@ namespace Azeroth.Nalu
 
         public object GetValueFromInstance(object instance, object[] index)
         {
-            if (this.xStringNullNickAttr == null)
-                return getvalueFromInstance((T)instance);
-            else
-                return this.xStringNullNickAttr.ReverseFromInstanceToDB(getvalueFromInstance((T)instance));
+            return getvalueFromInstance((T)instance);
         }
 
         public void SetValueToInstance(object instance, IDataReader reader, int index)
         {
-            if (this.xStringNullNickAttr == null)
-                setvalueToInstance((T)instance, getvalueFromDataReader(reader, index));
-            else
-                setvalueToInstance((T)instance, xStringNullNickAttr.ReverseFromDataReaderToInstance(getvalueFromDataReader(reader, index)));
+            setvalueToInstance((T)instance, getvalueFromDataReader(reader, index));
         }
 
-        public bool ValidateInstance(object instance, out string msg)
-        {
-            msg = string.Empty;
-            if (this.xStringAttr == null)
-                return true;
-            string str = this.GetValueFromInstance(instance, null) as string;
-            return xStringAttr.Validate(str, out msg);
-        }
+        //public bool ValidateInstance(object instance, out string msg)
+        //{
+        //    msg = string.Empty;
+        //    if (this.xStringAttr == null)
+        //        return true;
+        //    string str = this.GetValueFromInstance(instance, null) as string;
+        //    return xStringAttr.Validate(str, out msg);
+        //}
 
         public void SetValueToInstance(object instance, string value)
         {
             this.setvalueToInstance((T)instance,this.getvalueFromString(value));
         }
 
-        public bool IsMapStringToEnum()
-        {
-            return false;
-        }
+        //public bool IsMapStringToEnum()
+        //{
+        //    return false;
+        //}
     }
 }

@@ -9,7 +9,7 @@ namespace Azeroth.Nalu
     {
         int Execute(System.Data.Common.DbCommand cmd,ResolveContext context);
 
-        bool Validate(out string msg);
+        //bool Validate(out string msg);
 
     }
 }

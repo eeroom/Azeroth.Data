@@ -187,23 +187,23 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        bool ICud.Validate(out string msg)
-        {
-            msg = string.Empty;
-            if (this.OptCmd != Cmd.Add && this.OptCmd != Cmd.Edit)
-                return true;
-            foreach (object value in this.values)
-            {
-                foreach (var node in this.lstSelect)
-                {
-                    if (!this.dictMapHandler[node.Column.ColumnName].ValidateInstance(value, out msg))
-                    {
-                        msg = string.Format("{0}\r\n类型名称={1}\r\n属性名称={2}", msg, Type.GetTypeFromHandle(GetMetaInfo()).FullName, node.Column.ColumnName);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
+        //bool ICud.Validate(out string msg)
+        //{
+        //    msg = string.Empty;
+        //    if (this.OptCmd != Cmd.Add && this.OptCmd != Cmd.Edit)
+        //        return true;
+        //    foreach (object value in this.values)
+        //    {
+        //        foreach (var node in this.lstSelect)
+        //        {
+        //            if (!this.dictMapHandler[node.Column.ColumnName].ValidateInstance(value, out msg))
+        //            {
+        //                msg = string.Format("{0}\r\n类型名称={1}\r\n属性名称={2}", msg, Type.GetTypeFromHandle(GetMetaInfo()).FullName, node.Column.ColumnName);
+        //                return false;
+        //            }
+        //        }
+        //    }
+        //    return true;
+        //}
     }
 }
