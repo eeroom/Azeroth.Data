@@ -81,13 +81,7 @@
     <Compile Include="NodeON.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4.txt" />
-    <Content Include="T4Batch.txt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>T4Batch1.txt</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Model.txt" />
     <Content Include="MultipleOutputHelper.txt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>

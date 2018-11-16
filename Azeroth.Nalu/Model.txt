@@ -51,8 +51,6 @@ namespace T4
         }
         foreach (string nameClass in lstTableName)
         {
-            if(!nameClass.StartsWith("GZ_"))
-                continue;
             manager.StartNewFile(nameClass + ".cs");
             this.WriteLine(string.Format("{1}public partial class {0}", nameClass, new String(' ', 4)));
             this.WriteLine(new String(' ', 4) + "{");
