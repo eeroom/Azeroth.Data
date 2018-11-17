@@ -34,7 +34,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public virtual DbCud<T> Cud<T>()
+        public virtual DbCud<T> Cud<T>() where T:class
         {
             return new DbCud<T>();
         }

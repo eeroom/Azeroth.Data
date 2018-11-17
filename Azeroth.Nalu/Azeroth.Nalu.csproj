@@ -64,7 +64,7 @@
     <Compile Include="NodeWhere.cs" />
     <Compile Include="NodeWhere`2.cs" />
     <Compile Include="NodeWhereSegment.cs" />
-    <Compile Include="OPT.cs" />
+    <Compile Include="Option.cs" />
     <Compile Include="Container.cs" />
     <Compile Include="ResolveContext.cs" />
     <Compile Include="ICud.cs" />
@@ -76,9 +76,6 @@
     <Compile Include="NodeJOIN.cs" />
     <Compile Include="NodeOrderBy.cs" />
     <Compile Include="RowState.cs" />
-    <Compile Include="XStringAttribute.cs" />
-    <Compile Include="XStringNullNickAttribute.cs" />
-    <Compile Include="XStringMapEnumAttribute.cs" />
     <Compile Include="NodeON.cs" />
   </ItemGroup>
   <ItemGroup>

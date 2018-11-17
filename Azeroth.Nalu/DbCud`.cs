@@ -6,16 +6,16 @@ using System.Linq.Expressions;
 
 namespace Azeroth.Nalu
 {
-    public class DbCud<T>:Table<T>,ICud
+    public class DbCud<T>:Table<T>,ICud where T:class
     {
         public string CommandText {protected set; get; }
         public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
-        public NodeWhere WH{set;get;}
-        public DbCud<T> Select(Column col)
-        {
-            this.lstSelect.Add(new NodeSelect(col));
-            return this;
-        }
+        public NodeWhere WHERE{set;get;}
+        //public DbCud<T> Select(Column col)
+        //{
+        //    this.lstSelect.Add(new NodeSelect(col));
+        //    return this;
+        //}
 
         public DbCud<T> Select<S>(Expression<Func<T,S>> exp)
         {
@@ -42,8 +42,9 @@ namespace Azeroth.Nalu
             if (values == null||values.Count()<1)
                 return Del(cmd,context,null);
             foreach (var value in values)
-                rst += Del(cmd,context,value);
-
+            {
+                rst += Del(cmd, context, value);
+            } 
             return rst;
         }
 
@@ -51,7 +52,7 @@ namespace Azeroth.Nalu
         {
             context.Parameters.Clear();
             context.Tag = value;
-            string strwhere =((IResolver)this.WH).ToSQL(context);
+            string strwhere =((IResolver)this.WHERE).ToSQL(context);
             if (!string.IsNullOrEmpty(strwhere))
                 strwhere = " WHERE " + strwhere;
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
@@ -77,7 +78,7 @@ namespace Azeroth.Nalu
                 this.lstSelect.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
                 context.Parameters.Clear();
                 context.Tag = value;
-                string strwhere = ((INode)this.WH).ToSQL(context);
+                string strwhere = ((INode)this.WHERE).ToSQL(context);
                 if (!string.IsNullOrEmpty(strwhere))
                     strwhere = " WHERE " + strwhere;
                 context.Parameters.AddRange(dictParameter.Values);
@@ -95,7 +96,7 @@ namespace Azeroth.Nalu
         {
             int rst = 0;
             List<string> lstcolName;
-            cmd.CommandText= Add(cmd,context,out  lstcolName);
+            cmd.CommandText= Add(context,out  lstcolName);
             Dictionary<string, System.Data.Common.DbParameter> dictParameter = lstcolName.ToDictionary(x => x, x => cmd.CreateParameter());
             foreach (var kv in dictParameter)
                 kv.Value.ParameterName = context.Symbol + kv.Key;
@@ -114,7 +115,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        private string Add(System.Data.Common.DbCommand cmd, ResolveContext context, out List<string> lstcolName)
+        private string Add(ResolveContext context, out List<string> lstcolName)
         {
             if (this.lstSelect.Count <= 0)
                 throw new ArgumentException("必须指定要新增赋值的列");
@@ -145,45 +146,45 @@ namespace Azeroth.Nalu
         }
 
 
-        public Table<T> Add(IEnumerable<T> value)
+        public Table<T> InsertRange(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Add;
             this.values = value;
             return this;
         }
 
-        public Table<T> Add(params T[] value)
+        public Table<T> Insert(T value)
         {
             this.OptCmd = Cmd.Add;
-            this.values = value;
+            this.values = new List<T>() { value};
             return this;
         }
 
-        public Table<T> Edit(IEnumerable<T> value)
+        public Table<T> UpdateRange(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Edit;
             this.values = value;
             return this;
         }
 
-        public Table<T> Edit(params T[] value)
+        public Table<T> Update(T value)
         {
             this.OptCmd = Cmd.Edit;
-            this.values = value;
+            this.values = new List<T>() { value};
             return this;
         }
 
-        public Table<T> Del(IEnumerable<T> value)
+        public Table<T> RemoveRange(IEnumerable<T> value)
         {
             this.OptCmd = Cmd.Del;
             this.values = value;
             return this;
         }
 
-        public Table<T> Del(params T[] value)
+        public Table<T> Remove(T value)
         {
             this.OptCmd = Cmd.Del;
-            this.values = value;
+            this.values = new List<T>() {value };
             return this;
         }
 

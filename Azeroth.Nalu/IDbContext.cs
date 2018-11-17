@@ -11,7 +11,7 @@ namespace Azeroth.Nalu
         int SaveChange(params ICud[] lstcud);
         ResolveContext GetResolveContext();
 
-        DbCud<T> Cud<T>();
+        DbCud<T> Cud<T>() where T : class;
         Container CreateContainer();
 
         DbSet<T> Set<T>(IContainer container);
