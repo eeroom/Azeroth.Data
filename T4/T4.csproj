@@ -169,10 +169,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Azeroth.Nalu.Mysql\Azeroth.Nalu.Mysql.csproj">
-      <Project>{f0f10eae-ef96-49e7-b7c3-f602483eeb00}</Project>
-      <Name>Azeroth.Nalu.Mysql</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Azeroth.Nalu\Azeroth.Nalu.csproj">
       <Project>{503a49cf-ebb5-40e4-81f7-d1612f316e64}</Project>
       <Name>Azeroth.Nalu</Name>
