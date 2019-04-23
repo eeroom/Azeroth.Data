@@ -167,5 +167,10 @@ namespace Azeroth.Nalu.Excel
         }
     }
 
-
+    public static class Extension
+    {
+        public static double GetDouble(NPOI.SS.UserModel.ICell cell) {
+            return cell.NumericCellValue;
+        }
+    }
 }
