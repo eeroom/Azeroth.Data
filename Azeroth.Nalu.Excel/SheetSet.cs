@@ -167,5 +167,11 @@ namespace Azeroth.Nalu.Excel
         }
     }
 
-
+    public static class ExcelExtension
+    {
+        public static string GetString(this NPOI.SS.UserModel.ICell cell)
+        {
+            return cell.StringCellValue;
+        }
+    }
 }
