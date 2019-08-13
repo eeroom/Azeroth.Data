@@ -42,7 +42,7 @@
     <Compile Include="Column.cs" />
     <Compile Include="DateTimeWrapper.cs" />
     <Compile Include="DbContext`.cs" />
-    <Compile Include="MySqlContainer.cs" />
+    <Compile Include="ContainerMariadb.cs" />
     <Compile Include="Table.cs" />
     <Compile Include="DbCud`.cs" />
     <Compile Include="DbSet`.cs" />
@@ -54,7 +54,7 @@
     <Compile Include="IMapHandler.cs" />
     <Compile Include="INode.cs" />
     <Compile Include="INodeSelect.cs" />
-    <Compile Include="IResolver.cs" />
+    <Compile Include="ISqlResolver.cs" />
     <Compile Include="MapHandler.cs" />
     <Compile Include="MapHandlerFactory.cs" />
     <Compile Include="MapHandler`.cs" />
@@ -84,7 +84,8 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
     </Content>
-    <Content Include="MySqlModel.txt" />
+    <Content Include="ModelMariadb.txt" />
+    <Content Include="ModelVS2019.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

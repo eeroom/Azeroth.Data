@@ -24,8 +24,8 @@ namespace Azeroth.Nalu
             if (left.Placeholder)
                 return right.ToSQL(context);
             if (this.opt == Logic.And)
-                return string.Format("{0} {1} {2}", ((IResolver)left).ToSQL(context), AND, right.ToSQL(context));
-            return string.Format("({0} {1} {2})", ((IResolver)left).ToSQL(context), OR, right.ToSQL(context)); ;
+                return string.Format("{0} {1} {2}", ((ISqlResolver)left).ToSQL(context), AND, right.ToSQL(context));
+            return string.Format("({0} {1} {2})", ((ISqlResolver)left).ToSQL(context), OR, right.ToSQL(context)); ;
         }
     }
 }

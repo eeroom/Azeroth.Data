@@ -52,7 +52,7 @@ namespace Azeroth.Nalu
         {
             context.Parameters.Clear();
             context.Tag = value;
-            string strwhere =((IResolver)this.WHERE).ToSQL(context);
+            string strwhere =((ISqlResolver)this.WHERE).ToSQL(context);
             if (!string.IsNullOrEmpty(strwhere))
                 strwhere = " WHERE " + strwhere;
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);

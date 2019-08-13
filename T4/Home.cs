@@ -11,12 +11,12 @@ namespace T4
         {
             DbContext dbcontext = new DbContext();
             var container= dbcontext.CreateContainer();
-            var user= dbcontext.Set<GZ_User>(container).Select(x => new { x.Name, x.UserName });
-            var userRole = dbcontext.Set<GZ_UserRole>(container);
-            var role = dbcontext.Set<GZ_Role>(container).Select(x => new { x.Name,x.Code});
+            var user= dbcontext.Set<UserInfo>(container).Select(x => new { x.Name,x.Id });
+            var userRole = dbcontext.Set<RUserInfoRoleInfo>(container);
+            var role = dbcontext.Set<RoleInfo>(container).Select(x => new { x.Name,x.Id});
             user.Join(userRole, Azeroth.Nalu.JOIN.Inner).ON = user.Col(x => x.Id) == userRole.Col(x => x.UserId);
             userRole.Join(role, Azeroth.Nalu.JOIN.Inner).ON = userRole.Col(x => x.RoleId) == role.Col(x=>x.Id);
-            var lst= container.ToList(x => Tuple.Create((GZ_User)x[0], (GZ_Role)x[2]));
+            var lst= container.ToList(x => Tuple.Create((UserInfo)x[0], (RoleInfo)x[2]));
 
 
         }
@@ -32,5 +32,26 @@ namespace T4
         }
 
        
+    }
+
+    public class UserInfo
+    {
+        public string Name { get; set; }
+        public Guid Id { get; set; }
+    }
+
+    public class RoleInfo
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class RUserInfoRoleInfo
+    {
+        public Guid Id { get; set; }
+
+        public Guid UserId { get; set; }
+
+        public Guid RoleId { get; set; }
     }
 }

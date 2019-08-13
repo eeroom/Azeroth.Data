@@ -135,7 +135,7 @@ namespace Azeroth.Nalu
         }
 
        
-        string IResolver.ToSQL(ResolveContext context)
+        string ISqlResolver.ToSQL(ResolveContext context)
         {
             return this.ToSQL(context);
         }
@@ -379,7 +379,7 @@ namespace Azeroth.Nalu
         {
             string sqlstr = string.Empty;
             if (lstNode != null)
-                sqlstr = ((IResolver)lstNode).ToSQL(context);//筛选条件
+                sqlstr = ((ISqlResolver)lstNode).ToSQL(context);//筛选条件
             if (!string.IsNullOrEmpty(sqlstr))
                 sqlstr =string.Format(" \r\n{0} {1}",verb,sqlstr);
             return sqlstr;

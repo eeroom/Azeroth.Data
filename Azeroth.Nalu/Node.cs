@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
             get { return this.column; }
         }
 
-        string IResolver.ToSQL(ResolveContext context) {
+        string ISqlResolver.ToSQL(ResolveContext context) {
             return this.ToSQL(context);
         }
 

@@ -8,7 +8,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// OMT查询解析为sql语句
     /// </summary>
-    public interface IContainer:IResolver
+    public interface IContainer:ISqlResolver
     {
         List<IContainer> SubContainer { get; }
         List<INodeSelect> Select {  get; }
