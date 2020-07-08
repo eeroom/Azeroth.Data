@@ -43,6 +43,11 @@
     <Compile Include="DateTimeWrapper.cs" />
     <Compile Include="DbContext`.cs" />
     <Compile Include="ContainerMariadb.cs" />
+    <Compile Include="T4\MultipleOutputHelper.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MultipleOutputHelper.txt</DependentUpon>
+    </Compile>
     <Compile Include="Table.cs" />
     <Compile Include="DbCud`.cs" />
     <Compile Include="DbSet`.cs" />
@@ -79,13 +84,13 @@
     <Compile Include="Node\JoinOnNode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Model.txt" />
-    <Content Include="MultipleOutputHelper.txt">
+    <Content Include="T4\Model.txt" />
+    <Content Include="T4\MultipleOutputHelper.txt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
     </Content>
-    <Content Include="ModelMariadb.txt" />
-    <Content Include="ModelVS2019.txt" />
+    <Content Include="T4\ModelMariadb.txt" />
+    <Content Include="T4\ModelVS2019.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
