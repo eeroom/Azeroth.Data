@@ -42,7 +42,7 @@
     <Compile Include="Column.cs" />
     <Compile Include="DateTimeWrapper.cs" />
     <Compile Include="DbContext`.cs" />
-    <Compile Include="ContainerMariadb.cs" />
+    <Compile Include="QueryMariadb.cs" />
     <Compile Include="T4\MultipleOutputHelper.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
