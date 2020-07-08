@@ -4,16 +4,16 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
-    public class NodeJOIN:Node
+    public class JoinNode: NodeBase
     {
-        public NodeWhere ON { set; get; }
+        public WhereNode ON { set; get; }
 
         JOIN opt;
 
         ITable container;
-        public NodeJOIN(JOIN opt, Table dbr)
+        public JoinNode(JOIN opt, Table dbr)
         {
             this.opt = opt;
             this.container = dbr;
@@ -23,7 +23,7 @@ namespace Azeroth.Nalu
         {
             if (opt == JOIN.None)
                 return ToSQLWithScalar(context);
-            string strwhere = ((ISqlResolver)this.ON).ToSQL(context);
+            string strwhere = ((IResolver)this.ON).ToSQL(context);
             return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.ToSQL(),this.container.NameHandler(context),this.container.NameNick,strwhere);
         }
 

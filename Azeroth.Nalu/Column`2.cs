@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,53 +15,53 @@ namespace Azeroth.Nalu
             this.exp = exp;
         }
 
-        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp,INodeSelect mapcolumn)
+        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp,ISelectNode mapcolumn)
             : base(db, Column.GetName(exp.Body),mapcolumn)
         {
             this.exp = exp;
         }
 
-        public NodeWhere<T, S> In(System.Collections.ICollection value)
+        public WhereNode<T, S> In(System.Collections.ICollection value)
         {
-            return new NodeWhere<T, S>(this, WH.IN,value);
+            return new WhereNode<T, S>(this, WH.IN,value);
         }
 
-        public NodeWhere<T, S> In(params S[] value)
+        public WhereNode<T, S> In(params S[] value)
         {
-            return new NodeWhere<T, S>(this, WH.IN, value);
+            return new WhereNode<T, S>(this, WH.IN, value);
         }
 
-        public NodeWhere<T, S> Range(object min,object max)
+        public WhereNode<T, S> Range(object min,object max)
         {
-            return new NodeWhere<T, S>(this, WH.BT, min,max);
+            return new WhereNode<T, S>(this, WH.BT, min,max);
         }
 
-        public NodeWhere<T, S> BatchEdit(WH opt)
+        public WhereNode<T, S> BatchEdit(WH opt)
         {
-            return new NodeWhere<T, S>(this,this.exp,opt);
+            return new WhereNode<T, S>(this,this.exp,opt);
         }
 
-        public NodeWhere<T, S> Null()
+        public WhereNode<T, S> Null()
         {
             
-            return new NodeWhere<T, S>(this, WH.NULL,string.Empty);
+            return new WhereNode<T, S>(this, WH.NULL,string.Empty);
         }
 
-        public NodeWhere<T, S> Exists(Container value)
+        public WhereNode<T, S> Exists(Query value)
         {
 
-            return new NodeWhere<T, S>(this, WH.Exists, value);
+            return new WhereNode<T, S>(this, WH.Exists, value);
         }
 
-        public NodeWhere<T, S> Like(string value)
+        public WhereNode<T, S> Like(string value)
         {
-            return new NodeWhere<T, S>(this, WH.LIKE, value);
+            return new WhereNode<T, S>(this, WH.LIKE, value);
         }
 
-        public NodeWhere<T, S> NoParameter(Func<Column, string> handler)
+        public WhereNode<T, S> NoParameter(Func<Column, string> handler)
         {
             this.functionHandler = handler;
-            return new NodeWhere<T, S>(this, WH.NoParameter, string.Empty);
+            return new WhereNode<T, S>(this, WH.NoParameter, string.Empty);
         }
 
         public new Column<T, S> Function(Function value)
@@ -75,74 +76,74 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public static NodeWhere<T,S> operator >=(Column<T,S> col,S value)
+        public static WhereNode<T,S> operator >=(Column<T,S> col,S value)
         {
-            return new NodeWhere<T, S>(col, WH.GTE,value);
+            return new WhereNode<T, S>(col, WH.GTE,value);
         }
 
-        public static NodeWhere<T, S> operator >(Column<T, S> col, S value)
+        public static WhereNode<T, S> operator >(Column<T, S> col, S value)
         {
-            return new NodeWhere<T, S>(col, WH.GT, value);
+            return new WhereNode<T, S>(col, WH.GT, value);
         }
 
-        public static NodeWhere<T, S> operator <=(Column<T, S> col, S value)
+        public static WhereNode<T, S> operator <=(Column<T, S> col, S value)
         {
-            return new NodeWhere<T, S>(col, WH.LTE, value);
+            return new WhereNode<T, S>(col, WH.LTE, value);
         }
 
-        public static NodeWhere<T, S> operator <(Column<T, S> col, S value)
+        public static WhereNode<T, S> operator <(Column<T, S> col, S value)
         {
-            return new NodeWhere<T, S>(col, WH.LT, value);
+            return new WhereNode<T, S>(col, WH.LT, value);
         }
 
-        public static NodeWhere<T, S> operator ==(Column<T, S> col, S value)
+        public static WhereNode<T, S> operator ==(Column<T, S> col, S value)
         {
-            return new NodeWhere<T, S>(col, WH.EQ, value);
+            return new WhereNode<T, S>(col, WH.EQ, value);
         }
 
-        public static NodeWhere<T, S> operator !=(Column<T, S> col, S value)
+        public static WhereNode<T, S> operator !=(Column<T, S> col, S value)
         {
-            return new NodeWhere<T, S>(col, ~WH.EQ, value);
+            return new WhereNode<T, S>(col, ~WH.EQ, value);
         }
 
-        public static NodeWhere<T, S> operator >=(S value,Column<T, S> col)
+        public static WhereNode<T, S> operator >=(S value,Column<T, S> col)
         {
-            return new NodeWhere<T, S>(col, WH.LTE, value);
+            return new WhereNode<T, S>(col, WH.LTE, value);
         }
 
-        public static NodeWhere<T, S> operator >( S value,Column<T, S> col)
+        public static WhereNode<T, S> operator >( S value,Column<T, S> col)
         {
-            return new NodeWhere<T, S>(col, WH.LT, value);
+            return new WhereNode<T, S>(col, WH.LT, value);
         }
 
-        public static NodeWhere<T, S> operator <=(S value,Column<T, S> col )
+        public static WhereNode<T, S> operator <=(S value,Column<T, S> col )
         {
-            return new NodeWhere<T, S>(col, WH.GTE, value);
+            return new WhereNode<T, S>(col, WH.GTE, value);
         }
 
-        public static NodeWhere<T, S> operator <(S value,Column<T, S> col)
+        public static WhereNode<T, S> operator <(S value,Column<T, S> col)
         {
-            return new NodeWhere<T, S>(col, WH.GT, value);
+            return new WhereNode<T, S>(col, WH.GT, value);
         }
 
-        public static NodeWhere<T, S> operator ==(S value,Column<T, S> col)
+        public static WhereNode<T, S> operator ==(S value,Column<T, S> col)
         {
-            return new NodeWhere<T, S>(col, WH.EQ, value);
+            return new WhereNode<T, S>(col, WH.EQ, value);
         }
 
-        public static NodeWhere<T, S> operator !=(S value, Column<T, S> col)
+        public static WhereNode<T, S> operator !=(S value, Column<T, S> col)
         {
-            return new NodeWhere<T, S>(col, ~WH.EQ, value);
+            return new WhereNode<T, S>(col, ~WH.EQ, value);
         }
 
-        public static NodeON operator !=(Column<T, S> col, IColumn col2)
+        public static JoinOnNode operator !=(Column<T, S> col, IColumn col2)
         {
             throw new ArgumentException("不支持的连接条件");
         }
 
-        public static NodeON operator ==(Column<T, S> col, IColumn col2)
+        public static JoinOnNode operator ==(Column<T, S> col, IColumn col2)
         {
-            return new NodeON(col,col2);
+            return new JoinOnNode(col,col2);
         }
 
         public override bool Equals(object obj)
@@ -150,9 +151,9 @@ namespace Azeroth.Nalu
             return base.Equals(obj);
         }
 
-        public NodeWhere<T, S> Equals(S value)
+        public WhereNode<T, S> Equals(S value)
         {
-            return new NodeWhere<T, S>(this, WH.EQ, value);
+            return new WhereNode<T, S>(this, WH.EQ, value);
         }
 
         public override int GetHashCode()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -15,9 +16,9 @@ namespace Azeroth.Nalu
             this.columnName = columnName;
         }
 
-        protected INodeSelect mapColumn;
+        protected ISelectNode mapColumn;
 
-        public Column(Table table, string columnName, INodeSelect mapColumn)
+        public Column(Table table, string columnName, ISelectNode mapColumn)
         {
             this.table = table;
             this.columnName = columnName;

@@ -4,18 +4,18 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
     /// <summary>
     /// Join中的where
     /// </summary>
     /// <typeparam name="L"></typeparam>
     /// <typeparam name="R"></typeparam>
-    public class NodeON : NodeWhere
+    public class JoinOnNode : WhereNode
     {
         IColumn right;
 
-        public NodeON(IColumn left,IColumn right):base(left)
+        public JoinOnNode(IColumn left,IColumn right):base(left)
         {
             this.right = right;
         }

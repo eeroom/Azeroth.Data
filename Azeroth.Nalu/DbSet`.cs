@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,7 +10,7 @@ namespace Azeroth.Nalu
     public class DbSet<T>:Table<T>
     {
 
-        public DbSet(IContainer container)
+        public DbSet(IQuery container)
         {
             this.container = container;
             container.Items.Add(this);
@@ -18,8 +19,8 @@ namespace Azeroth.Nalu
                 //return tmp;
         }
 
-        protected IContainer container;
-        protected IContainer subContainer;
+        protected IQuery container;
+        protected IQuery subContainer;
 
         string viewName;//也可能是表名称，泛指和class名称不一致的表名称
         public DbSet<T> From(string name)
@@ -29,7 +30,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public DbSet<T> From(Container subContainer)
+        public DbSet<T> From(Query subContainer)
         {
             //因为这个时候 dbset.SQLResolver.NameForCTE这个值还没有，所有需要解析的时候去取，
             //所有把Name定义成委托，解析开始后再去取这个名称
@@ -40,11 +41,11 @@ namespace Azeroth.Nalu
         }
 
 
-        public NodeJOIN Join<B>(DbSet<B> dbset,JOIN opt)
+        public JoinNode Join<B>(DbSet<B> dbset,JOIN opt)
         {
             if (dbset.container != this.container)
                 throw new ArgumentException("必须同一container下的dbset才可以进行join");
-            var tmp = new NodeJOIN(opt, dbset);
+            var tmp = new JoinNode(opt, dbset);
             this.container.JOIN.Add(tmp);
             return tmp;
         }
@@ -90,9 +91,9 @@ namespace Azeroth.Nalu
         public DbSet<T> Select<S>(Expression<Func<T,S>> exp) 
         {
             List<Column> cols = Cols(exp);
-            var tmp = cols.Select(x => new NodeSelect(x)).ToList();
+            var tmp = cols.Select(x => new SelectNode(x)).ToList();
             tmp.ForEach(x=>this.lstSelect.Add(x));
-            tmp.ForEach(x => ((INodeSelect)x).Column.Table.Select.Add(x));
+            tmp.ForEach(x => ((ISelectNode)x).Column.Table.Select.Add(x));
             this.container.Select.AddRange(tmp);
             return this; 
         }
@@ -106,7 +107,7 @@ namespace Azeroth.Nalu
 
         public DbSet<T> OrderBy<S>(Order opt, Expression<Func<T, S>> exp)
         {
-            var lstcol = this.Cols(exp).Select(x=>new NodeOrderBy(x,opt));
+            var lstcol = this.Cols(exp).Select(x=>new OrderByNode(x,opt));
             this.container.OrderBy.AddRange(lstcol);
             return this;
         }

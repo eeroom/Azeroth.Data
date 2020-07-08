@@ -4,26 +4,26 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
-    public  class Node:INode
+    public  class NodeBase:INodeBase
     {
         protected IColumn column;
-        public Node()
+        public NodeBase()
         { 
         
         }
-        public Node(IColumn column)
+        public NodeBase(IColumn column)
         {
             this.column = column;
         }
 
-        IColumn INode.Column
+        IColumn INodeBase.Column
         {
             get { return this.column; }
         }
 
-        string ISqlResolver.ToSQL(ResolveContext context) {
+        string IResolver.ToSQL(ResolveContext context) {
             return this.ToSQL(context);
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -12,7 +13,7 @@ namespace Azeroth.Nalu
         protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
         protected Func<ResolveContext, string> nameHandler;
         protected string nameNick;
-        protected List<INodeSelect> lstSelect = new List<INodeSelect>();
+        protected List<ISelectNode> lstSelect = new List<ISelectNode>();
 
         protected abstract RuntimeTypeHandle GetMetaInfo();
         protected abstract object CreateInstance(bool isCreateNull);
@@ -55,7 +56,7 @@ namespace Azeroth.Nalu
             }
         }
       
-        List<INodeSelect> ITable.Select
+        List<ISelectNode> ITable.Select
         {
             get
             {

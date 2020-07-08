@@ -15,7 +15,7 @@ namespace Azeroth.Nalu
     /// 这个wrapper引入时间段模式的概念，对于原始的datetime而言，其模式就是秒模式，长度是1s(999.9999毫秒)
     /// 数据库里只需要一列日期时间值，一列模式，一列偏移，即可表示任意的一段时间
     /// </summary>
-     class DateTimeWrapper
+    public  class DateTimeWrapper
     {
         public DateTime StartDateTime { get;private set; }
         public DateTime EndDateTime { get; private set; }

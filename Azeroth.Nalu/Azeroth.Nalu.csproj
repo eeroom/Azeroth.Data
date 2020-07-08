@@ -52,31 +52,31 @@
     <Compile Include="IDbContext.cs" />
     <Compile Include="ITable.cs" />
     <Compile Include="IMapHandler.cs" />
-    <Compile Include="INode.cs" />
-    <Compile Include="INodeSelect.cs" />
-    <Compile Include="ISqlResolver.cs" />
+    <Compile Include="Node\INodeBase.cs" />
+    <Compile Include="Node\ISelectNode.cs" />
+    <Compile Include="IResolver.cs" />
     <Compile Include="MapHandler.cs" />
     <Compile Include="MapHandlerFactory.cs" />
     <Compile Include="MapHandler`.cs" />
     <Compile Include="MapHandler`2.cs" />
     <Compile Include="Column`2.cs" />
-    <Compile Include="NodeSelect.cs" />
-    <Compile Include="NodeWhere.cs" />
-    <Compile Include="NodeWhere`2.cs" />
-    <Compile Include="NodeWhereSegment.cs" />
+    <Compile Include="Node\SelectNode.cs" />
+    <Compile Include="Node\WhereNode.cs" />
+    <Compile Include="Node\WhereNode`2.cs" />
+    <Compile Include="Node\WhereSegmentNode.cs" />
     <Compile Include="Option.cs" />
-    <Compile Include="Container.cs" />
+    <Compile Include="Query.cs" />
     <Compile Include="ResolveContext.cs" />
     <Compile Include="ICud.cs" />
-    <Compile Include="IContainer.cs" />
-    <Compile Include="Enumerable.cs" />
+    <Compile Include="IQuery.cs" />
+    <Compile Include="OrmExtension.cs" />
     <Compile Include="Function.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="NodeJOIN.cs" />
-    <Compile Include="NodeOrderBy.cs" />
+    <Compile Include="Node\NodeBase.cs" />
+    <Compile Include="Node\JoinNode.cs" />
+    <Compile Include="Node\OrderByNode.cs" />
     <Compile Include="RowState.cs" />
-    <Compile Include="NodeON.cs" />
+    <Compile Include="Node\JoinOnNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Model.txt" />
@@ -90,6 +90,7 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

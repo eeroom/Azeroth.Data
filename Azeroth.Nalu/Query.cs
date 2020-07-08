@@ -1,24 +1,25 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public   class Container:IContainer
+    public   class Query:IQuery
     {
         /// <summary>
         /// 总记录数的辅助列
         /// </summary>
         protected const string CountAuxiliaryColumn = "_CountAuxiliaryColumn";
 
-        public Container(IDbContext contex)
+        public Query(IDbContext contex)
         {
             this.dbContex = contex;
         }
-        protected List<INodeSelect> lstSelect = new List<INodeSelect>();
-        protected List<INode> lstJoin = new List<INode>();
-        public NodeWhere WHERE { set; get; }
+        protected List<ISelectNode> lstSelect = new List<ISelectNode>();
+        protected List<INodeBase> lstJoin = new List<INodeBase>();
+        public WhereNode WHERE { set; get; }
         /// <summary>
         /// 筛选条件
         /// </summary>
@@ -29,10 +30,10 @@ namespace Azeroth.Nalu
         //public PredicateNode Having { set; get; }
 
         protected List<IColumn> lstGroupBy = new List<IColumn>();
-        public NodeWhere Having { set; get; }
-        protected List<INode> lstOrderBy = new List<INode>();
+        public WhereNode Having { set; get; }
+        protected List<INodeBase> lstOrderBy = new List<INodeBase>();
         protected List<ITable> lstItem=new List<ITable>();
-        protected List<IContainer> lstSubContainer = new List<IContainer>();
+        protected List<IQuery> lstSubContainer = new List<IQuery>();
         protected string nameForCTE;
         protected bool isDistinct;
 
@@ -49,13 +50,13 @@ namespace Azeroth.Nalu
         /// Distinct去重
         /// </summary>
         /// <returns></returns>
-        public Container Distinct()
+        public Query Distinct()
         {
             this.isDistinct = true;
             return this;
         }
 
-        public Container Take(int index, int size)
+        public Query Take(int index, int size)
         {
             if (this.top > 0)
                 throw new ArgumentException("top后不能进行分页查询");
@@ -105,7 +106,7 @@ namespace Azeroth.Nalu
        
 
 
-        string IContainer.NameForCTE
+        string IQuery.NameForCTE
         {
             get
             {
@@ -117,16 +118,16 @@ namespace Azeroth.Nalu
             }
         }
 
-        List<IContainer> IContainer.SubContainer
+        List<IQuery> IQuery.SubContainer
         {
             get { return this.lstSubContainer; }
         }
 
-        List<INode> IContainer.JOIN
+        List<INodeBase> IQuery.JOIN
         {
             get { return this.lstJoin; }
         }
-        List<INodeSelect> IContainer.Select
+        List<ISelectNode> IQuery.Select
         {
             get
             {
@@ -135,16 +136,16 @@ namespace Azeroth.Nalu
         }
 
        
-        string ISqlResolver.ToSQL(ResolveContext context)
+        string IResolver.ToSQL(ResolveContext context)
         {
             return this.ToSQL(context);
         }
 
-        protected virtual string ResolveCTE(ResolveContext context, IList<IContainer> lstCTEHandler)
+        protected virtual string ResolveCTE(ResolveContext context, IList<IQuery> lstCTEHandler)
         {
             if (lstCTEHandler.Count < 1 || !context.CanCTE)
                 return string.Empty;
-            List<IContainer> lstCTEHandler2 = new List<IContainer>();
+            List<IQuery> lstCTEHandler2 = new List<IQuery>();
             ResolveCTE(lstCTEHandler, lstCTEHandler2);
             lstCTEHandler2.ForEach(x => x.NameForCTE = "W" + context.NextSetIndex().ToString());
             context.CanCTE = false;
@@ -157,7 +158,7 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="resolvers"></param>
         /// <param name="resolversWithFlat"></param>
-        protected virtual void ResolveCTE(IList<IContainer> resolvers, IList<IContainer> resolversWithFlat)
+        protected virtual void ResolveCTE(IList<IQuery> resolvers, IList<IQuery> resolversWithFlat)
         {
             foreach (var resolver in resolvers)
             {
@@ -168,7 +169,7 @@ namespace Azeroth.Nalu
             }
         }
 
-        protected virtual string ResolveNodeSelect(ResolveContext context, IList<INodeSelect> lstNode)
+        protected virtual string ResolveNodeSelect(ResolveContext context, IList<ISelectNode> lstNode)
         {
             if (lstNode.Count < 1)
                 throw new ArgumentException("需要指定查询的列");
@@ -176,7 +177,7 @@ namespace Azeroth.Nalu
             return string.Join(",", lststr);
         }
 
-        protected virtual string ResolveNodeJOIN(ResolveContext context, IList<INode> lstNode)
+        protected virtual string ResolveNodeJOIN(ResolveContext context, IList<INodeBase> lstNode)
         {
             var lststr = lstNode.Select(x => x.ToSQL(context));
             return string.Join(" ", lststr).Trim(',');//","用于处理UnKown 的连接类型，只是把表放在一起
@@ -191,7 +192,7 @@ namespace Azeroth.Nalu
             return tmp;
         }
 
-        protected virtual string ResolveNodeOrderBy(ResolveContext context, IList<INode> lstNode)
+        protected virtual string ResolveNodeOrderBy(ResolveContext context, IList<INodeBase> lstNode)
         {
             var lststr = lstNode.Select(x => x.ToSQL(context));
             string strOrder = string.Join(",", lststr);
@@ -233,7 +234,7 @@ namespace Azeroth.Nalu
         //    return this.ToSQL(context);
         //}
 
-        public Container Top(int top)
+        public Query Top(int top)
         {
             if (this.pageIndex * this.pageSize > 0)
                 throw new ArgumentException("分页后不能再进行top查询");
@@ -243,7 +244,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        List<T> IContainer.ToList<H,T>(Func<object[], T> transfer,string cnnstr)
+        List<T> IQuery.ToList<H,T>(Func<object[], T> transfer,string cnnstr)
         {
             using (H cnn = new H())
             {
@@ -375,28 +376,28 @@ namespace Azeroth.Nalu
                                                          , CountAuxiliaryColumn);
         }
 
-        protected string ResolveNodeWhere(ResolveContext context, NodeWhere lstNode, string verb)
+        protected string ResolveNodeWhere(ResolveContext context, WhereNode lstNode, string verb)
         {
             string sqlstr = string.Empty;
             if (lstNode != null)
-                sqlstr = ((ISqlResolver)lstNode).ToSQL(context);//筛选条件
+                sqlstr = ((IResolver)lstNode).ToSQL(context);//筛选条件
             if (!string.IsNullOrEmpty(sqlstr))
                 sqlstr =string.Format(" \r\n{0} {1}",verb,sqlstr);
             return sqlstr;
         }
 
 
-        List<ITable> IContainer.Items
+        List<ITable> IQuery.Items
         {
             get { return this.lstItem; }
         }
 
-        List<IColumn> IContainer.GroupBy
+        List<IColumn> IQuery.GroupBy
         {
             get { return this.lstGroupBy; }
         }
 
-        List<INode> IContainer.OrderBy
+        List<INodeBase> IQuery.OrderBy
         {
             get { return this.lstOrderBy; }
         }

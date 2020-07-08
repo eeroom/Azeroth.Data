@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class ContainerMariadb : Container
+    public class QueryMariadb : Query
     {
-        public ContainerMariadb(IDbContext dbcontext):base(dbcontext)
+        public QueryMariadb(IDbContext dbcontext):base(dbcontext)
         {
             
         }

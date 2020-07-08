@@ -4,11 +4,11 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
-    public class NodeSelect :Node, INodeSelect
+    public class SelectNode :NodeBase, ISelectNode
     {
-        public NodeSelect(IColumn column):base(column)
+        public SelectNode(IColumn column):base(column)
         {
             this.columNameNick = column.ColumnName;
             //column.Container.SelectNodes.Add(this);
@@ -24,13 +24,13 @@ namespace Azeroth.Nalu
             return this.column.ToString();
         }
 
-        string INodeSelect.ColumnNameNick
+        string ISelectNode.ColumnNameNick
         {
             get {return this.columNameNick; }
             set { this.columNameNick = value; }
         }
 
-        int INodeSelect.ColIndex
+        int ISelectNode.ColIndex
         {
             get { return this.colIndex; }
             set { this.colIndex = value; }

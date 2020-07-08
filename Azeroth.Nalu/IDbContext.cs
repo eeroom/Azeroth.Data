@@ -7,13 +7,13 @@ namespace Azeroth.Nalu
 {
     public interface IDbContext
     {
-        List<T> ToList<T>(IContainer container, Func<object[], T> transfer);
+        List<T> ToList<T>(IQuery container, Func<object[], T> transfer);
         int SaveChange(params ICud[] lstcud);
         ResolveContext GetResolveContext();
 
         DbCud<T> Cud<T>() where T : class;
-        Container CreateContainer();
+        Query CreateContainer();
 
-        DbSet<T> Set<T>(IContainer container);
+        DbSet<T> Set<T>(IQuery container);
     }
 }

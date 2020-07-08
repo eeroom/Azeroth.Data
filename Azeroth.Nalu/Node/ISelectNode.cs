@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
-    public interface INodeSelect:INode
+    public interface ISelectNode:INodeBase
     {
 
         /// <summary>

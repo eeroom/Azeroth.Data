@@ -39,9 +39,9 @@ namespace Azeroth.Nalu
             return new DbCud<T>();
         }
 
-        public virtual Container CreateContainer() 
+        public virtual Query CreateContainer() 
         {
-            return new Container(this);
+            return new Query(this);
         }
 
         ResolveContext IDbContext.GetResolveContext()
@@ -54,7 +54,7 @@ namespace Azeroth.Nalu
             return new ResolveContext("@",()=>new System.Data.SqlClient.SqlParameter());
         }
 
-        List<T> IDbContext.ToList<T>(IContainer container, Func<object[], T> transfer)
+        List<T> IDbContext.ToList<T>(IQuery container, Func<object[], T> transfer)
         {
             return container.ToList<H, T>(transfer,this.Cnnstr);
         }
@@ -62,7 +62,7 @@ namespace Azeroth.Nalu
 
 
 
-        public DbSet<T> Set<T>(IContainer container)
+        public DbSet<T> Set<T>(IQuery container)
         {
             return new DbSet<T>(container);
 

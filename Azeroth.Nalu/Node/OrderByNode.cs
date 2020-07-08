@@ -4,13 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace Azeroth.Nalu
+namespace Azeroth.Nalu.Node
 {
-    public class NodeOrderBy:Node
+    public class OrderByNode:NodeBase
     {
         protected Order opt;
 
-        public NodeOrderBy(IColumn col,Order opt): base(col)
+        public OrderByNode(IColumn col,Order opt): base(col)
         {
             this.opt = opt;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Azeroth.Nalu.Node;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,7 +31,7 @@ namespace Azeroth.Nalu
         /// 需要修改的列
         /// 需要新增值得列
         /// </summary>
-        List<INodeSelect> Select { set; get; }
+        List<ISelectNode> Select { set; get; }
 
         /// <summary>
         /// 创建该Set对应的实例
