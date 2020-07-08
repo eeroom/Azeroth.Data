@@ -11,13 +11,16 @@ namespace T4
         static void Main(string[] args)
         {
             DbContext dbcontext = new DbContext();
-            var container= dbcontext.Query();
-            var user= dbcontext.Set<UserInfo>(container).Select(x => new { x.Name,x.Id });
-            var userRole = dbcontext.Set<RUserInfoRoleInfo>(container);
-            var role = dbcontext.Set<RoleInfo>(container).Select(x => new { x.Name,x.Id});
-            user.Join(userRole, Azeroth.Nalu.JOIN.Inner).ON = user.Col(x => x.Id) == userRole.Col(x => x.UserId);
-            userRole.Join(role, Azeroth.Nalu.JOIN.Inner).ON = userRole.Col(x => x.RoleId) == role.Col(x=>x.Id);
-            var lst= container.ToList(x => Tuple.Create((UserInfo)x[0], (RoleInfo)x[2]));
+            var query= dbcontext.Query();
+            var user= query.Set<UserInfo>().Select(x => new { x.Name,x.Id });
+            var userRole = query.Set<RUserInfoRoleInfo>();
+            var role = query.Set<RoleInfo>().Select(x => new { x.Name,x.Id});
+
+            //user.Join(userRole, Azeroth.Nalu.JOIN.Inner)
+            //    .ON(user.Col(x => x.Id) == userRole.Col(x => x.UserId))
+
+            //userRole.Join(role, Azeroth.Nalu.JOIN.Inner).ON = userRole.Col(x => x.RoleId) == role.Col(x=>x.Id);
+            //var lst= query.ToList(x => Tuple.Create((UserInfo)x[0], (RoleInfo)x[2]));
 
 
         }

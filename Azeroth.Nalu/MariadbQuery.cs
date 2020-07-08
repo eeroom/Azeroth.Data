@@ -5,28 +5,29 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class QueryMariadb : Query
+    public class MariadbQuery : Query
     {
-        public QueryMariadb(IDbContext dbcontext):base(dbcontext)
+        public MariadbQuery(IDbContext dbcontext):base(dbcontext)
         {
             
         }
 
         protected override string ToSQL(ResolveContext context)
         {
-            string strWithAS = ResolveCTE(context, this.lstSubContainer);
-            if (!string.IsNullOrEmpty(strWithAS))
-                strWithAS = strWithAS + " \r\n";
-            this.lstItem.ForEach(x => x.NameNick = "T" + context.NextSetIndex().ToString());//表的别名
+            //string strWithAS = ResolveCTE(context, this.lstSubContainer);
+            //if (!string.IsNullOrEmpty(strWithAS))
+            //    strWithAS = strWithAS + " \r\n";
+            string strWithAS = string.Empty;
+            this.lstItem.ForEach(x => x.NameNick = "T" + context.NextTableIndex().ToString());//表的别名
             //因为会出现重复的列名，所以要使用别名，比如表1和表2都使用A列
-            this.lstSelect.GroupBy(x => x.Column.ColumnName, (k, v) => v.ToList()).Where(v => v.Count > 1).ToList()
+            this.lstSelectNode.GroupBy(x => x.Column.ColumnName, (k, v) => v.ToList()).Where(v => v.Count > 1).ToList()
                 .ForEach(x => x.ForEach(a => a.ColumnNameNick = a.Column.ColumnName + context.NextColIndex().ToString()));
-            string strCol = ResolveNodeSelect(context, this.lstSelect);//查询的列
+            string strCol = ResolveNodeSelect(context, this.lstSelectNode);//查询的列
             string strfrom = this.lstItem[0].NameHandler(context) + " AS " + this.lstItem[0].NameNick;
-            string strjn = ResolveNodeJOIN(context, this.lstJoin);
-            string strwhere = ResolveNodeWhere(context, this.WHERE, "WHERE");
-            string strgroup = ResolverNodeGroupBy(context, this.lstGroupBy);
-            string strhaving = ResolveNodeWhere(context, this.Having, "HAVING");
+            string strjn = ResolveNodeJOIN(context, this.lstJoinNode);
+            string strwhere = ResolveNodeWhere(context, this.whereNode, "WHERE");
+            string strgroup = ResolverNodeGroupBy(context, this.lstGroupByNode);
+            string strhaving = ResolveNodeWhere(context, this.havingNode, "HAVING");
             string strOrder = ResolveNodeOrderBy(context, this.lstOrderBy);//排序
             if (this.pageIndex * this.pageSize <= 0)//不分页
                 return string.Format("{0}SELECT {1} {2} {3} \r\nFROM {4} {5} {6} {7} {8} {9} {10}", strWithAS

@@ -96,7 +96,7 @@ namespace Azeroth.Nalu.Node
             
         }
 
-        public WhereNode(Column<T, P> column, WH opt, IQuery handler)
+        public WhereNode(Column<T, P> column, WH opt, Query handler)
             : base(column)
         {
             
@@ -139,7 +139,7 @@ namespace Azeroth.Nalu.Node
                     break;
             }
             DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();//参数名称
+            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();//参数名称
             parameter.Value = value;//参数值
             string strwhere = string.Format("{0} {1} {2}", this.column.ToSQL(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
             context.Parameters.Add(parameter);
@@ -148,7 +148,7 @@ namespace Azeroth.Nalu.Node
 
         private string ToSQLWithExists(ResolveContext context)
         {
-            var tmp= this.value as IQuery;
+            var tmp= this.value as IResolver;
             string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.ToSQL(context));
             return strwhere;
         }
@@ -172,11 +172,11 @@ namespace Azeroth.Nalu.Node
         private string ToSQLWithBetween(ResolveContext context)
         {
             System.Data.Common.DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();
+            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
             parameter.Value = value;
             context.Parameters.Add(parameter);
             System.Data.Common.DbParameter parameter2 = context.CreateParameter();
-            parameter2.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();
+            parameter2.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
             parameter2.Value = value2;
             context.Parameters.Add(parameter2);
             return string.Format("{0} {3} {1} AND {2}", this.column.ToSQL(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
@@ -191,7 +191,7 @@ namespace Azeroth.Nalu.Node
         {
             if (qianTao)
             {//这里是IN的嵌套查询
-                var container = value as IQuery;
+                var container = value as IResolver;
                 return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), container.ToSQL(context));//where里面的子查询
             }
             List<string> lstName = new List<string>();
@@ -199,7 +199,7 @@ namespace Azeroth.Nalu.Node
             foreach (object val in lstValue)
             {//处理参数
                 parameter = context.CreateParameter();
-                parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextIndex().ToString();
+                parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
                 lstName.Add(parameter.ParameterName);
                 parameter.Value = val;
                 context.Parameters.Add(parameter);

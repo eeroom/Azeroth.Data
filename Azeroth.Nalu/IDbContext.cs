@@ -14,8 +14,6 @@ namespace Azeroth.Nalu
         DbCud<T> Cud<T>() where T : class;
         Query Query();
 
-        DbSet<T> Set<T>(IQuery container);
-
         System.Data.Common.DbProviderFactory GetDbProviderFactory();
     }
 }

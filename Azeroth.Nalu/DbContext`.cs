@@ -51,15 +51,6 @@ namespace Azeroth.Nalu
         }
 
 
-        public DbSet<T> Set<T>(IQuery container)
-        {
-            return new DbSet<T>(container);
-
-            //DbSet<B> tmp = new DbSet<B>(this);
-            //this.lstDbSet.Add(tmp);
-            //return tmp;
-        }
-
         public abstract DbProviderFactory GetDbProviderFactory();
 
         ResolveContext IDbContext.GetResolveContext()

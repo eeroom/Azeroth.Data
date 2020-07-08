@@ -11,7 +11,12 @@ namespace Azeroth.Nalu
     {
         public string CommandText {protected set; get; }
         public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
-        public WhereNode WHERE{set;get;}
+        WhereNode whereNode{set;get;}
+
+        public DbCud<T> Where(WhereNode predicate)
+        {
+            return this;
+        }
         //public DbCud<T> Select(Column col)
         //{
         //    this.lstSelect.Add(new NodeSelect(col));
@@ -53,7 +58,7 @@ namespace Azeroth.Nalu
         {
             context.Parameters.Clear();
             context.Tag = value;
-            string strwhere =((IResolver)this.WHERE).ToSQL(context);
+            string strwhere =((IResolver)this.whereNode).ToSQL(context);
             if (!string.IsNullOrEmpty(strwhere))
                 strwhere = " WHERE " + strwhere;
             cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
@@ -79,7 +84,7 @@ namespace Azeroth.Nalu
                 this.lstSelect.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
                 context.Parameters.Clear();
                 context.Tag = value;
-                string strwhere = ((INodeBase)this.WHERE).ToSQL(context);
+                string strwhere = ((INodeBase)this.whereNode).ToSQL(context);
                 if (!string.IsNullOrEmpty(strwhere))
                     strwhere = " WHERE " + strwhere;
                 context.Parameters.AddRange(dictParameter.Values);

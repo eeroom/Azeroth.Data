@@ -11,7 +11,7 @@ namespace Azeroth.Nalu
         {
             this.Symbol = symbol;
             this.Parameters = new List<System.Data.Common.DbParameter>(8);
-            this.CanCTE = true;
+            //this.CanCTE = true;
             this.CreateParameter = createParameter;
         }
 
@@ -27,7 +27,7 @@ namespace Azeroth.Nalu
         /// </summary>
         public List<System.Data.Common.DbParameter> Parameters { get;private set; }
 
-        public bool CanCTE { set; get; }
+        //public bool CanCTE { set; get; }
 
         public object Tag { set; get; }
         /// <summary>
@@ -48,7 +48,7 @@ namespace Azeroth.Nalu
         /// 表，CTE 的序号
         /// </summary>
         /// <returns></returns>
-        public int NextSetIndex()
+        public int NextTableIndex()
         {
             return this.setIndex++;
         }
@@ -56,8 +56,9 @@ namespace Azeroth.Nalu
         /// SQL参数的序号
         /// </summary>
         /// <returns></returns>
-        public int NextIndex()
+        public int NextParameterIndex()
         {
+
             return this.index++;
         }
     }
