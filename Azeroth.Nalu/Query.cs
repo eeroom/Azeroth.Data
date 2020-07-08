@@ -1,6 +1,7 @@
 ﻿using Azeroth.Nalu.Node;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
@@ -203,12 +204,12 @@ namespace Azeroth.Nalu
 
         public  List<S> ToList<S>()
         {
-            return this.dbContex.ToList(this,x=>(S)x[0]);
+            return this.ToList(x=>(S)x[0],this.dbContex.Cnnstr);
         }
 
         public List<S> ToList<S>(out int rowscount)
         {
-            var lst = this.dbContex.ToList(this, x => (S)x[0]);
+            var lst = this.ToList(x => (S)x[0],this.dbContex.Cnnstr);
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
@@ -217,12 +218,12 @@ namespace Azeroth.Nalu
 
         public  List<S> ToList<S>(Func<object[], S> transfer)
         {
-            return this.dbContex.ToList(this, transfer);
+            return this.ToList(transfer,this.dbContex.Cnnstr);
         }
 
         public  List<S> ToList<S>(Func<object[], S> transfer, out int rowscount)
         {
-            var lst = this.dbContex.ToList(this, transfer);
+            var lst = this.ToList(transfer);
             rowscount = this.rowsCount;
             if (pageIndex * pageSize <= 0)
                 rowscount = lst.Count;
@@ -244,9 +245,9 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        List<T> IQuery.ToList<H,T>(Func<object[], T> transfer,string cnnstr)
+        List<T> ToList<T>(Func<object[], T> transfer,string cnnstr)
         {
-            using (H cnn = new H())
+            using (DbConnection cnn = this.dbContex.GetDbProviderFactory().CreateConnection())
             {
                 cnn.ConnectionString = cnnstr;
                 using (var cmd = cnn.CreateCommand())

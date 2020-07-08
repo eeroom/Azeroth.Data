@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
@@ -9,14 +10,14 @@ namespace Azeroth.Nalu
     /// 数据库上下文，对应于连接的数据库
     /// </summary>
     /// <typeparam name="H"></typeparam>
-    public abstract  class DbContext<H>:IDbContext where H : System.Data.Common.DbConnection, new()
+    public abstract  class DbContext:IDbContext
     {
-        protected string Cnnstr { get; set; }
+        public string Cnnstr { get; set; }
 
         public virtual int SaveChange(params ICud[] dbsets)
         {
             int rst = 0;
-            using (H cnn = new H())
+            using (DbConnection cnn = this.GetDbProviderFactory().CreateConnection())
             {
                 cnn.ConnectionString = this.Cnnstr;
                 cnn.Open();
@@ -39,27 +40,15 @@ namespace Azeroth.Nalu
             return new DbCud<T>();
         }
 
-        public virtual Query CreateContainer() 
+        public virtual Query Query() 
         {
             return new Query(this);
-        }
-
-        ResolveContext IDbContext.GetResolveContext()
-        {
-            return this.GetResolveContext();
         }
 
         protected virtual ResolveContext GetResolveContext() 
         {
             return new ResolveContext("@",()=>new System.Data.SqlClient.SqlParameter());
         }
-
-        List<T> IDbContext.ToList<T>(IQuery container, Func<object[], T> transfer)
-        {
-            return container.ToList<H, T>(transfer,this.Cnnstr);
-        }
-
-
 
 
         public DbSet<T> Set<T>(IQuery container)
@@ -69,6 +58,13 @@ namespace Azeroth.Nalu
             //DbSet<B> tmp = new DbSet<B>(this);
             //this.lstDbSet.Add(tmp);
             //return tmp;
+        }
+
+        public abstract DbProviderFactory GetDbProviderFactory();
+
+        ResolveContext IDbContext.GetResolveContext()
+        {
+            return this.GetResolveContext();
         }
     }
 }

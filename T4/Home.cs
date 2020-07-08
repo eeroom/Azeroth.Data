@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace T4
         static void Main(string[] args)
         {
             DbContext dbcontext = new DbContext();
-            var container= dbcontext.CreateContainer();
+            var container= dbcontext.Query();
             var user= dbcontext.Set<UserInfo>(container).Select(x => new { x.Name,x.Id });
             var userRole = dbcontext.Set<RUserInfoRoleInfo>(container);
             var role = dbcontext.Set<RoleInfo>(container).Select(x => new { x.Name,x.Id});
@@ -23,7 +24,7 @@ namespace T4
 
     }
 
-    public class DbContext:Azeroth.Nalu.DbContext<System.Data.SqlClient.SqlConnection>
+    public class DbContext:Azeroth.Nalu.DbContext
     {
         static string cnnstr = System.Configuration.ConfigurationManager.ConnectionStrings["mssqlmaster"].ConnectionString;
         public DbContext()
@@ -31,7 +32,10 @@ namespace T4
             this.Cnnstr = cnnstr;
         }
 
-       
+        public override DbProviderFactory GetDbProviderFactory()
+        {
+            return System.Data.SqlClient.SqlClientFactory.Instance;
+        }
     }
 
     public class UserInfo

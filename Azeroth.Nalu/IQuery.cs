@@ -19,8 +19,6 @@ namespace Azeroth.Nalu
         List<INodeBase> OrderBy { get; }
         string NameForCTE { set; get; }
         
-        List<T> ToList<CnnType, T>(Func<object[], T> transfer,string cnnstr) where CnnType : System.Data.Common.DbConnection, new();
-
         List<ITable> Items { get; }
     }
 }
