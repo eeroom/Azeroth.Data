@@ -166,18 +166,4 @@ namespace Azeroth.Nalu.Excel
             return this;
         }
     }
-
-    public static class Extension
-    {
-        public static double GetDouble(NPOI.SS.UserModel.ICell cell) {
-            return cell.NumericCellValue;
-        }
-    }
-    public static class ExcelExtension
-    {
-        public static string GetString(this NPOI.SS.UserModel.ICell cell)
-        {
-            return cell.StringCellValue;
-        }
-    }
 }
