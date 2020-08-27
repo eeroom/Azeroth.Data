@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{503A49CF-EBB5-40E4-81F7-D1612F316E64}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Azeroth.Nalu</RootNamespace>
-    <AssemblyName>Azeroth.Nalu</AssemblyName>
+    <RootNamespace>Azeroth.Entityframwork</RootNamespace>
+    <AssemblyName>Azeroth.Entityframwork</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -20,8 +21,10 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -30,7 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -39,57 +51,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Column.cs" />
-    <Compile Include="DateTimeWrapper.cs" />
-    <Compile Include="DbContext`.cs" />
-    <Compile Include="MariadbQuery.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="DbCud`.cs" />
-    <Compile Include="DbSet`.cs" />
-    <Compile Include="Table`.cs" />
-    <Compile Include="DictionaryWrapper.cs" />
-    <Compile Include="IColumn.cs" />
-    <Compile Include="IDbContext.cs" />
-    <Compile Include="ITable.cs" />
-    <Compile Include="IMapHandler.cs" />
-    <Compile Include="Node\INodeBase.cs" />
-    <Compile Include="Node\ISelectNode.cs" />
-    <Compile Include="IResolver.cs" />
-    <Compile Include="MapHandler.cs" />
-    <Compile Include="MapHandlerFactory.cs" />
-    <Compile Include="MapHandler`.cs" />
-    <Compile Include="MapHandler`2.cs" />
-    <Compile Include="Column`2.cs" />
-    <Compile Include="Node\SelectNode.cs" />
-    <Compile Include="Node\WhereNode.cs" />
-    <Compile Include="Node\WhereNode`2.cs" />
-    <Compile Include="Node\WhereSegmentNode.cs" />
-    <Compile Include="Option.cs" />
-    <Compile Include="Query.cs" />
-    <Compile Include="ResolveContext.cs" />
-    <Compile Include="ICud.cs" />
-    <Compile Include="Extension.cs" />
-    <Compile Include="Function.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Node\NodeBase.cs" />
-    <Compile Include="Node\JoinNode.cs" />
-    <Compile Include="Node\OrderByNode.cs" />
-    <Compile Include="RowState.cs" />
-    <Compile Include="Node\JoinOnNode.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\Model.txt" />
-    <Content Include="T4\MultipleOutputHelper.txt">
+    <Content Include="T4\DbContext.txt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MultipleOutputHelper.cs</LastGenOutput>
+      <LastGenOutput>DbContext2.cs</LastGenOutput>
     </Content>
-    <Content Include="T4\ModelMariadb.txt" />
-    <Content Include="T4\ModelVS2019.txt" />
+    <Content Include="T4\Model.txt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model2.txt</LastGenOutput>
+    </Content>
+    <Content Include="T4\MultipleOutputHelper.txt" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

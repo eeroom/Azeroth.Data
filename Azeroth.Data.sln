@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu", "Azeroth.Nal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Excel", "Azeroth.Nalu.Excel\Azeroth.Nalu.Excel.csproj", "{58B01816-B301-41AB-9F5E-E0A71D08A52E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Entityframwork", "Azeroth.Entityframwork\Azeroth.Entityframwork.csproj", "{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58B01816-B301-41AB-9F5E-E0A71D08A52E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
