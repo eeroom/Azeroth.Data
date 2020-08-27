@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public static class OrmExtension
+    public static class Extension
     {
         //public static string ParameterNameForPaginationEnd = "Num_End";
         //public static string ParameterNameForPaginationStart = "Num_Start";
