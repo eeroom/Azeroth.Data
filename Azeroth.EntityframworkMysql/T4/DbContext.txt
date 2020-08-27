@@ -1,0 +1,64 @@
+﻿<#@ template language="C#" hostspecific="True" debug="true"#>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Configuration" #>
+
+<#@ assembly name="$(SolutionDir)\packages\MySql.Data.6.9.12\lib\net45\MySql.Data.dll"  #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Data" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Data.Entity;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace EF.T4.Mysql
+{
+<#
+    string cnnstrName="EquitySaas";
+    string nameClass= System.IO.Path.GetFileNameWithoutExtension(this.Host.TemplateFile);
+    this.WriteLine(string.Format("{0}public partial class {1} : System.Data.Entity.DbContext",new String(' ',2),nameClass));
+    this.WriteLine(new String(' ',2)+"{");
+    this.WriteLine(string.Format("{0}public {1}() : base(\"name={2}\")",new String(' ',8),nameClass,cnnstrName));
+ #>
+        {
+        }    
+<#
+	//System.Diagnostics.Debugger.Launch();//---进入调试
+    string configPath=Host.ResolveAssemblyReference("$(ProjectDir)")+"app.config";
+    var configPathMap=new System.Configuration.ExeConfigurationFileMap(){ExeConfigFilename=configPath};
+    var appConfig=System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configPathMap, System.Configuration.ConfigurationUserLevel.None);
+    var connSection= appConfig.GetSection("connectionStrings") as System.Configuration.ConnectionStringsSection;  
+    string cnnstr= connSection.ConnectionStrings[cnnstrName].ConnectionString;
+	using (var cnn = new MySql.Data.MySqlClient.MySqlConnection(cnnstr))
+    {
+        cnn.Open();
+        Dictionary<string,string> dictTableName=new Dictionary<string,string>();
+        using (var cmd = cnn.CreateCommand())
+        {
+            string catalog=cnnstr.Split(new char[] { ';','='},StringSplitOptions.RemoveEmptyEntries).Select(x=>x.ToLower()).SkipWhile(x=>x!= "initial catalog").ToArray()[1];
+            cmd.CommandText=string.Format(@"select * from INFORMATION_SCHEMA.TABLES where TABLE_TYPE='BASE TABLE' and table_schema='{0}'", catalog);
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    dictTableName.Add(reader["TABLE_NAME"].ToString(),reader["TABLE_COMMENT"].ToString());
+                }
+            }
+        }
+        foreach (var kv in dictTableName)
+        {
+            string comment=kv.Value;
+            this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
+            this.WriteLine(string.Format("{0}/// {1}",new String(' ',4),comment));
+            this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
+            this.WriteLine(string.Format("{0}public virtual DbSet<{1}> {1} {2}",new String(' ',4),kv.Key,"{ get; set; }"));
+        }
+    }
+ #>
+    }
+}
