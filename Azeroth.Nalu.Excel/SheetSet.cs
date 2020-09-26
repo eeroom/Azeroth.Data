@@ -12,9 +12,9 @@ namespace Azeroth.Nalu.Excel
 
         Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>> dictMapHandlerByColIndex = new Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>>();
 
-        public SheetValue<T> ToListByColIndex(NPOI.SS.UserModel.ISheet sheet,int startrow)
+        public SheetWrapper<T> ToListByColIndex(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
-            SheetValue<T> rt = new SheetValue<T>();
+            SheetWrapper<T> rt = new SheetWrapper<T>();
             if (dictMapHandlerByColIndex.Count < 1)
                 throw new ArgumentException("必须指定列索引和model之间的映射");
             //sheet.Workbook.MissingCellPolicy = NPOI.SS.UserModel.MissingCellPolicy.CREATE_NULL_AS_BLANK;
@@ -51,11 +51,11 @@ namespace Azeroth.Nalu.Excel
         /// <param name="sheet"></param>
         /// <param name="callback">典型场景，数据校验</param>
         /// <returns></returns>
-        public SheetValue<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
+        public SheetWrapper<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
             if (dictMapHandlerByColName == null)
                 throw new ArgumentException("必须指定列名称和model之间的映射");
-            SheetValue<T> rt = new SheetValue<T>();
+            SheetWrapper<T> rt = new SheetWrapper<T>();
             var row= sheet.GetRow(startrow);
             var lstIndexName = System.Linq.Enumerable.Range(0, row.Cells.Count).Select(x => new { Index=x,Name=row.GetCell(x).StringCellValue})
                 .Where(x=>dictMapHandlerByColName.Keys.Contains(x.Name)).ToList();
