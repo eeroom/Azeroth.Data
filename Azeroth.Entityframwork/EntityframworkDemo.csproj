@@ -7,8 +7,8 @@
     <ProjectGuid>{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Azeroth.Entityframwork</RootNamespace>
-    <AssemblyName>Azeroth.Entityframwork</AssemblyName>
+    <RootNamespace>EntityframworkDemo</RootNamespace>
+    <AssemblyName>EntityframworkDemo</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

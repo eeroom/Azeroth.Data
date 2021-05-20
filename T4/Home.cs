@@ -10,6 +10,7 @@ namespace T4
     {
         static void Main(string[] args)
         {
+            CalTzp();
             DbContext dbcontext = new DbContext();
             var query= dbcontext.Query();
             var user= query.Set<UserInfo>().Select(x => new { x.Name,x.Id });
@@ -25,6 +26,18 @@ namespace T4
 
         }
 
+        private static void CalTzp() {
+            String appSecret = "0221860e";
+            String nonce = "1234567890";
+            String curTime = "1610717873";
+            //curTime = ((long)(DateTime.Now.ToUniversalTime() - new DateTime(1970, 1, 1)).TotalSeconds).ToString();
+            var tmp = appSecret + nonce + curTime;
+
+            System.Security.Cryptography.SHA1Cng sha = new System.Security.Cryptography.SHA1Cng();
+            var buffer= sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(tmp));
+            var lst= buffer.Select(x => x.ToString("x2")).ToList();
+            string rt = string.Concat(lst);
+        }
     }
 
     public class DbContext:Azeroth.Nalu.DbContext

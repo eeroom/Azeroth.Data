@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Elasticsearch
+namespace ElasticsearchDemo
 {
     public class ZlInfomation
     {
@@ -98,8 +98,8 @@ namespace Elasticsearch
             else
                 Console.Write("开始重建索引");
 
-            ElasticSearchConfig config = new ElasticSearchConfig("http://111.230.87.237:9200/", "articleindex");
-            ElasticSearchConfig config2 = new ElasticSearchConfig("http://111.230.87.237:9200/", "htttags");
+            ElasticsearchDemoConfig config = new ElasticsearchDemoConfig("http://111.230.87.237:9200/", "articleindex");
+            ElasticsearchDemoConfig config2 = new ElasticsearchDemoConfig("http://111.230.87.237:9200/", "htttags");
             var mappings = new
             {
                 contentinfo = new
@@ -204,7 +204,7 @@ namespace Elasticsearch
 
         }
 
-        private static string Analyze(ElasticSearchConfig config, object parameter)
+        private static string Analyze(ElasticsearchDemoConfig config, object parameter)
         {
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
@@ -218,7 +218,7 @@ namespace Elasticsearch
             }
         }
 
-        private static string CreateIndex(ElasticSearchConfig config, object parameter)
+        private static string CreateIndex(ElasticsearchDemoConfig config, object parameter)
         {
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
@@ -239,7 +239,7 @@ namespace Elasticsearch
         /// <param name="config"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        private static string DeleteDocument<T>(ElasticSearchConfig config, string id)
+        private static string DeleteDocument<T>(ElasticsearchDemoConfig config, string id)
         {
             string className = typeof(T).Name.ToLower();
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
@@ -259,7 +259,7 @@ namespace Elasticsearch
         /// <param name="config"></param>
         /// <param name="parameter"></param>
         /// <returns></returns>
-        private static string Search(ElasticSearchConfig config, object parameter)
+        private static string Search(ElasticsearchDemoConfig config, object parameter)
         {
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
@@ -281,7 +281,7 @@ namespace Elasticsearch
         /// <param name="id"></param>
         /// <param name="docInfo"></param>
         /// <returns></returns>
-        private static string AddDocument<T>(ElasticSearchConfig config, string id, T docInfo)
+        private static string AddDocument<T>(ElasticsearchDemoConfig config, string id, T docInfo)
         {
             var className = typeof(T).Name.ToLower();
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
@@ -304,7 +304,7 @@ namespace Elasticsearch
         /// <param name="id"></param>
         /// <param name="docInfo"></param>
         /// <returns></returns>
-        private static string EditDocument<T>(ElasticSearchConfig config, string id, T docInfo)
+        private static string EditDocument<T>(ElasticsearchDemoConfig config, string id, T docInfo)
         {
             if (string.IsNullOrEmpty(id))
                 throw new ArgumentException("必须指定要修改的document的id");
@@ -329,7 +329,7 @@ namespace Elasticsearch
         /// </summary>
         /// <param name="config"></param>
         /// <returns></returns>
-        private static string GetMapping(ElasticSearchConfig config)
+        private static string GetMapping(ElasticsearchDemoConfig config)
         {
             using (System.Net.Http.HttpClient client = new System.Net.Http.HttpClient())
             {
@@ -356,9 +356,9 @@ namespace Elasticsearch
         public string title { get; set; }
     }
 
-    public class ElasticSearchConfig
+    public class ElasticsearchDemoConfig
     {
-        public ElasticSearchConfig(string url, params string[] indexs)
+        public ElasticsearchDemoConfig(string url, params string[] indexs)
         {
             this.BaseAddress = new Uri(url);
             this.Indexs = indexs;
