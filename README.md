@@ -30,3 +30,5 @@ QQ:`1344206656`，欢迎你一起来交流
  //转换成字典，键-用户名，值-角色名称的List
  var dictUserRole= lst.GroupBy(x => x.Item1.Account).ToDictionary(x => x.Key, x => x.Select(a => a.Item2.Name).ToList());
  ```
+
+ Ado.net、odbc、oledb、ado的关系梳理
