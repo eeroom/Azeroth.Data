@@ -9,11 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu", "Azeroth.Nal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Excel", "Azeroth.Nalu.Excel\Azeroth.Nalu.Excel.csproj", "{58B01816-B301-41AB-9F5E-E0A71D08A52E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkDemo", "Azeroth.Entityframwork\EntityframworkDemo.csproj", "{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkDemo", "EntityframworkDemo\EntityframworkDemo.csproj", "{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMysqlDemo", "Azeroth.EntityframworkMysql\EntityframworkMysqlDemo.csproj", "{3CA8634D-7661-436E-90C6-AA1472E994A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMysqlDemo", "EntityframworkMysqlDemo\EntityframworkMysqlDemo.csproj", "{3CA8634D-7661-436E-90C6-AA1472E994A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticsearchDemo", "Elasticsearch\ElasticsearchDemo.csproj", "{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticsearchDemo", "ElasticsearchDemo\ElasticsearchDemo.csproj", "{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaluDemo", "NaluDemo\NaluDemo.csproj", "{861506D7-D1EC-420A-A4FC-01E6D986037D}"
 EndProject
