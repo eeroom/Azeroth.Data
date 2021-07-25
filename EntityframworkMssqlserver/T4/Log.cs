@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Model
 {
+    [System.ComponentModel.DataAnnotations.Schema.Table("Log",Schema ="dbo")]
     public partial class Log
     {
         /// <summary>
@@ -19,4 +20,3 @@ namespace Model
     }
 
 }
-// It's the end

@@ -24,7 +24,6 @@ namespace Model
 <# manager.StartFooter(); #>
 
 }
-// It's the end
 <# manager.EndBlock(); #>
 
 <#
@@ -38,27 +37,28 @@ namespace Model
 	using (var cnn = new System.Data.SqlClient.SqlConnection(cnnstr))
     {
         cnn.Open();
-        List<string> lstTableName = new List<string>();
+        Dictionary<string,string> dictTableName = new Dictionary<string,string>();
         using (var cmd = cnn.CreateCommand())
         {
-            cmd.CommandText = "select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME";
+            cmd.CommandText = "select TABLE_NAME,TABLE_SCHEMA from INFORMATION_SCHEMA.TABLES where TABLE_TYPE='BASE TABLE' ORDER BY TABLE_NAME";
             using (var reader = cmd.ExecuteReader())
             {
                 while (reader.Read())
                 {
-                    lstTableName.Add(reader.GetString(0));
+                    dictTableName.Add(reader.GetString(0),reader.GetString(1));
                 }
             }
         }
-        foreach (string nameClass in lstTableName)
+        foreach (System.Collections.Generic.KeyValuePair<string,string> kvNameSchema in dictTableName)
         {
-            manager.StartNewFile(nameClass + ".cs");
-            this.WriteLine(string.Format("{0}public partial class {1}", new String(' ', 4), nameClass));
+            manager.StartNewFile(kvNameSchema.Key + ".cs");
+            this.WriteLine(string.Format("{0}[System.ComponentModel.DataAnnotations.Schema.Table(\"{1}\",Schema =\"{2}\")]",new String(' ', 4), kvNameSchema.Key, kvNameSchema.Value));
+            this.WriteLine(string.Format("{0}public partial class {1}", new String(' ', 4), kvNameSchema.Key));
             this.WriteLine(new String(' ', 4) + "{");
             System.Data.DataTable schemaTable;
             using (var cmd = cnn.CreateCommand())
             {
-                cmd.CommandText = string.Format("select * from [{0}]",nameClass);
+                cmd.CommandText = string.Format("select * from [{0}].[{1}]",kvNameSchema.Value,kvNameSchema.Key);
                 using (var reader = cmd.ExecuteReader(System.Data.CommandBehavior.KeyInfo | System.Data.CommandBehavior.SchemaOnly))
                 {
                     schemaTable = reader.GetSchemaTable();
@@ -68,8 +68,8 @@ namespace Model
             using (var cmd = cnn.CreateCommand())
             {
                 cmd.CommandText = string.Format("with htt as({0}),gmm as ({1}) select htt.name,gmm.value from htt left join gmm on htt.column_id=gmm.minor_id",
-                        "select * from sys.columns where object_id=OBJECT_ID('" + nameClass + "')",
-                        "select * from sys.extended_properties where sys.extended_properties.major_id=OBJECT_ID('" + nameClass + "')");
+                    "select * from sys.columns where object_id=OBJECT_ID('" + string.Format("{0}.{1}",kvNameSchema.Value,kvNameSchema.Key) + "')",
+                    "select * from sys.extended_properties where sys.extended_properties.major_id=OBJECT_ID('" + string.Format("{0}.{1}",kvNameSchema.Value,kvNameSchema.Key)  + "')");
                 using (var adapter=new System.Data.SqlClient.SqlDataAdapter(cmd))
                 {
                     adapter.Fill(commentTable);
