@@ -7,8 +7,8 @@
     <ProjectGuid>{3CA8634D-7661-436E-90C6-AA1472E994A4}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EntityframworkMysqlDemo</RootNamespace>
-    <AssemblyName>EntityframworkMysqlDemo</AssemblyName>
+    <RootNamespace>EntityframworkMysql</RootNamespace>
+    <AssemblyName>EntityframworkMysql</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

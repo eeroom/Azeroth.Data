@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Excel", "Azero
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMssqlserver", "EntityframworkMssqlserver\EntityframworkMssqlserver.csproj", "{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMysqlDemo", "EntityframworkMysqlDemo\EntityframworkMysqlDemo.csproj", "{3CA8634D-7661-436E-90C6-AA1472E994A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMysql", "EntityframworkMysql\EntityframworkMysql.csproj", "{3CA8634D-7661-436E-90C6-AA1472E994A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticsearchDemo", "ElasticsearchDemo\ElasticsearchDemo.csproj", "{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}"
 EndProject
