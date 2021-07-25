@@ -28,7 +28,7 @@ namespace Model
 <# manager.EndBlock(); #>
 
 <#
-    string connectionName="mssqlmaster";
+    string connectionName="hz";
     //System.Diagnostics.Debugger.Launch();
     string configPath=Host.ResolveAssemblyReference("$(ProjectDir)")+"app.config";
     var configPathMap=new System.Configuration.ExeConfigurationFileMap(){ExeConfigFilename=configPath};

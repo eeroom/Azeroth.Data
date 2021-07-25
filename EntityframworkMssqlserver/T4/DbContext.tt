@@ -18,7 +18,7 @@ using System.Linq;
 namespace Model
 {
 <#
-    string cnnstrName="mssqlmaster";
+    string cnnstrName="hz";
     //System.Diagnostics.Debugger.Launch();//---进入调试
     string nameClass= System.IO.Path.GetFileNameWithoutExtension(this.Host.TemplateFile);
     this.WriteLine(string.Format("{0}public partial class {1} : System.Data.Entity.DbContext",new String(' ',2),nameClass));
