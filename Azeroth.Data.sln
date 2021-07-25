@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMysql", "Enti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElasticsearchFullText", "ElasticsearchFullText\ElasticsearchFullText.csproj", "{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NaluDemo", "NaluDemo\NaluDemo.csproj", "{861506D7-D1EC-420A-A4FC-01E6D986037D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,10 +45,6 @@ Global
 		{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CF0EAFF-2BC7-44B6-9E02-19A5196444BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{861506D7-D1EC-420A-A4FC-01E6D986037D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{861506D7-D1EC-420A-A4FC-01E6D986037D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{861506D7-D1EC-420A-A4FC-01E6D986037D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{861506D7-D1EC-420A-A4FC-01E6D986037D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
