@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Spatial;
 
-namespace EF.T4.Mysql
+namespace Model
 {
 <# manager.EndBlock(); #>
  
@@ -30,7 +30,7 @@ namespace EF.T4.Mysql
 
 <#
 	 //System.Diagnostics.Debugger.Launch();//---进入调试
-     string cnnstrName="EquitySaas";
+     string cnnstrName="hz";
     string configPath=Host.ResolveAssemblyReference("$(ProjectDir)")+"app.config";
     var configPathMap=new System.Configuration.ExeConfigurationFileMap(){ExeConfigFilename=configPath};
     var appConfig=System.Configuration.ConfigurationManager.OpenMappedExeConfiguration(configPathMap, System.Configuration.ConfigurationUserLevel.None);

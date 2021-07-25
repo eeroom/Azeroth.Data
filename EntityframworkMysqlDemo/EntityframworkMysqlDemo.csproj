@@ -60,15 +60,37 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="T4\DbContextHz.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DbContextHz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4\student.cs">
+      <DependentUpon>ModelHz.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="T4\DbContext.txt" />
-    <Content Include="T4\Models.txt" />
+    <Content Include="T4\DbContextHz.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DbContextHz.cs</LastGenOutput>
+    </Content>
+    <Content Include="T4\ModelHz.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ModelHz.tt</DependentUpon>
+    </Content>
+    <Content Include="T4\ModelHz.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ModelHz.txt</LastGenOutput>
+    </Content>
     <Content Include="T4\MultipleOutputHelper.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
