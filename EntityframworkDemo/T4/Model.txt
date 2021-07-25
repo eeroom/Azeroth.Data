@@ -17,7 +17,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace EF.T4.Mssql
+namespace Model
 {
 <# manager.EndBlock(); #>
  
@@ -52,8 +52,6 @@ namespace EF.T4.Mssql
         }
         foreach (string nameClass in lstTableName)
         {
-            if(!nameClass.StartsWith("GZ_"))
-                continue;
             manager.StartNewFile(nameClass + ".cs");
             this.WriteLine(string.Format("{0}public partial class {1}", new String(' ', 4), nameClass));
             this.WriteLine(new String(' ', 4) + "{");

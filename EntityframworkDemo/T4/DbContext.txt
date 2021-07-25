@@ -4,7 +4,6 @@
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Configuration" #>
 
-<#@ assembly name="$(SolutionDir)\packages\MySql.Data.6.9.12\lib\net45\MySql.Data.dll"  #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -16,7 +15,7 @@ using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace EF.T4.Mssql
+namespace Model
 {
 <#
     string cnnstrName="mssqlmaster";
@@ -51,8 +50,6 @@ namespace EF.T4.Mssql
         }
         foreach (string tableName in lstTableName)
         {
-            if(!tableName.StartsWith("GZ_"))
-                continue;
             string comment=string.Empty;
             this.WriteLine(string.Format("{0}/// <summary>",new String(' ',4)));
             this.WriteLine(string.Format("{0}/// {1}",new String(' ',4),comment));
