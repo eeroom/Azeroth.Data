@@ -10,6 +10,9 @@ namespace Model
   {
         public DbContext() : base("name=hz")
         {
+        }
+        static DbContext() {
+            System.Data.Entity.Database.SetInitializer<Model.DbContext>(null);
         }    
     /// <summary>
     /// 

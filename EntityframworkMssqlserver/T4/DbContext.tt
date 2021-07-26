@@ -26,6 +26,9 @@ namespace Model
     this.WriteLine(string.Format("{0}public {1}() : base(\"name={2}\")",new String(' ',8),nameClass,cnnstrName));
  #>
         {
+        }
+        static DbContext() {
+            System.Data.Entity.Database.SetInitializer<Model.DbContext>(null);
         }    
 <#
     string configPath=Host.ResolveAssemblyReference("$(ProjectDir)")+"app.config";
