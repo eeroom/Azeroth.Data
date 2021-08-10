@@ -6,46 +6,25 @@ using System.Text;
 
 namespace Azeroth.Nalu.Node
 {
-    public class JoinNode: NodeBase
+    public class JoinNode:IParseSql
     {
-        WhereNode whereNode { set; get; }
-
-        JOIN opt;
-
-        ITable container;
-        Query query;
-        public JoinNode(JOIN opt, Table dbr,Query query)
+        Table rightTable;
+        WhereNode jw;
+        JOIN joption;
+        public JoinNode(Table rightTable,WhereNode jw,JOIN joption)
         {
-            this.opt = opt;
-            this.container = dbr;
-            this.query = query;
+            this.rightTable = rightTable;
+            this.jw = jw;
+            this.joption = joption;
         }
 
-        protected override string ToSQL(ResolveContext context)
+
+     
+
+        public string Parse(ParseSqlContext context)
         {
-            if (opt == JOIN.None)
-                return ToSQLWithScalar(context);
-            string strwhere = ((IResolver)this.whereNode).ToSQL(context);
-            return string.Format("\r\n{0} {1} AS {2} ON {3}",this.opt.ToSQL(),this.container.NameHandler(context),this.container.NameNick,strwhere);
+            var str = $"{joption.ToSQL()} {this.rightTable.Name} AS {this.rightTable.NameNick} ON {this.jw.Parse(context)}";
+            return str;    
         }
-
-        private string ToSQLWithScalar(ResolveContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        //public void ON(PredicateNode predicate)
-        //{
-        //    this.predicate = predicate;
-            
-        //}
-
-        public Query ON(WhereNode predicate)
-        {
-            this.whereNode = predicate;
-            return this.query;
-            
-        }
-
     }
 }

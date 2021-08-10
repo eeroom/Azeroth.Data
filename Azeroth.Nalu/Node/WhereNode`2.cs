@@ -14,6 +14,7 @@ namespace Azeroth.Nalu.Node
     /// <typeparam name="P">筛选条件针对的列的数据类型--为了解决批量编辑和修改场景下，从实例数据中获取该属性对应的参数值，所以保留这个参数</typeparam>
     public class WhereNode<T,P> : WhereNode
     {
+        Column<T, P> column;
         /// <summary>
         /// 筛选条件的参数值列表
         /// </summary>
@@ -25,22 +26,13 @@ namespace Azeroth.Nalu.Node
         /// </summary>
         WH opt;
 
-        /// <summary>
-        /// 批量修改和批量删除的的场景下，从要删除的实例中获取参数的值
-        /// </summary>
-        Func<T, P> getParameterValueFromResolverContext;
 
-        bool qianTao;//是否嵌套查询
 
         public WhereNode(Column<T,P> column,  WH opt, object value)
-            : base(column)
         {
             this.opt = opt;
             this.value = value;
-            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
-            //    this.value = value.ToString();
-            //else
-            //    this.value = value;
+            this.column = column;
         }
 
         /// <summary>
@@ -50,59 +42,22 @@ namespace Azeroth.Nalu.Node
         /// <param name="opt"></param>
         /// <param name="value"></param>
         public WhereNode(Column<T, P> column, WH opt, System.Collections.ICollection value)
-            : base(column)
         {
+            this.column = column;
             this.opt = opt;
             this.lstValue = new List<object>();
             foreach (var tmp in value)
             {
                 this.lstValue.Add(tmp);
             }     
-            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
-            //{
-            //    foreach (var tmp in value)
-            //        this.lstValue.Add(tmp.ToString());
-            //}
-            //else
-            //{
-            //    foreach (var tmp in value)
-            //        this.lstValue.Add(tmp);
-            //}
         }
 
         public WhereNode(Column<T, P> column, WH opt,object min,object max)
-            : base(column)
         {
+            this.column = column;
             this.opt = opt;
-            //if (this.column.Table.DictMapHandler[this.column.ColumnName].IsMapStringToEnum())
-            //{
-            //    this.value = min.ToString();
-            //    this.value2 = max.ToString();
-            //}
-            //else
-            //{
-            //    this.value = min;
-            //    this.value2 = max;
-            //}
             this.value = min;
             this.value2 = max;
-        }
-
-        public WhereNode(IColumn col, Expression<Func<T, P>> exp, WH opt)
-            : base(col)
-        {
-            this.opt = opt;
-            this.getParameterValueFromResolverContext = exp.Compile();//针对批量编辑和批量删除的场景
-            
-        }
-
-        public WhereNode(Column<T, P> column, WH opt, Query handler)
-            : base(column)
-        {
-            
-            this.opt = opt;
-            this.value = handler;
-            this.qianTao = true;
         }
 
 
@@ -111,10 +66,8 @@ namespace Azeroth.Nalu.Node
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        protected override string ToSQL(ResolveContext context)
+        public override string Parse(ParseSqlContext context)
         {
-            if (this.getParameterValueFromResolverContext != null && context.Tag != null)
-                value= this.getParameterValueFromResolverContext((T)context.Tag);
             switch (this.opt)
             {
                 case WH.IN:
@@ -139,29 +92,29 @@ namespace Azeroth.Nalu.Node
                     break;
             }
             DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();//参数名称
+            parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();//参数名称
             parameter.Value = value;//参数值
-            string strwhere = string.Format("{0} {1} {2}", this.column.ToSQL(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
-            context.Parameters.Add(parameter);
+            string strwhere = string.Format("{0} {1} {2}", this.column.Parse(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
+            context.DbParameters.Add(parameter);
             return strwhere;
         }
 
-        private string ToSQLWithExists(ResolveContext context)
+        private string ToSQLWithNoParameter(ParseSqlContext context)
         {
-            var tmp= this.value as IResolver;
-            string strwhere = string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(),tmp.ToSQL(context));
+            throw new NotImplementedException();
+        }
+
+        private string ToSQLWithExists(ParseSqlContext context)
+        {
+            var tmp= this.value as IParseSql;
+            string strwhere = string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(),tmp.Parse(context));
             return strwhere;
         }
 
-        private string ToSQLWithNULL(ResolveContext context)
+        private string ToSQLWithNULL(ParseSqlContext context)
         {
-            string strwhere = string.Format("{0} {1}", this.column.ToSQL(context), this.opt.ToSQL()); 
+            string strwhere = string.Format("{0} {1}", this.column.Parse(context), this.opt.ToSQL()); 
             return strwhere;
-        }
-
-        private string ToSQLWithNoParameter(ResolveContext context)
-        {
-            return base.ToSQL(context);
         }
 
         /// <summary>
@@ -169,17 +122,17 @@ namespace Azeroth.Nalu.Node
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private string ToSQLWithBetween(ResolveContext context)
+        private string ToSQLWithBetween(ParseSqlContext context)
         {
             System.Data.Common.DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
+            parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
             parameter.Value = value;
-            context.Parameters.Add(parameter);
+            context.DbParameters.Add(parameter);
             System.Data.Common.DbParameter parameter2 = context.CreateParameter();
-            parameter2.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
+            parameter2.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
             parameter2.Value = value2;
-            context.Parameters.Add(parameter2);
-            return string.Format("{0} {3} {1} AND {2}", this.column.ToSQL(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
+            context.DbParameters.Add(parameter2);
+            return string.Format("{0} {3} {1} AND {2}", this.column.Parse(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
         }
 
         /// <summary>
@@ -187,31 +140,22 @@ namespace Azeroth.Nalu.Node
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        private string ToSQLWithIN(ResolveContext context)
+        private string ToSQLWithIN(ParseSqlContext context)
         {
-            if (qianTao)
-            {//这里是IN的嵌套查询
-                var container = value as IResolver;
-                return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), container.ToSQL(context));//where里面的子查询
-            }
             List<string> lstName = new List<string>();
             System.Data.Common.DbParameter parameter;
             foreach (object val in lstValue)
             {//处理参数
                 parameter = context.CreateParameter();
-                parameter.ParameterName = context.Symbol + this.column.ColumnName + context.NextParameterIndex().ToString();
+                parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
                 lstName.Add(parameter.ParameterName);
                 parameter.Value = val;
-                context.Parameters.Add(parameter);
+                context.DbParameters.Add(parameter);
             }
-            return string.Format("{0} {1} ({2})", this.column.ToSQL(context), this.opt.ToSQL(), string.Join(",", lstName));
+            return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(), string.Join(",", lstName));
         }
 
-        public WhereNode<T, P> SetPlaceholder(bool placeholder)
-        {
-            this.Placeholder = placeholder;
-            return this;
-        }
+
 
         public static WhereNode<T,P> operator!(WhereNode<T,P> node)
         {

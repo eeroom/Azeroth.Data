@@ -7,70 +7,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public abstract class Table:ITable
+    public abstract class Table
     {
-       
-        protected DictionaryWrapper<string, IMapHandler> dictMapHandler;
-        protected Func<ResolveContext, string> nameHandler;
-        protected string nameNick;
-        protected List<ISelectNode> lstSelect = new List<ISelectNode>();
-
-        protected abstract RuntimeTypeHandle GetMetaInfo();
-        protected abstract object CreateInstance(bool isCreateNull);
-
-        DictionaryWrapper<string, IMapHandler> ITable.DictMapHandler
-        {
-            get { return this.dictMapHandler; }
-        }
-
-        
-        Func<ResolveContext, string> ITable.NameHandler
-        {
-            get
-            {
-                return this.nameHandler;
-            }
-            set
-            {
-                this.nameHandler=value;
-            }
-        }
-
-       
-        string ITable.NameNick
-        {
-            get
-            {
-                return this.nameNick;
-            }
-            set
-            {
-                this.nameNick=value;
-            }
-        }
-        string ITable.Name
-        {
-            get
-            {
-                return this.nameHandler(null);
-            }
-        }
-      
-        List<ISelectNode> ITable.Select
-        {
-            get
-            {
-                return this.lstSelect;
-            }
-            set
-            {
-                this.lstSelect=value;
-            }
-        }
-
-        object ITable.CreateInstance(bool isCreateNull)
-        {
-            return this.CreateInstance(isCreateNull);
-        }
+        internal string NameNick { set; get; }
+        internal string Name { set; get; }
     }
 }

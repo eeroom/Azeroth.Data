@@ -7,13 +7,6 @@ namespace Azeroth.Nalu
 {
     public interface IDbContext
     {
-        string Cnnstr { get; set; }
-        int SaveChange(params ICud[] lstcud);
-        ResolveContext GetResolveContext();
-
-        DbCud<T> Cud<T>() where T : class;
-        Query Query();
-
-        System.Data.Common.DbProviderFactory GetDbProviderFactory();
+        List<T> ToList<T>(Func<System.Data.Common.DbDataReader, T> map, Action<ParseSqlContext,bool> initParseSqlContext);
     }
 }

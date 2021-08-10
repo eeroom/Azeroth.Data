@@ -8,7 +8,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 解析出SQL相关的信息
     /// </summary>
-    public interface IResolver
+    public interface IParseSql
     {
         
         /// <summary>
@@ -16,6 +16,6 @@ namespace Azeroth.Nalu
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        string ToSQL(ResolveContext context);
+        string Parse(ParseSqlContext context);
     }
 }

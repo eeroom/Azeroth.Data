@@ -7,7 +7,7 @@ namespace Azeroth.Nalu
 {
     public interface ICud
     {
-        int Execute(System.Data.Common.DbCommand cmd,ResolveContext context);
+        int Execute(System.Data.Common.DbCommand cmd,ParseSqlContext context);
 
         //bool Validate(out string msg);
 

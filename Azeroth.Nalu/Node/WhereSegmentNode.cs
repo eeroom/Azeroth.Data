@@ -10,8 +10,9 @@ namespace Azeroth.Nalu.Node
         const string AND = "AND";
         const string OR = "OR";
         WhereNode left;
-        INodeBase right;
+        WhereNode right;
         Logic opt;
+
         public WhereSegmentNode(WhereNode left, Logic opt, WhereNode right)
         {
             this.left = left;
@@ -19,13 +20,11 @@ namespace Azeroth.Nalu.Node
             this.right = right;
         }
 
-        protected override string ToSQL(ResolveContext context)
+        public override string Parse(ParseSqlContext context)
         {
-            if (left.Placeholder)
-                return right.ToSQL(context);
             if (this.opt == Logic.And)
-                return string.Format("{0} {1} {2}", ((IResolver)left).ToSQL(context), AND, right.ToSQL(context));
-            return string.Format("({0} {1} {2})", ((IResolver)left).ToSQL(context), OR, right.ToSQL(context)); ;
+                return string.Format("{0} {1} {2}", this.right.Parse(context), AND, this.left.Parse(context));
+            return string.Format("({0} {1} {2})", this.right.Parse(context), OR, this.left.Parse(context));
         }
     }
 }

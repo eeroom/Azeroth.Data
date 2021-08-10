@@ -9,109 +9,196 @@ namespace Azeroth.Nalu
 {
     public class DbSet<T>:Table<T>
     {
+        
+        internal T identity { set; get; }
 
-        internal DbSet()
+        protected List<SelectNode> selectNode { set; get; }
+
+        protected List<Column> groupbyNode { set; get; }
+
+        protected   List<OrderByNode> orderbyNode { set; get; }
+
+        protected DbContext dbContext { set; get; }
+
+
+        protected WhereNode whereNode { set; get; }
+
+        protected WhereNode havingNode { set; get; }
+
+
+        internal virtual Table SeekTableByIdentity(object identity)
         {
-            //this.query = query;
-            //query.Items.Add(this);
-            //    //DbSet<B> tmp = new DbSet<B>(this);
-            //    //this.lstDbSet.Add(tmp);
-            //    //return tmp;
+            if (identity == (object)this.identity)
+                return this;
+            return null;
         }
 
-        //protected IQuery query;
-        //protected IQuery subQuery;
-
-        string viewName;//也可能是表名称，泛指和class名称不一致的表名称
-        public DbSet<T> SetTarget(string viewName)
+        internal DbSet(DbContext context,bool complexDbset=false)
         {
-            this.viewName = viewName;
-            this.nameHandler = context => this.viewName;
-            return this;
+            this.dbContext = context;
+            this.selectNode = new List<SelectNode>();
+            this.groupbyNode = new List<Column>();
+            this.orderbyNode = new List<OrderByNode>();
+            if (!complexDbset)
+                this.identity = this.CreateInstance();
         }
 
-        //public DbSet<T> From(Query subContainer)
-        //{
-        //    //因为这个时候 dbset.SQLResolver.NameForCTE这个值还没有，所有需要解析的时候去取，
-        //    //所有把Name定义成委托，解析开始后再去取这个名称
-        //    this.subQuery = subContainer;
-        //    this.nameHandler = context => this.subQuery.NameForCTE;
-        //    this.query.SubContainer.Add(subContainer);
-        //    return this;
-        //}
-
-
-        //public JoinNode Join<B>(DbSet<B> dbset,JOIN opt)
-        //{
-        //    if (dbset.query != this.query)
-        //        throw new ArgumentException("必须同一container下的dbset才可以进行join");
-        //    var tmp = new JoinNode(opt, dbset,(Query)this.query);
-        //    this.query.JOIN.Add(tmp);
-        //    return tmp;
-        //}
-        //public NodeJOIN RightJoin<B>(DbSet<B> dbset)
-        //{
-        //    if (dbset.container != this.container)
-        //        throw new ArgumentException("必须同一container下的dbset才可以进行join");
-        //    var tmp = new NodeJOIN(JOIN.Right, dbset);
-        //    this.container.JOIN.Add(tmp);
-        //    return tmp;
-        //}
-        //public NodeJOIN InnerJoin<B>(DbSet<B> dbset)
-        //{
-        //    if (dbset.container != this.container)
-        //        throw new ArgumentException("必须同一container下的dbset才可以进行join");
-        //    var tmp = new NodeJOIN(JOIN.Inner, dbset);
-        //    this.container.JOIN.Add(tmp);
-        //    return tmp;
-        //}
-
-        public override Column<T, S> Col<S>(Expression<Func<T, S>> exp)
+        public Column<T, S> Col<S>(Expression<Func<T, S>> exp)
         {
-            //if (subQuery == null)
-            //    return base.Col(exp);
-            //dbset同名称，col同名称
-            //string name = Type.GetTypeFromHandle(this.GetMetaInfo()).Name;//这里不用namehandler,因为这样会拿到他对于cte的名字，这里只需要他原本的表名称
-            //var colName = Column.GetName(exp.Body);
-            //var mapColumn = subQuery.Select.FirstOrDefault(x => name.Equals(x.Column.Table.NameHandler(null)) && colName.Equals(x.Column.ColumnName));
-            //return new Column<T, S>(this, exp, mapColumn);
-            return base.Col(exp);
+            //join的where,having,orderby,group之后，需要确定这个col是属于哪个dbset
+            var colmem = exp.Body as MemberExpression;
+            if (colmem == null)
+                throw new ArgumentException("不支持的表达式");
+            var body = Expression.Convert(colmem.Expression, typeof(object));
+            var identity = Expression.Lambda<Func<T, object>>(body, exp.Parameters[0]).Compile()(this.identity);
+          
+            var table = this.SeekTableByIdentity(identity);
+            if (table == null)
+                throw new ArgumentException("内部错误，通过identity无法找到所在table");
+            var col = new Column<T,S>(table, colmem.Member.Name);
+            return col;
         }
 
-        protected override List<Column> Cols<S>(Expression<Func<T, S>> exp)
-        {
-            //if (subQuery == null)
-            //    return base.Cols(exp);
-            ////dbset同名称，col同名称
-            //string name = Type.GetTypeFromHandle(this.GetMetaInfo()).Name;//这里不用namehandler,因为这样会拿到他对于cte的名字，这里只需要他原本的表名称
-            //var lstName = Column.GetNameCollection(exp.Body);
-            //var lstmap= lstName.Select(x=>subQuery.Select.FirstOrDefault(a=>name.Equals(a.Column.Table.NameHandler(null))&&x.Equals(a.Column.ColumnName))).ToList();
-            //return lstName.Zip(lstmap, (x, y) => new Column(this, x, y)).ToList();
-            return base.Cols(exp);
-        }
+        
 
         public DbSet<T> Select<S>(Expression<Func<T,S>> exp) 
         {
-            List<Column> cols = Cols(exp);
-            var tmp = cols.Select(x => new SelectNode(x)).ToList();
-            tmp.ForEach(x=>this.lstSelect.Add(x));
-            tmp.ForEach(x => ((ISelectNode)x).Column.Table.Select.Add(x));
-            //this.query.Select.AddRange(tmp);
+            List<string> lstName = new List<string>();
+            var colmem = exp.Body as MemberExpression;
+            if (colmem != null)
+                lstName.Add(colmem.Member.Name);
+            else
+            {
+                var colmem2 = exp.Body as NewExpression;
+                if (colmem2 != null)
+                    lstName.AddRange(colmem2.Members.Select(x => x.Name));
+            }
+            if (lstName.Count < 1)
+                throw new ArgumentException("不支持的表达式");
+            var lst= lstName.Select(x => new Column(this, x))
+                .Select(x => new SelectNode(x))
+                .ToList();
+            this.selectNode.AddRange(lst);
             return this; 
+        }
+
+        public DbSet<T> SelectCol(Func<DbSet<T>,Column> colHandler)
+        {
+            var col= colHandler(this);
+            var selectNode = new SelectNode(col);
+            this.selectNode.Add(selectNode);
+            return this;
         }
 
         public DbSet<T> GroupBy<S>(Expression<Func<T, S>> exp)
         {
-            var lstcol=this.Cols(exp);
-            //this.query.GroupBy.AddRange(lstcol);
+            List<string> lstName = new List<string>();
+            var colmem = exp.Body as MemberExpression;
+            if (colmem != null)
+                lstName.Add(colmem.Member.Name);
+            else
+            {
+                var colmem2 = exp.Body as NewExpression;
+                if (colmem2 != null)
+                    lstName.AddRange(colmem2.Members.Select(x => x.Name));
+            }
+            if (lstName.Count < 1)
+                throw new ArgumentException("不支持的表达式");
+            var lst = lstName.Select(x => new Column(this, x))
+                .Select(x => new SelectNode(x))
+                .ToList();
+            
             return this;
         }
 
         public DbSet<T> OrderBy<S>(Order opt, Expression<Func<T, S>> exp)
         {
-            var lstcol = this.Cols(exp).Select(x=>new OrderByNode(x,opt));
-            //this.query.OrderBy.AddRange(lstcol);
+            List<string> lstName = new List<string>();
+            var colmem = exp.Body as MemberExpression;
+            if (colmem != null)
+                lstName.Add(colmem.Member.Name);
+            else
+            {
+                var colmem2 = exp.Body as NewExpression;
+                if (colmem2 != null)
+                    lstName.AddRange(colmem2.Members.Select(x => x.Name));
+            }
+            if (lstName.Count < 1)
+                throw new ArgumentException("不支持的表达式");
+            
+
             return this;
+        }
+
+        internal virtual T CreateInstance()
+        {
+            return System.Activator.CreateInstance<T>();
+        }
+
+        public DbSet<T> Where(Func<DbSet<T>,WhereNode> predicate)
+        {
+            var wh = predicate(this);
+            if (this.whereNode == null)
+                this.whereNode = wh;
+            else
+                this.whereNode = this.whereNode && wh;
+            return this;
+        }
+
+        public DbSet<Tuple<T,B>> Join<B>(DbSet<B> right,Func<DbSet<T>,DbSet<B>, WhereJoinOnNode> on)
+        {
+            var dbset = new DbSetComplex<T, B, Tuple<T, B>>(this.dbContext, this, right, on, (x, y) => Tuple.Create(x, y));
+            return dbset;
+        }
+
+        public DbSet<C> Join<B,C>(DbSet<B> right, Func<DbSet<T>, DbSet<B>, WhereJoinOnNode> on,Func<T,B,C> mapper)
+        {
+            var dbset = new DbSetComplex<T, B, C>(this.dbContext, this, right, on, mapper);
+            return dbset;
+        }
+
+        internal virtual T Map(System.Data.Common.DbDataReader reader)
+        {
+            var obj = this.CreateInstance();
+            this.selectNode.ForEach(x => DictMapHandlerInternal[x.column.Name].SetValueToInstance(obj, reader, x.Index));
+            return (T)obj;
+        }
+
+        public List<T> ToList()
+        {
+           var lst= ((IDbContext)this.dbContext).ToList(this.Map, this.InitParseSqlContext);
+            return lst;
+        }
+
+        public List<M> ToList<M>(Func<T,M> select)
+        {
+            var lst = ((IDbContext)this.dbContext).ToList(x=>select(this.Map(x)), this.InitParseSqlContext);
+            return lst;
+        }
+
+        protected internal virtual void InitParseSqlContext(ParseSqlContext context,bool initLeftTable=false)
+        {
+            context.WhereNode = this.AddWhereNode(context.WhereNode, this.whereNode);
+            context.Having = this.AddWhereNode(context.Having, this.havingNode);
+            context.Tables.Insert(0,this);
+            context.SelectNode.AddRange(this.selectNode);
+            if (initLeftTable)
+            {
+                context.FromTable = this;
+            }
+            context.GroupbyNode.InsertRange(0, this.groupbyNode);
+            context.SelectNode.InsertRange(0, this.selectNode);
+            context.OrderbyNode.InsertRange(0, this.orderbyNode);
+
+        }
+
+        protected WhereNode AddWhereNode(WhereNode left,WhereNode right)
+        {
+            if (left == null)
+                return right;
+            if (right == null)
+                return left;
+            return left && right;
         }
     }
 }

@@ -6,18 +6,22 @@ using System.Text;
 
 namespace Azeroth.Nalu.Node
 {
-    public class OrderByNode:NodeBase
+    public class OrderByNode:IParseSql
     {
-        protected Order opt;
+        Order opt;
 
-        public OrderByNode(IColumn col,Order opt): base(col)
+        Column col;
+        public OrderByNode(Column col,Order opt)
         {
+            this.col = col;
             this.opt = opt;
         }
 
-        protected override string ToSQL(ResolveContext context)
+
+        public string Parse(ParseSqlContext context)
         {
-            return this.column.ToSQL(context) +" "+ opt.ToString();
+            var str = $"{this.col.Parse(context)} {opt.ToSQL()}";
+            return str;
         }
     }
 }

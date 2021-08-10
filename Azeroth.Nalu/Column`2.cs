@@ -6,20 +6,17 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public class Column<T,S>:Column,IColumn
+    public class Column<T,S>:Column
     {
-        System.Linq.Expressions.Expression<Func<T, S>> exp;
 
-        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp):base(db,Column.GetName(exp.Body))
+
+        public Column(Table db, string colName):base(db,colName)
         {
-            this.exp = exp;
+           
         }
 
-        public Column(Table db, System.Linq.Expressions.Expression<Func<T, S>> exp,ISelectNode mapcolumn)
-            : base(db, Column.GetName(exp.Body),mapcolumn)
-        {
-            this.exp = exp;
-        }
+     
+        
 
         public WhereNode<T, S> In(System.Collections.ICollection value)
         {
@@ -36,45 +33,44 @@ namespace Azeroth.Nalu
             return new WhereNode<T, S>(this, WH.BT, min,max);
         }
 
-        public WhereNode<T, S> BatchEdit(WH opt)
-        {
-            return new WhereNode<T, S>(this,this.exp,opt);
-        }
-
         public WhereNode<T, S> Null()
         {
-            
             return new WhereNode<T, S>(this, WH.NULL,string.Empty);
         }
 
-        public WhereNode<T, S> Exists(Query value)
-        {
-
-            return new WhereNode<T, S>(this, WH.Exists, value);
-        }
 
         public WhereNode<T, S> Like(string value)
         {
             return new WhereNode<T, S>(this, WH.LIKE, value);
         }
 
-        public WhereNode<T, S> NoParameter(Func<Column, string> handler)
+
+
+        public Column<T, S> Max()
         {
-            this.functionHandler = handler;
-            return new WhereNode<T, S>(this, WH.NoParameter, string.Empty);
+            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Max);
         }
 
-        public new Column<T, S> Function(Function value)
+        public Column<T, S> Min()
         {
-            this.functionCode = value;
-            return this;
+            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Min);
         }
 
-        public new  Column<T, S> Function(Func<Column, string> handler)
+        public Column<T, S> Sum()
         {
-            this.functionHandler = handler;
-            return this;
+            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Sum);
         }
+
+        public Column<T, S> Avg()
+        {
+            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Avg);
+        }
+
+        public Column<T,S> UserFunction(Func<Column<T, S>, ParseSqlContext, string> handler)
+        {
+            return new ColumnByUserFunction<T,S>(this.table, this.Name, handler);
+        }
+
 
         public static WhereNode<T,S> operator >=(Column<T,S> col,S value)
         {
@@ -136,14 +132,14 @@ namespace Azeroth.Nalu
             return new WhereNode<T, S>(col, ~WH.EQ, value);
         }
 
-        public static JoinOnNode operator !=(Column<T, S> col, IColumn col2)
+        public static WhereJoinOnNode operator !=(Column<T, S> col, Column col2)
         {
             throw new ArgumentException("不支持的连接条件");
         }
 
-        public static JoinOnNode operator ==(Column<T, S> col, IColumn col2)
+        public static WhereJoinOnNode operator ==(Column<T, S> col, Column col2)
         {
-            return new JoinOnNode(col,col2);
+            return new WhereJoinOnNode(col,col2);
         }
 
         public override bool Equals(object obj)

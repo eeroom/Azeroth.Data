@@ -8,20 +8,8 @@ using System.Text;
 
 namespace Azeroth.Nalu.Node
 {
-    public abstract class WhereNode : NodeBase
+    public abstract class WhereNode:IParseSql
     {
-        public WhereNode(IColumn column):base(column)
-        { 
-        
-        }
-
-        public WhereNode()
-        { 
-        
-        }
-
-        public bool Placeholder{protected set;get;}
-
 
         public static WhereNode operator &(WhereNode wh1,WhereNode wh2)
         {
@@ -31,7 +19,6 @@ namespace Azeroth.Nalu.Node
 
         public static WhereNode operator |(WhereNode wh1, WhereNode wh2)
         {
-            
             WhereSegmentNode sm = new WhereSegmentNode(wh1, Logic.OR, wh2);
             return sm;
         }
@@ -46,5 +33,7 @@ namespace Azeroth.Nalu.Node
         {
             return false;
         }
+
+        public abstract string Parse(ParseSqlContext context);
     }
 }

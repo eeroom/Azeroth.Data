@@ -7,111 +7,147 @@ using Azeroth.Nalu.Node;
 
 namespace Azeroth.Nalu
 {
-    public class DbCud<T>:Table<T>,ICud where T:class
+    public class DbCud<T>:Table<T>,ICud
     {
-        public string CommandText {protected set; get; }
-        public System.Data.Common.DbParameterCollection DbParameters { get;protected set; }
-        WhereNode whereNode{set;get;}
+        string CommandText {set; get; }
+        System.Data.Common.DbParameterCollection DbParameters { get;set; }
 
-        public DbCud<T> Where(WhereNode predicate)
+        List<T> lstEntity { set; get; }
+
+        Cmd cmd { set; get; }
+
+        List<Column> selectNode { set; get; }
+
+        Func<DbCud<T>, T, WhereNode> whereNodeHandler { set; get; }
+        internal DbCud(T entity,Cmd cmd):this(new List<T>() { entity},cmd)
         {
+         
+
+        }
+
+        internal DbCud(IEnumerable<T> lst, Cmd cmd)
+        {
+            this.lstEntity = new List<T>();
+            this.lstEntity.AddRange(lst);
+            this.cmd = cmd;
+            switch (this.cmd)
+            {
+                case Cmd.Add:
+                    this.selectNode = new List<Column>();
+                    break;
+                case Cmd.Del:
+                    break;
+                case Cmd.Edit:
+                    break;
+                default:
+                    throw new ArgumentException("只支持增、删、改");
+            }
+        }
+
+        public DbCud<T> Where(Func<DbCud<T>,T,WhereNode> predicate)
+        {
+            this.whereNodeHandler = predicate;
             return this;
         }
-        //public DbCud<T> Select(Column col)
-        //{
-        //    this.lstSelect.Add(new NodeSelect(col));
-        //    return this;
-        //}
+
+        public Column<T, S> Col<S>(Expression<Func<T, S>> exp)
+        {
+            var colmem = exp.Body as MemberExpression;
+            if (colmem == null)
+                throw new ArgumentException("不支持的表达式");
+            var col = new Column<T, S>(this, colmem.Member.Name);
+            return col;
+        }
 
         public DbCud<T> Select<S>(Expression<Func<T,S>> exp)
         {
-            var lstcol= this.Cols(exp);
-            this.lstSelect.AddRange(lstcol.Select(x => new SelectNode(x)));
+            if (this.cmd != Cmd.Add)
+                throw new ArgumentException("只有新增数据支持此方法");
+            List<string> lstName = new List<string>();
+            var colmem = exp.Body as MemberExpression;
+            if (colmem != null)
+                lstName.Add(colmem.Member.Name);
+            else
+            {
+                var colmem2 = exp.Body as NewExpression;
+                if (colmem2 != null)
+                    lstName.AddRange(colmem2.Members.Select(x => x.Name));
+            }
+            if (lstName.Count < 1)
+                throw new ArgumentException("不支持的表达式");
+            var lst = lstName.Select(x => new Column(this, x))
+                .ToList();
+            this.selectNode.AddRange(lst);
             return this;
         }
 
-        //public void Where(ComponentWHERE predicate)
-        //{
-        //    this.WH = predicate;
-        //}
-
-        /// <summary>
-        /// 增、删、改对应的行数据
-        /// </summary>
-        protected IEnumerable<T> values;
-
-        protected Cmd OptCmd { set; get; }
-
-        private int Del(System.Data.Common.DbCommand cmd, ResolveContext context)
+        private int Del(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             int rst = 0;
-            if (values == null||values.Count()<1)
-                return Del(cmd,context,null);
-            foreach (var value in values)
+            foreach (var value in lstEntity)
             {
-                rst += Del(cmd, context, value);
+                context.DbParameters.Clear();
+                var wherenode = this.whereNodeHandler(this, value);
+                string strwhere = wherenode.Parse(context);
+                if (!string.IsNullOrEmpty(strwhere))
+                    strwhere = " WHERE " + strwhere;
+                cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.Name, strwhere);
+                cmd.Parameters.Clear();
+                cmd.Parameters.AddRange(context.DbParameters.ToArray());
+                this.CommandText = cmd.CommandText;
+                this.DbParameters = cmd.Parameters;
+                rst += cmd.ExecuteNonQuery();
             } 
             return rst;
         }
 
-        private int Del(System.Data.Common.DbCommand cmd, ResolveContext context, object value)
-        {
-            context.Parameters.Clear();
-            context.Tag = value;
-            string strwhere =((IResolver)this.whereNode).ToSQL(context);
-            if (!string.IsNullOrEmpty(strwhere))
-                strwhere = " WHERE " + strwhere;
-            cmd.CommandText = string.Format("DELETE FROM {0} {1}", this.nameHandler(context), strwhere);
-            cmd.Parameters.Clear();
-            cmd.Parameters.AddRange(context.Parameters.ToArray());
-            this.CommandText = cmd.CommandText;
-            this.DbParameters = cmd.Parameters; 
-            return cmd.ExecuteNonQuery();
-        }
-
-        private int Edit(System.Data.Common.DbCommand cmd, ResolveContext context)
+        private int Edit(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             int rst = 0;
-            if (this.lstSelect.Count <= 0)
+            if (this.selectNode.Count <= 0)
                 throw new ArithmeticException("必须指定修改要赋值的列");
-            List<string> lstSet = this.lstSelect.Select(col => col.Column.ColumnName + "=" + context.Symbol + col.Column.ColumnName).ToList();
+            List<string> lstSet = this.selectNode.Select(col => col.Name + "=" + context.DbParameterNamePrefix + col.Name).ToList();
             string strSet = string.Join(",", lstSet);
-            var dictParameter = this.lstSelect.ToDictionary(col => col.Column.ColumnName, col => cmd.CreateParameter());
+            var dictParameter = this.selectNode.ToDictionary(col => col.Name, col => cmd.CreateParameter());
             foreach (var kv in dictParameter)
-                kv.Value.ParameterName = context.Symbol + kv.Key;
-            foreach (var value in this.values)
+                kv.Value.ParameterName = context.DbParameterNamePrefix + kv.Key;
+            foreach (var value in this.lstEntity)
             {
-                this.lstSelect.ForEach(col => dictParameter[col.Column.ColumnName].Value = this.dictMapHandler[col.Column.ColumnName].GetValueFromInstance(value, null));
-                context.Parameters.Clear();
-                context.Tag = value;
-                string strwhere = ((INodeBase)this.whereNode).ToSQL(context);
+                this.selectNode.ForEach(col => dictParameter[col.Name].Value = DictMapHandlerInternal[col.Name].GetValueFromInstance(value, null));
+                var wherenode= this.whereNodeHandler(this, value);
+                string strwhere = wherenode.Parse(context);
                 if (!string.IsNullOrEmpty(strwhere))
                     strwhere = " WHERE " + strwhere;
-                context.Parameters.AddRange(dictParameter.Values);
-                cmd.CommandText = string.Format("UPDATE {0} SET {1} {2}", this.nameHandler(context), strSet, strwhere);
+                context.DbParameters.AddRange(dictParameter.Values);
+                cmd.CommandText = string.Format("UPDATE {0} SET {1} {2}", this.Name, strSet, strwhere);
                 cmd.Parameters.Clear();
-                cmd.Parameters.AddRange(context.Parameters.ToArray());
+                cmd.Parameters.AddRange(context.DbParameters.ToArray());
                 rst += cmd.ExecuteNonQuery();
             }
             this.CommandText = cmd.CommandText;
-            this.DbParameters = cmd.Parameters; 
+            this.DbParameters = cmd.Parameters;
             return rst;
         }
 
-        private int Add(System.Data.Common.DbCommand cmd, ResolveContext context)
+        private int Add(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             int rst = 0;
-            List<string> lstcolName;
-            cmd.CommandText= Add(context,out  lstcolName);
+            if (this.selectNode.Count <= 0)
+                throw new ArgumentException("必须指定要新增赋值的列");
+            List<string> lstcolName = this.selectNode.Select(x => x.Name).ToList();
+            string strCol = string.Join(",", lstcolName);
+            string strParamter = context.DbParameterNamePrefix + string.Join("," + context.DbParameterNamePrefix, lstcolName);
+            cmd.CommandText= string.Format("INSERT INTO {0} ({1}) VALUES ({2})", this.Name, strCol, strParamter);
+
             Dictionary<string, System.Data.Common.DbParameter> dictParameter = lstcolName.ToDictionary(x => x, x => cmd.CreateParameter());
             foreach (var kv in dictParameter)
-                kv.Value.ParameterName = context.Symbol + kv.Key;
-            foreach (var value in values)
+                kv.Value.ParameterName = context.DbParameterNamePrefix + kv.Key;
+            foreach (var value in lstEntity)
             {
                 cmd.Parameters.Clear();
                 lstcolName.ForEach(pName =>
                 {
-                    dictParameter[pName].Value = this.dictMapHandler[pName].GetValueFromInstance(value, null);
+                    dictParameter[pName].Value = DictMapHandlerInternal[pName].GetValueFromInstance(value, null);
                     cmd.Parameters.Add(dictParameter[pName]);
                 });
                 rst += cmd.ExecuteNonQuery();
@@ -121,20 +157,10 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        private string Add(ResolveContext context, out List<string> lstcolName)
-        {
-            if (this.lstSelect.Count <= 0)
-                throw new ArgumentException("必须指定要新增赋值的列");
-           lstcolName = this.lstSelect.Select(x => x.Column.ColumnName).ToList();
-            string strCol = string.Join(",", lstcolName);
-            string strParamter = context.Symbol + string.Join("," + context.Symbol, lstcolName);
-            return string.Format("INSERT INTO {0} ({1}) VALUES ({2})", this.nameHandler(context), strCol, strParamter);
-        }
-
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ResolveContext context)
+        int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             int rst = 0;
-            switch (this.OptCmd)
+            switch (this.cmd)
             {
                 case Cmd.Add:
                     rst = Add(cmd, context);
@@ -146,71 +172,9 @@ namespace Azeroth.Nalu
                     rst = Del(cmd, context);
                     break;
                 default:
-                    throw new ArgumentException("NoQuery操作必须属于增、删、改");
+                    throw new ArgumentException("不支持的操作");
             }
             return rst;
         }
-
-
-        public Table<T> InsertRange(IEnumerable<T> value)
-        {
-            this.OptCmd = Cmd.Add;
-            this.values = value;
-            return this;
-        }
-
-        public Table<T> Insert(T value)
-        {
-            this.OptCmd = Cmd.Add;
-            this.values = new List<T>() { value};
-            return this;
-        }
-
-        public Table<T> UpdateRange(IEnumerable<T> value)
-        {
-            this.OptCmd = Cmd.Edit;
-            this.values = value;
-            return this;
-        }
-
-        public Table<T> Update(T value)
-        {
-            this.OptCmd = Cmd.Edit;
-            this.values = new List<T>() { value};
-            return this;
-        }
-
-        public Table<T> RemoveRange(IEnumerable<T> value)
-        {
-            this.OptCmd = Cmd.Del;
-            this.values = value;
-            return this;
-        }
-
-        public Table<T> Remove(T value)
-        {
-            this.OptCmd = Cmd.Del;
-            this.values = new List<T>() {value };
-            return this;
-        }
-
-        //bool ICud.Validate(out string msg)
-        //{
-        //    msg = string.Empty;
-        //    if (this.OptCmd != Cmd.Add && this.OptCmd != Cmd.Edit)
-        //        return true;
-        //    foreach (object value in this.values)
-        //    {
-        //        foreach (var node in this.lstSelect)
-        //        {
-        //            if (!this.dictMapHandler[node.Column.ColumnName].ValidateInstance(value, out msg))
-        //            {
-        //                msg = string.Format("{0}\r\n类型名称={1}\r\n属性名称={2}", msg, Type.GetTypeFromHandle(GetMetaInfo()).FullName, node.Column.ColumnName);
-        //                return false;
-        //            }
-        //        }
-        //    }
-        //    return true;
-        //}
     }
 }

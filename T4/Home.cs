@@ -10,12 +10,12 @@ namespace T4
     {
         static void Main(string[] args)
         {
-            CalTzp();
-            DbContext dbcontext = new DbContext();
-            var query= dbcontext.Query();
-            var user= query.Set<UserInfo>().Select(x => new { x.Name,x.Id });
-            var userRole = query.Set<RUserInfoRoleInfo>();
-            var role = query.Set<RoleInfo>().Select(x => new { x.Name,x.Id});
+            //CalTzp();
+            //DbContext dbcontext = new DbContext();
+            //var query= dbcontext.Query();
+            //var user= query.Set<UserInfo>().Select(x => new { x.Name,x.Id });
+            //var userRole = query.Set<RUserInfoRoleInfo>();
+            //var role = query.Set<RoleInfo>().Select(x => new { x.Name,x.Id});
 
             //user.Join(userRole, Azeroth.Nalu.JOIN.Inner)
             //    .ON(user.Col(x => x.Id) == userRole.Col(x => x.UserId))
@@ -40,19 +40,19 @@ namespace T4
         }
     }
 
-    public class DbContext:Azeroth.Nalu.DbContext
-    {
-        static string cnnstr = System.Configuration.ConfigurationManager.ConnectionStrings["mssqlmaster"].ConnectionString;
-        public DbContext()
-        {
-            this.Cnnstr = cnnstr;
-        }
+    //public class DbContext:Azeroth.Nalu.DbContext
+    //{
+    //    static string cnnstr = System.Configuration.ConfigurationManager.ConnectionStrings["mssqlmaster"].ConnectionString;
+    //    public DbContext()
+    //    {
+    //        this.Cnnstr = cnnstr;
+    //    }
 
-        public override DbProviderFactory GetDbProviderFactory()
-        {
-            return System.Data.SqlClient.SqlClientFactory.Instance;
-        }
-    }
+    //    public override DbProviderFactory GetDbProviderFactory()
+    //    {
+    //        return System.Data.SqlClient.SqlClientFactory.Instance;
+    //    }
+    //}
 
     public class UserInfo
     {

@@ -9,53 +9,82 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 数据库上下文，对应于连接的数据库
     /// </summary>
-    /// <typeparam name="H"></typeparam>
     public abstract  class DbContext:IDbContext
     {
-        public string Cnnstr { get; set; }
+        protected string Cnnstr { get; set; }
 
-        public virtual int SaveChange(params ICud[] dbsets)
+
+        protected virtual string GetDbParameterNamePrefix() 
         {
-            int rst = 0;
-            using (DbConnection cnn = this.GetDbProviderFactory().CreateConnection())
+            return "@";
+        }
+
+        protected virtual System.Data.Common.DbConnection CreateConnection()
+        {
+            return new System.Data.SqlClient.SqlConnection();
+        }
+
+        public DbSet<T> Set<T>()
+        {
+            return new DbSet<T>(this);
+        }
+
+        public DbCud<T> Add<T>(T entity)
+        {
+            return new DbCud<T>(entity, Cmd.Add);
+        }
+
+        public DbCud<T> Add<T>(IEnumerable<T> lst)
+        {
+            return new DbCud<T>(lst, Cmd.Add);
+        }
+
+        public DbCud<T> Edit<T>(T entity)
+        {
+            return new DbCud<T>(entity, Cmd.Edit);
+        }
+
+        public DbCud<T> Edit<T>(IEnumerable<T> lst)
+        {
+            return new DbCud<T>(lst, Cmd.Edit);
+        }
+
+        public DbCud<T> Delete<T>(T entity)
+        {
+            return new DbCud<T>(entity, Cmd.Del);
+        }
+
+        public DbCud<T> Delete<T>(IEnumerable<T> lst)
+        {
+            return new DbCud<T>(lst, Cmd.Del);
+        }
+
+        List<T> IDbContext.ToList<T>(Func<DbDataReader, T> map, Action<ParseSqlContext, bool> initParseSqlContext)
+        {
+            using (var cnn = this.CreateConnection())
             {
-                cnn.ConnectionString = this.Cnnstr;
-                cnn.Open();
                 using (var cmd = cnn.CreateCommand())
                 {
-                    cmd.Transaction = cnn.BeginTransaction();
-                    var context = this.GetResolveContext();
-                    foreach (ICud dbset in dbsets)
+                    var parseSqlContext = new ParseSqlContext(this.GetDbParameterNamePrefix(), cmd.CreateParameter);
+                    initParseSqlContext(parseSqlContext, true);
+                    cmd.CommandText = this.Parse(parseSqlContext);
+                    cnn.Open();
+                    using (var reader=cmd.ExecuteReader())
                     {
-                        rst += dbset.Execute(cmd, context);
+                        List<T> lst = new List<T>();
+                        while (reader.Read())
+                        {
+                            lst.Add(map(reader));
+                        }
+                        return lst;
                     }
-                    cmd.Transaction.Commit();
                 }
             }
-            return rst;
         }
 
-        public virtual DbCud<T> Cud<T>() where T:class
+        protected virtual string Parse(ParseSqlContext context)
         {
-            return new DbCud<T>();
-        }
-
-        public virtual Query Query() 
-        {
-            return new Query(this);
-        }
-
-        protected virtual ResolveContext GetResolveContext() 
-        {
-            return new ResolveContext("@",()=>new System.Data.SqlClient.SqlParameter());
-        }
-
-
-        public abstract DbProviderFactory GetDbProviderFactory();
-
-        ResolveContext IDbContext.GetResolveContext()
-        {
-            return this.GetResolveContext();
+            throw new NotImplementedException();
         }
     }
 }

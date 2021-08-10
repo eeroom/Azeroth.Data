@@ -11,18 +11,22 @@ namespace Azeroth.Nalu.Node
     /// </summary>
     /// <typeparam name="L"></typeparam>
     /// <typeparam name="R"></typeparam>
-    public class JoinOnNode : WhereNode
+    public class WhereJoinOnNode : WhereNode
     {
-        IColumn right;
+        Column left;
+        Column right;
 
-        public JoinOnNode(IColumn left,IColumn right):base(left)
+        public WhereJoinOnNode(Column left, Column right)
         {
+            this.left = left;
             this.right = right;
         }
 
-        protected override string ToSQL(ResolveContext context)
+        public override string Parse(ParseSqlContext context)
         {
-            return string.Format("{0}={1}", this.column.ToSQL(context), this.right.ToSQL(context));
+            var str=$"{this.left.Parse(context)} = { this.right.Parse(context)}";
+            return str;
         }
+
     }
 }
