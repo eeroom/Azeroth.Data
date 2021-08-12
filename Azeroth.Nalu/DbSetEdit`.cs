@@ -57,7 +57,7 @@ namespace Azeroth.Nalu
 
         int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
-            int rst = 0;
+          
             if (this.selectNode.Count <= 0)
                 throw new ArgumentException("必须指定修改要赋值的列");
             if (this.whereNodeHandler == null)
@@ -66,13 +66,14 @@ namespace Azeroth.Nalu
             List<string> lstSet = this.selectNode.Zip(lstParameter, (x, y) => $"{x.Name}={y.ParameterName}").ToList();
             string strset = string.Join(",", lstSet);
             var lstWrapper = lstParameter.Zip(this.selectNode, (parameter, sn) => new { parameter, sn }).ToList();
+            int rst = 0;
             foreach (var entity in lstEntity)
             {
-                context.DbParameters.Clear();
-                cmd.Parameters.Clear();
                 lstWrapper.ForEach(x => x.parameter.Value = DictMapHandlerInternal[x.sn.Name].GetValueFromInstance(entity, null));
+                context.DbParameters.Clear();
                 var strwhere= this.whereNodeHandler(this, entity).Parse(context);
                 cmd.CommandText = $"update {this.Name} set {strset} where {strwhere}";
+                cmd.Parameters.Clear();
                 cmd.Parameters.AddRange(lstParameter);
                 cmd.Parameters.AddRange(context.DbParameters.ToArray());
                 rst += cmd.ExecuteNonQuery();

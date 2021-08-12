@@ -58,8 +58,8 @@ namespace Azeroth.Nalu
             var lstWrapper= lstParameter.Zip(lstcolName, (parameter, name) => new { parameter, name }).ToList();
             foreach (var entity in lstEntity)
             {
-                cmd.Parameters.Clear();
                 lstWrapper.ForEach(x => x.parameter.Value = DictMapHandlerInternal[x.name].GetValueFromInstance(entity, null));
+                cmd.Parameters.Clear();
                 cmd.Parameters.AddRange(lstParameter);
                 rst += cmd.ExecuteNonQuery();
             }

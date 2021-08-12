@@ -57,6 +57,13 @@ namespace Azeroth.Nalu
             return dbset;
         }
 
+        public DbSetEditSimple<T> Edit<T>()
+        {
+            var dbset = new DbSetEditSimple<T>();
+            this.lstCud.Add(dbset);
+            return dbset;
+        }
+
         public DbSetDel<T> Delete<T>(T entity)
         {
             var dbset = new DbSetDel<T>(new List<T>() { entity });
