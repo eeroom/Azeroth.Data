@@ -9,7 +9,8 @@ namespace Azeroth.Nalu
 {
     public abstract class Table
     {
-        internal string NameNick { set; get; }
-        internal string Name { set; get; }
+        public string NameNick {protected set; get; }
+        public string Name { protected set; get; }
+
     }
 }

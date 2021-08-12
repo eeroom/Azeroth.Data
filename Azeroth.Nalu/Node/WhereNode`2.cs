@@ -91,9 +91,7 @@ namespace Azeroth.Nalu.Node
                 default:
                     break;
             }
-            DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();//参数名称
-            parameter.Value = value;//参数值
+            DbParameter parameter = context.CreateParameter(this.column.Name, value);
             string strwhere = string.Format("{0} {1} {2}", this.column.Parse(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
             context.DbParameters.Add(parameter);
             return strwhere;
@@ -124,13 +122,9 @@ namespace Azeroth.Nalu.Node
         /// <returns></returns>
         private string ToSQLWithBetween(ParseSqlContext context)
         {
-            System.Data.Common.DbParameter parameter = context.CreateParameter();
-            parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
-            parameter.Value = value;
+            System.Data.Common.DbParameter parameter = context.CreateParameter(this.column.Name, value);
             context.DbParameters.Add(parameter);
-            System.Data.Common.DbParameter parameter2 = context.CreateParameter();
-            parameter2.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
-            parameter2.Value = value2;
+            System.Data.Common.DbParameter parameter2 = context.CreateParameter(this.column.Name, value2);
             context.DbParameters.Add(parameter2);
             return string.Format("{0} {3} {1} AND {2}", this.column.Parse(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
         }
@@ -142,17 +136,10 @@ namespace Azeroth.Nalu.Node
         /// <returns></returns>
         private string ToSQLWithIN(ParseSqlContext context)
         {
-            List<string> lstName = new List<string>();
-            System.Data.Common.DbParameter parameter;
-            foreach (object val in lstValue)
-            {//处理参数
-                parameter = context.CreateParameter();
-                parameter.ParameterName = context.DbParameterNamePrefix + this.column.Name + context.NextParameterIndex().ToString();
-                lstName.Add(parameter.ParameterName);
-                parameter.Value = val;
-                context.DbParameters.Add(parameter);
-            }
-            return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(), string.Join(",", lstName));
+            var lstParameter= lstValue.Select(x => context.CreateParameter(this.column.Name, x)).ToList();
+            context.DbParameters.AddRange(lstParameter);
+            var lstParameterName = lstParameter.Select(x => x.ParameterName).ToList();
+            return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(), string.Join(",", lstParameterName));
         }
 
 

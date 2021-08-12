@@ -23,5 +23,10 @@ namespace Azeroth.Nalu
         /// </summary>
         protected static readonly Dictionary<string, IMapHandler> DictMapHandlerInternal =
             typeof(T).GetProperties().ToDictionary(propmeta => propmeta.Name, propmeta => MapHandlerFactory<T>.Create(propmeta));
+
+        public Table()
+        {
+            this.Name = typeof(T).Name;
+        }
     }
 }

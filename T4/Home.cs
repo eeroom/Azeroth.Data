@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using Azeroth.Nalu;
 
 namespace T4
 {
@@ -55,7 +56,6 @@ namespace T4
             //this.Cnnstr = cnnstr;
         }
 
-        
     }
 
     public class UserInfo

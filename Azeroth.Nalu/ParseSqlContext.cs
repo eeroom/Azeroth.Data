@@ -12,7 +12,7 @@ namespace Azeroth.Nalu
             this.DbParameterNamePrefix = prefix;
             this.DbParameters = new List<System.Data.Common.DbParameter>(8);
             //this.CanCTE = true;
-            this.CreateParameter = createParameter;
+            this.createParameter = createParameter;
             this.JoinNode = new List<Node.JoinNode>();
             this.GroupbyNode = new List<Column>();
             this.OrderbyNode = new List<Node.OrderByNode>();
@@ -33,11 +33,17 @@ namespace Azeroth.Nalu
         /// </summary>
         public List<System.Data.Common.DbParameter> DbParameters { get;private set; }
 
-
+        Func<System.Data.Common.DbParameter> createParameter;
         /// <summary>
         /// 创建DbParameter的方法
         /// </summary>
-        public Func<System.Data.Common.DbParameter> CreateParameter { get; private set; }
+        public System.Data.Common.DbParameter CreateParameter(string name,object value)
+        {
+            var p = this.createParameter();
+            p.ParameterName = $"{this.DbParameterNamePrefix}{name}{this.NextParameterIndex()}";
+            p.Value = value;
+            return p;
+        }
 
         /// <summary>
         /// 列别名的序号
@@ -46,6 +52,12 @@ namespace Azeroth.Nalu
         public int NextColIndex()
         {
             return this.colIndex++;
+        }
+
+        int tableIndex;
+        public int NextTableIndex()
+        {
+            return this.tableIndex++;
         }
 
 

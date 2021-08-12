@@ -8,19 +8,21 @@ namespace Azeroth.Nalu.Node
 {
     public class SelectNode:IParseSql
     {
-        internal Column column { set; get; }
+        public Column Column { set; get; }
         public SelectNode(Column column)
         {
-            this.column = column;
+            this.Column = column;
         }
 
-        string columNameNick;
-        public int Index { set; get; }
+        internal string nameNick { set; get; }
+        internal int index { set; get; }
 
 
         public string Parse(ParseSqlContext context)
         {
-            return this.column.ToString();
+            if (string.IsNullOrEmpty(this.nameNick))
+                return this.Column.Parse(context);
+            return $"{this.Column.Parse(context)} as {this.nameNick}";
         }
 
     

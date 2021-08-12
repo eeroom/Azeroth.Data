@@ -160,7 +160,7 @@ namespace Azeroth.Nalu
         internal virtual T Map(System.Data.Common.DbDataReader reader)
         {
             var obj = this.CreateInstance();
-            this.selectNode.ForEach(x => DictMapHandlerInternal[x.column.Name].SetValueToInstance(obj, reader, x.Index));
+            this.selectNode.ForEach(x => DictMapHandlerInternal[x.Column.Name].SetValueToInstance(obj, reader, x.index));
             return (T)obj;
         }
 
@@ -178,16 +178,20 @@ namespace Azeroth.Nalu
 
         protected internal virtual void InitParseSqlContext(ParseSqlContext context,bool initLeftTable=false)
         {
+            this.NameNick = "T" + context.NextTableIndex();
+            context.Tables.Add(this);
             context.WhereNode = this.AddWhereNode(context.WhereNode, this.whereNode);
             context.Having = this.AddWhereNode(context.Having, this.havingNode);
             if (initLeftTable)
             {
                 context.FromTable = this;
             }
-            context.Tables.Insert(0, this);
-            context.GroupbyNode.InsertRange(0, this.groupbyNode);
-            context.SelectNode.InsertRange(0, this.selectNode);
-            context.OrderbyNode.InsertRange(0, this.orderbyNode);
+          
+            context.GroupbyNode.AddRange( this.groupbyNode);
+            this.selectNode.ForEach(x => x.index = context.NextColIndex());
+            this.selectNode.ForEach(x => x.nameNick = "c" + x.index.ToString());
+            context.SelectNode.AddRange(this.selectNode);
+            context.OrderbyNode.AddRange(this.orderbyNode);
 
         }
 

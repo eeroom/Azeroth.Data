@@ -84,7 +84,30 @@ namespace Azeroth.Nalu
 
         protected virtual string Parse(ParseSqlContext context)
         {
-            throw new NotImplementedException();
+            var lstselect = context.SelectNode.Select(x => x.Parse(context)).ToList();
+            string selectstr = $"select {string.Join(",", lstselect)}";
+            string fromstr = $"from {context.FromTable.Name} as {context.FromTable.NameNick}";
+            var lstjoin = context.JoinNode.Select(x => x.Parse(context)).ToList();
+            var joinstr = string.Empty;
+            if (lstjoin.Count > 0)
+                joinstr = string.Join("\r\n", lstjoin);
+            string wherestr = string.Empty;
+            if (context.WhereNode != null)
+                wherestr = $"where {context.WhereNode.Parse(context)}";
+            List<string> lstgroupby = context.GroupbyNode.Select(x => x.Parse(context)).ToList();
+            string groupbystr = string.Empty;
+            if (lstgroupby.Count > 0)
+                groupbystr = $"group by {string.Join(",", lstgroupby)}";
+            string havingstr = string.Empty;
+            if (context.Having != null)
+                havingstr = context.Having.Parse(context);
+            var lstorderby = context.OrderbyNode.Select(x => x.Parse(context)).ToList();
+            string orderbystr = string.Empty;
+            if (lstorderby.Count > 0)
+                orderbystr = $"order by {string.Join(",", lstorderby)}";
+            string cmdstr = $"{selectstr} \r\n{fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}\r\n{orderbystr}";
+            return cmdstr;
+
         }
     }
 }

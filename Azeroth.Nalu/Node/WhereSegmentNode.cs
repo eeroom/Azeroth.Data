@@ -23,8 +23,8 @@ namespace Azeroth.Nalu.Node
         public override string Parse(ParseSqlContext context)
         {
             if (this.opt == Logic.And)
-                return string.Format("{0} {1} {2}", this.right.Parse(context), AND, this.left.Parse(context));
-            return string.Format("({0} {1} {2})", this.right.Parse(context), OR, this.left.Parse(context));
+                return string.Format("{0} {1} {2}", this.left.Parse(context), AND, this.right.Parse(context));
+            return string.Format("({0} {1} {2})", this.left.Parse(context), OR, this.right.Parse(context));
         }
     }
 }
