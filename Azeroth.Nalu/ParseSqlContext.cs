@@ -37,10 +37,13 @@ namespace Azeroth.Nalu
         /// <summary>
         /// 创建DbParameter的方法
         /// </summary>
-        public System.Data.Common.DbParameter CreateParameter(string name,object value)
+        public System.Data.Common.DbParameter CreateParameter(string name,object value,bool addIndex=true)
         {
             var p = this.createParameter();
-            p.ParameterName = $"{this.DbParameterNamePrefix}{name}{this.NextParameterIndex()}";
+            if (addIndex)
+                p.ParameterName = $"{this.DbParameterNamePrefix}{name}{this.NextParameterIndex()}";
+            else
+                p.ParameterName = $"{this.DbParameterNamePrefix}{name}";
             p.Value = value;
             return p;
         }

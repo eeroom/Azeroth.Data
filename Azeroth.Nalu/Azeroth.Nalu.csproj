@@ -43,7 +43,9 @@
     <Compile Include="ColumnByFunction`2.cs" />
     <Compile Include="ColumnByUserFunction`2.cs" />
     <Compile Include="DbContext`.cs" />
-    <Compile Include="DbCud`.cs" />
+    <Compile Include="DbSetDel`.cs" />
+    <Compile Include="DbSetEdit`.cs" />
+    <Compile Include="DbSetAdd`.cs" />
     <Compile Include="DbSetComplex`3.cs" />
     <Compile Include="IDbContext.cs" />
     <Compile Include="Table.cs" />

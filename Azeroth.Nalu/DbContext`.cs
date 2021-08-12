@@ -13,7 +13,7 @@ namespace Azeroth.Nalu
     {
         protected string Cnnstr { get; set; }
 
-
+        List<ICud> lstCud = new List<ICud>();
         protected virtual string GetDbParameterNamePrefix() 
         {
             return "@";
@@ -29,34 +29,46 @@ namespace Azeroth.Nalu
             return new DbSet<T>(this);
         }
 
-        public DbCud<T> Add<T>(T entity)
+        public DbSetAdd<T> Add<T>(T entity)
         {
-            return new DbCud<T>(entity, Cmd.Add);
+            var dbset = new DbSetAdd<T>(new List<T>() { entity});
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
-        public DbCud<T> Add<T>(IEnumerable<T> lst)
+        public DbSetAdd<T> Add<T>(IEnumerable<T> lst)
         {
-            return new DbCud<T>(lst, Cmd.Add);
+            var dbset= new DbSetAdd<T>(lst);
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
-        public DbCud<T> Edit<T>(T entity)
+        public DbSetEdit<T> Edit<T>(T entity)
         {
-            return new DbCud<T>(entity, Cmd.Edit);
+            var dbset = new DbSetEdit<T>(new List<T>() { entity});
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
-        public DbCud<T> Edit<T>(IEnumerable<T> lst)
+        public DbSetEdit<T> Edit<T>(IEnumerable<T> lst)
         {
-            return new DbCud<T>(lst, Cmd.Edit);
+            var dbset = new DbSetEdit<T>(lst);
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
-        public DbCud<T> Delete<T>(T entity)
+        public DbSetDel<T> Delete<T>(T entity)
         {
-            return new DbCud<T>(entity, Cmd.Del);
+            var dbset = new DbSetDel<T>(new List<T>() { entity });
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
-        public DbCud<T> Delete<T>(IEnumerable<T> lst)
+        public DbSetDel<T> Delete<T>(IEnumerable<T> lst)
         {
-            return new DbCud<T>(lst, Cmd.Del);
+            var dbset = new DbSetDel<T>(lst);
+            this.lstCud.Add(dbset);
+            return dbset;
         }
 
         List<T> IDbContext.ToList<T>(Func<DbDataReader, T> map, Action<ParseSqlContext, bool> initParseSqlContext)
