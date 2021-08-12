@@ -6,31 +6,6 @@ using System.Text;
 namespace Azeroth.Nalu
 {
     /// <summary>
-    /// 要执行的命令类别
-    /// </summary>
-    public enum Cmd
-    {
-        
-        None = 0,
-        /// <summary>
-        /// 增
-        /// </summary>
-        Add = 1,
-        /// <summary>
-        /// 删
-        /// </summary>
-        Del = 3,
-        /// <summary>
-        /// 改
-        /// </summary>
-        Edit = 2,
-        /// <summary>
-        /// 查
-        /// </summary>
-        Query = 4
-    }
-
-    /// <summary>
     /// 连接关系
     /// </summary>
     public enum JOIN
@@ -120,5 +95,27 @@ namespace Azeroth.Nalu
     {
         And,
         OR
+    }
+
+    /// <summary>
+    /// 聚合函数，自定义函数等
+    /// </summary>
+    public enum Function
+    {
+        NONE,
+        Sum,
+        Avg,
+        Count,
+        Max,
+        Min,
+        Lower,
+        Upper,
+        SumOrDefault,
+        AvgOrDefault,
+        CountOrDefault,
+        MaxOrDefault,
+        MinOrDefault,
+        LowerOrDefault,
+        UpperOrDefault
     }
 }

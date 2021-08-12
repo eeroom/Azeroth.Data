@@ -8,7 +8,7 @@ using System.Data.Common;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetAdd<T>:Table<T>,ICud
+    public class DbSetAdd<T>:Table<T>,IExecuteNonQuery
     {
         string CommandText {set; get; }
         System.Data.Common.DbParameterCollection DbParameters { get;set; }
@@ -44,7 +44,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        int ICud.Execute(DbCommand cmd, ParseSqlContext context)
+        int IExecuteNonQuery.ExecuteNonQuery(DbCommand cmd, ParseSqlContext context)
         {
             int rst = 0;
             if (this.selectNode.Count <= 0)

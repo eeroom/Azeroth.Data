@@ -20,6 +20,9 @@ namespace T4
                 .Join(dbcontext.Set<RoleInfo>(), (x, y) => x.Col(a => a.relation.RoleId) == y.Col(a => a.Id), (x, role) => new { x.user, role })
                 .Where(x => x.Col(a => a.role.Name).In("管理员", "admin") || x.Col(a => a.user.Id) == Guid.Empty)
                 .ToList(x => Tuple.Create(x.user, x.role));
+
+            dbcontext.Delete<UserInfo>();
+
             //var query = dbcontext.Query();
             //var user = query.Set<UserInfo>().Select(x => new { x.Name, x.Id });
             //var userRole = query.Set<RUserInfoRoleInfo>();

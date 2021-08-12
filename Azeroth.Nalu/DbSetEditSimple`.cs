@@ -7,7 +7,7 @@ using Azeroth.Nalu.Node;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetEditSimple<T>:Table<T>,ICud
+    public class DbSetEditSimple<T>:Table<T>,IExecuteNonQuery
     {
         WhereNode whereNode { set; get; }
       
@@ -38,7 +38,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
+        int IExecuteNonQuery.ExecuteNonQuery(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             var lstsetcol = this.lstSetNode.Select(x => x.Parse(context)).ToList();
             var strset = string.Join(",", lstsetcol);

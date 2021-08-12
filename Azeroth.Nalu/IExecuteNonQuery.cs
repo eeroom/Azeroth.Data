@@ -5,9 +5,9 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public interface ICud
+    public interface IExecuteNonQuery
     {
-        int Execute(System.Data.Common.DbCommand cmd,ParseSqlContext context);
+        int ExecuteNonQuery(System.Data.Common.DbCommand cmd,ParseSqlContext context);
 
         //bool Validate(out string msg);
 

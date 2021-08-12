@@ -7,7 +7,7 @@ using Azeroth.Nalu.Node;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetDelSimple<T>:Table<T>,ICud
+    public class DbSetDelSimple<T>:Table<T>,IExecuteNonQuery
     {
         WhereNode whereNode { set; get; }
      
@@ -31,7 +31,7 @@ namespace Azeroth.Nalu
             return col;
         }
 
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
+        int IExecuteNonQuery.ExecuteNonQuery(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             context.DbParameters.Clear();
             string strwhere = string.Empty;

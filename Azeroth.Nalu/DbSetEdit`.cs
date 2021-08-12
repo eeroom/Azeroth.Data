@@ -7,7 +7,7 @@ using Azeroth.Nalu.Node;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetEdit<T>:Table<T>,ICud
+    public class DbSetEdit<T>:Table<T>,IExecuteNonQuery
     {
         IEnumerable<T> lstEntity { set; get; }
 
@@ -55,7 +55,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
+        int IExecuteNonQuery.ExecuteNonQuery(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
           
             if (this.selectNode.Count <= 0)

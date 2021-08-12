@@ -7,7 +7,7 @@ using Azeroth.Nalu.Node;
 
 namespace Azeroth.Nalu
 {
-    public class DbSetDel<T>:Table<T>,ICud
+    public class DbSetDel<T>:Table<T>,IExecuteNonQuery
     {
         IEnumerable<T> lstEntity { set; get; }
 
@@ -33,7 +33,7 @@ namespace Azeroth.Nalu
             return col;
         }
 
-        int ICud.Execute(System.Data.Common.DbCommand cmd, ParseSqlContext context)
+        int IExecuteNonQuery.ExecuteNonQuery(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
             if (this.whereNodeHandler == null)
                 throw new ArgumentException("必须指定where条件");
