@@ -9,12 +9,12 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 数据库上下文，对应于连接的数据库
     /// </summary>
-    public abstract  class DbContext:IDbContext
+    public abstract class DbContext : IDbContext
     {
         protected string Cnnstr { get; set; }
 
-        List<ICud> lstCud = new List<ICud>();
-        protected virtual string GetDbParameterNamePrefix() 
+        protected List<ICud> lstCud = new List<ICud>();
+        protected virtual string GetDbParameterNamePrefix()
         {
             return "@";
         }
@@ -31,21 +31,21 @@ namespace Azeroth.Nalu
 
         public DbSetAdd<T> Add<T>(T entity)
         {
-            var dbset = new DbSetAdd<T>(new List<T>() { entity});
+            var dbset = new DbSetAdd<T>(new List<T>() { entity });
             this.lstCud.Add(dbset);
             return dbset;
         }
 
         public DbSetAdd<T> Add<T>(IEnumerable<T> lst)
         {
-            var dbset= new DbSetAdd<T>(lst);
+            var dbset = new DbSetAdd<T>(lst);
             this.lstCud.Add(dbset);
             return dbset;
         }
 
         public DbSetEdit<T> Edit<T>(T entity)
         {
-            var dbset = new DbSetEdit<T>(new List<T>() { entity});
+            var dbset = new DbSetEdit<T>(new List<T>() { entity });
             this.lstCud.Add(dbset);
             return dbset;
         }
@@ -81,7 +81,7 @@ namespace Azeroth.Nalu
                     initParseSqlContext(parseSqlContext, true);
                     cmd.CommandText = this.Parse(parseSqlContext);
                     cnn.Open();
-                    using (var reader=cmd.ExecuteReader())
+                    using (var reader = cmd.ExecuteReader())
                     {
                         List<T> lst = new List<T>();
                         while (reader.Read())
@@ -120,6 +120,31 @@ namespace Azeroth.Nalu
             string cmdstr = $"{selectstr} \r\n{fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}\r\n{orderbystr}";
             return cmdstr;
 
+        }
+
+        public virtual int SaveChange(System.Data.IsolationLevel isolationLevel = System.Data.IsolationLevel.Unspecified)
+        {
+            using (var cnn = this.CreateConnection())
+            {
+                using (var cmd = cnn.CreateCommand())
+                {
+                    cnn.Open();
+                    var context = new ParseSqlContext(this.GetDbParameterNamePrefix(), cmd.CreateParameter);
+                    cmd.Transaction = cnn.BeginTransaction(isolationLevel);
+                    try
+                    {
+                        int effectrows = 0;
+                        this.lstCud.ForEach(x => effectrows += x.Execute(cmd, context));
+                        cmd.Transaction.Commit();
+                        return effectrows;
+                    }
+                    catch (Exception)
+                    {
+                        cmd.Transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
         }
     }
 }
