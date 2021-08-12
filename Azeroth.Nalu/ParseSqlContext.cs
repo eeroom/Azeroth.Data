@@ -13,6 +13,12 @@ namespace Azeroth.Nalu
             this.DbParameters = new List<System.Data.Common.DbParameter>(8);
             //this.CanCTE = true;
             this.CreateParameter = createParameter;
+            this.JoinNode = new List<Node.JoinNode>();
+            this.GroupbyNode = new List<Column>();
+            this.OrderbyNode = new List<Node.OrderByNode>();
+            this.SelectNode = new List<Node.SelectNode>();
+            this.Tables = new List<Table>();
+            
         }
 
         int colIndex = 0;

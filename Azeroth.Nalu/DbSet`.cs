@@ -180,12 +180,11 @@ namespace Azeroth.Nalu
         {
             context.WhereNode = this.AddWhereNode(context.WhereNode, this.whereNode);
             context.Having = this.AddWhereNode(context.Having, this.havingNode);
-            context.Tables.Insert(0,this);
-            context.SelectNode.AddRange(this.selectNode);
             if (initLeftTable)
             {
                 context.FromTable = this;
             }
+            context.Tables.Insert(0, this);
             context.GroupbyNode.InsertRange(0, this.groupbyNode);
             context.SelectNode.InsertRange(0, this.selectNode);
             context.OrderbyNode.InsertRange(0, this.orderbyNode);

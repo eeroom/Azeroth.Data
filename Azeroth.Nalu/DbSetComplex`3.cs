@@ -50,8 +50,8 @@ namespace Azeroth.Nalu
             context.GroupbyNode.InsertRange(0, this.groupbyNode);
             context.SelectNode.InsertRange(0, this.selectNode);
             context.OrderbyNode.InsertRange(0, this.orderbyNode);
-            this.right.InitParseSqlContext(context, true);
-            this.left.InitParseSqlContext(context, false);
+            this.right.InitParseSqlContext(context, false);
+            this.left.InitParseSqlContext(context, true);
         }
     }
 }

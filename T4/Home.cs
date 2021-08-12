@@ -11,17 +11,24 @@ namespace T4
         static void Main(string[] args)
         {
             //CalTzp();
-            //DbContext dbcontext = new DbContext();
-            //var query= dbcontext.Query();
-            //var user= query.Set<UserInfo>().Select(x => new { x.Name,x.Id });
+            DbContext dbcontext = new DbContext();
+            var lst= dbcontext.Set<UserInfo>()
+                .Select(x => new { x.Id, x.Name })
+                .Where(x => x.Col(a => a.Name).In("张三", "李四"))
+                .Join(dbcontext.Set<RUserInfoRoleInfo>(), (x, y) => x.Col(a => a.Id) == y.Col(a => a.UserId), (user, relation) => new { user, relation })
+                .Join(dbcontext.Set<RoleInfo>(), (x, y) => x.Col(a => a.relation.RoleId) == y.Col(a => a.Id), (x, role) => new { x.user, role })
+                .Where(x => x.Col(a => a.role.Name).In("管理员", "admin") || x.Col(a => a.user.Id) == Guid.Empty)
+                .ToList(x => Tuple.Create(x.user, x.role));
+            //var query = dbcontext.Query();
+            //var user = query.Set<UserInfo>().Select(x => new { x.Name, x.Id });
             //var userRole = query.Set<RUserInfoRoleInfo>();
-            //var role = query.Set<RoleInfo>().Select(x => new { x.Name,x.Id});
+            //var role = query.Set<RoleInfo>().Select(x => new { x.Name, x.Id });
 
             //user.Join(userRole, Azeroth.Nalu.JOIN.Inner)
             //    .ON(user.Col(x => x.Id) == userRole.Col(x => x.UserId))
 
-            //userRole.Join(role, Azeroth.Nalu.JOIN.Inner).ON = userRole.Col(x => x.RoleId) == role.Col(x=>x.Id);
-            //var lst= query.ToList(x => Tuple.Create((UserInfo)x[0], (RoleInfo)x[2]));
+            //userRole.Join(role, Azeroth.Nalu.JOIN.Inner).ON = userRole.Col(x => x.RoleId) == role.Col(x => x.Id);
+            //var lst = query.ToList(x => Tuple.Create((UserInfo)x[0], (RoleInfo)x[2]));
 
 
         }
@@ -40,19 +47,16 @@ namespace T4
         }
     }
 
-    //public class DbContext:Azeroth.Nalu.DbContext
-    //{
-    //    static string cnnstr = System.Configuration.ConfigurationManager.ConnectionStrings["mssqlmaster"].ConnectionString;
-    //    public DbContext()
-    //    {
-    //        this.Cnnstr = cnnstr;
-    //    }
+    public class DbContext : Azeroth.Nalu.DbContext
+    {
+        //static string cnnstr = System.Configuration.ConfigurationManager.ConnectionStrings["mssqlmaster"].ConnectionString;
+        public DbContext()
+        {
+            //this.Cnnstr = cnnstr;
+        }
 
-    //    public override DbProviderFactory GetDbProviderFactory()
-    //    {
-    //        return System.Data.SqlClient.SqlClientFactory.Instance;
-    //    }
-    //}
+        
+    }
 
     public class UserInfo
     {
