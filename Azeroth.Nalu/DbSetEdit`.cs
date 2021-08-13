@@ -35,7 +35,7 @@ namespace Azeroth.Nalu
             return col;
         }
 
-        public DbSetEdit<T> UpdateColumn<S>(Expression<Func<T,S>> exp)
+        public DbSetEdit<T> SetColumn<S>(Expression<Func<T,S>> exp)
         {
             List<string> lstName = new List<string>();
             var colmem = exp.Body as MemberExpression;

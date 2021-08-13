@@ -11,10 +11,10 @@ namespace Azeroth.Nalu
     {
         WhereNode whereNode { set; get; }
       
-        List<WhereNode> lstSetNode { set; get; }
+        Dictionary<string,object> dictSetColumn { set; get; }
         internal DbSetEditSimple()
         {
-          
+            this.dictSetColumn = new Dictionary<string, object>();
         }
 
         public DbSetEditSimple<T> Where(Func<DbSetEditSimple<T>,WhereNode> predicate)
@@ -32,23 +32,27 @@ namespace Azeroth.Nalu
             return col;
         }
 
-        public DbSetEditSimple<T> SetColumn<S>(Func<DbSetEditSimple<T>, WhereNode> setColValue)
+        public DbSetEditSimple<T> SetColumn<S>(Expression<Func<T,S>> colexp,S value)
         {
-            this.lstSetNode.Add(setColValue(this));
+            var colmem = colexp.Body as MemberExpression;
+            if (colmem == null)
+                throw new ArgumentException("不支持的表达式");
+            this.dictSetColumn.Add(colmem.Member.Name, value);
             return this;
         }
 
         int IExecuteNonQuery.ExecuteNonQuery(System.Data.Common.DbCommand cmd, ParseSqlContext context)
         {
-            var lstsetcol = this.lstSetNode.Select(x => x.Parse(context)).ToList();
+            var lstParameter= this.dictSetColumn.Select(x => context.CreateParameter(x.Key, x.Value, false)).ToArray();
+            var lstsetcol = this.dictSetColumn.Zip(lstParameter, (x, y) => $"{x.Key}={y.ParameterName}").ToList();
             var strset = string.Join(",", lstsetcol);
-
             context.DbParameters.Clear();
             string strwhere = string.Empty;
             if (this.whereNode != null)
                 strwhere = " where " + this.whereNode.Parse(context);
-            cmd.CommandText = $"update {this.Name} set {strset} where {strwhere}";
+            cmd.CommandText = $"update {this.Name} set {strset} {strwhere}";
             cmd.Parameters.Clear();
+            cmd.Parameters.AddRange(lstParameter);
             cmd.Parameters.AddRange(context.DbParameters.ToArray());
             return cmd.ExecuteNonQuery();
         }

@@ -36,7 +36,7 @@ namespace Azeroth.Nalu
             return dbset;
         }
 
-        public DbSetAdd<T> Add<T>(IEnumerable<T> lst)
+        public DbSetAdd<T> AddRange<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetAdd<T>(lst);
             this.executeNonQueryDbSetCollection.Add(dbset);
@@ -50,7 +50,7 @@ namespace Azeroth.Nalu
             return dbset;
         }
 
-        public DbSetEdit<T> Edit<T>(IEnumerable<T> lst)
+        public DbSetEdit<T> EditRange<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetEdit<T>(lst);
             this.executeNonQueryDbSetCollection.Add(dbset);
@@ -71,7 +71,7 @@ namespace Azeroth.Nalu
             return dbset;
         }
 
-        public DbSetDel<T> Delete<T>(IEnumerable<T> lst)
+        public DbSetDel<T> DeleteRange<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetDel<T>(lst);
             this.executeNonQueryDbSetCollection.Add(dbset);
