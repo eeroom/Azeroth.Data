@@ -48,27 +48,27 @@ namespace Azeroth.Nalu
 
         public Column<T, S> Max()
         {
-            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Max);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Max);
         }
 
         public Column<T, S> Min()
         {
-            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Min);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Min);
         }
 
         public Column<T, S> Sum()
         {
-            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Sum);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Sum);
         }
 
         public Column<T, S> Avg()
         {
-            return new ColumnByFunction<T, S>(this.table, this.Name, Nalu.Function.Avg);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Avg);
         }
 
         public Column<T,S> UserFunction(Func<Column<T, S>, ParseSqlContext, string> handler)
         {
-            return new ColumnByUserFunction<T,S>(this.table, this.Name, handler);
+            return new ColumnByUserFunction<T,S>(this.table, this.name, handler);
         }
 
 

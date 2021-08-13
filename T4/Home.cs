@@ -13,6 +13,7 @@ namespace T4
         {
             //CalTzp();
             DbContext dbcontext = new DbContext();
+            
             var lst= dbcontext.Set<UserInfo>()
                 .Select(x => new { x.Id, x.Name })
                 .Where(x => x.Col(a => a.Name).In("张三", "李四"))

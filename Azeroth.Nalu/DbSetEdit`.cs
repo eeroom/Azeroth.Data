@@ -62,14 +62,14 @@ namespace Azeroth.Nalu
                 throw new ArgumentException("必须指定修改要赋值的列");
             if (this.whereNodeHandler == null)
                 throw new ArgumentException("必须指定where条件");
-            var lstParameter = this.selectNode.Select(x => context.CreateParameter(x.Name, null, false)).ToArray();
-            List<string> lstSet = this.selectNode.Zip(lstParameter, (x, y) => $"{x.Name}={y.ParameterName}").ToList();
+            var lstParameter = this.selectNode.Select(x => context.CreateParameter(x.name, null, false)).ToArray();
+            List<string> lstSet = this.selectNode.Zip(lstParameter, (x, y) => $"{x.name}={y.ParameterName}").ToList();
             string strset = string.Join(",", lstSet);
             var lstWrapper = lstParameter.Zip(this.selectNode, (parameter, sn) => new { parameter, sn }).ToList();
             int rst = 0;
             foreach (var entity in lstEntity)
             {
-                lstWrapper.ForEach(x => x.parameter.Value = DictMapHandlerInternal[x.sn.Name].GetValueFromInstance(entity, null));
+                lstWrapper.ForEach(x => x.parameter.Value = DictMapHandlerInternal[x.sn.name].GetValueFromInstance(entity, null));
                 context.DbParameters.Clear();
                 var strwhere= this.whereNodeHandler(this, entity).Parse(context);
                 cmd.CommandText = $"update {this.Name} set {strset} where {strwhere}";

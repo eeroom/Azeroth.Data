@@ -75,7 +75,7 @@ namespace Azeroth.Nalu
 
         public List<Node.SelectNode> SelectNode { set; get; }
 
-        public Table FromTable { get; set; }
+        public ITable FromTable { get; set; }
 
         public List<Node.JoinNode> JoinNode { get; set; }
 

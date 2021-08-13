@@ -8,7 +8,7 @@ namespace Azeroth.Nalu.Node
 {
     public class JoinNode:IParseSql
     {
-        Table rightTable;
+        ITable rightTable;
         WhereNode jw;
         JOIN joption;
         public JoinNode(Table rightTable,WhereNode jw,JOIN joption)

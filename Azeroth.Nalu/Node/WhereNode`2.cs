@@ -91,7 +91,7 @@ namespace Azeroth.Nalu.Node
                 default:
                     break;
             }
-            DbParameter parameter = context.CreateParameter(this.column.Name, value);
+            DbParameter parameter = context.CreateParameter(this.column.name, value);
             string strwhere = string.Format("{0} {1} {2}", this.column.Parse(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
             context.DbParameters.Add(parameter);
             return strwhere;
@@ -122,9 +122,9 @@ namespace Azeroth.Nalu.Node
         /// <returns></returns>
         private string ToSQLWithBetween(ParseSqlContext context)
         {
-            System.Data.Common.DbParameter parameter = context.CreateParameter(this.column.Name, value);
+            System.Data.Common.DbParameter parameter = context.CreateParameter(this.column.name, value);
             context.DbParameters.Add(parameter);
-            System.Data.Common.DbParameter parameter2 = context.CreateParameter(this.column.Name, value2);
+            System.Data.Common.DbParameter parameter2 = context.CreateParameter(this.column.name, value2);
             context.DbParameters.Add(parameter2);
             return string.Format("{0} {3} {1} AND {2}", this.column.Parse(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
         }
@@ -136,7 +136,7 @@ namespace Azeroth.Nalu.Node
         /// <returns></returns>
         private string ToSQLWithIN(ParseSqlContext context)
         {
-            var lstParameter= lstValue.Select(x => context.CreateParameter(this.column.Name, x)).ToList();
+            var lstParameter= lstValue.Select(x => context.CreateParameter(this.column.name, x)).ToList();
             context.DbParameters.AddRange(lstParameter);
             var lstParameterName = lstParameter.Select(x => x.ParameterName).ToList();
             return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(), string.Join(",", lstParameterName));

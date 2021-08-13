@@ -13,7 +13,7 @@ namespace Azeroth.Nalu
     {
         protected string Cnnstr { get; set; }
 
-        protected List<IExecuteNonQuery> lstExecuteNonQuery = new List<IExecuteNonQuery>();
+        protected List<IExecuteNonQuery> executeNonQueryDbSetCollection = new List<IExecuteNonQuery>();
         protected virtual string GetDbParameterNamePrefix()
         {
             return "@";
@@ -32,56 +32,56 @@ namespace Azeroth.Nalu
         public DbSetAdd<T> Add<T>(T entity)
         {
             var dbset = new DbSetAdd<T>(new List<T>() { entity });
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetAdd<T> Add<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetAdd<T>(lst);
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetEdit<T> Edit<T>(T entity)
         {
             var dbset = new DbSetEdit<T>(new List<T>() { entity });
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetEdit<T> Edit<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetEdit<T>(lst);
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetEditSimple<T> Edit<T>()
         {
             var dbset = new DbSetEditSimple<T>();
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetDel<T> Delete<T>(T entity)
         {
             var dbset = new DbSetDel<T>(new List<T>() { entity });
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetDel<T> Delete<T>(IEnumerable<T> lst)
         {
             var dbset = new DbSetDel<T>(lst);
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
         public DbSetDelSimple<T> Delete<T>()
         {
             var dbset = new DbSetDelSimple<T>();
-            this.lstExecuteNonQuery.Add(dbset);
+            this.executeNonQueryDbSetCollection.Add(dbset);
             return dbset;
         }
 
@@ -148,7 +148,7 @@ namespace Azeroth.Nalu
                     try
                     {
                         int effectrows = 0;
-                        this.lstExecuteNonQuery.ForEach(x => effectrows += x.ExecuteNonQuery(cmd, context));
+                        this.executeNonQueryDbSetCollection.ForEach(x => effectrows += x.ExecuteNonQuery(cmd, context));
                         cmd.Transaction.Commit();
                         return effectrows;
                     }

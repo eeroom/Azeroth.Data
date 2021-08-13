@@ -27,6 +27,7 @@ namespace Azeroth.Nalu
         public Table()
         {
             this.Name = typeof(T).Name;
+            this.NameNick = this.Name;
         }
     }
 }

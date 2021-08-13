@@ -160,7 +160,7 @@ namespace Azeroth.Nalu
         internal virtual T Map(System.Data.Common.DbDataReader reader)
         {
             var obj = this.CreateInstance();
-            this.selectNode.ForEach(x => DictMapHandlerInternal[x.Column.Name].SetValueToInstance(obj, reader, x.index));
+            this.selectNode.ForEach(x => DictMapHandlerInternal[x.Column.name].SetValueToInstance(obj, reader, x.index));
             return (T)obj;
         }
 

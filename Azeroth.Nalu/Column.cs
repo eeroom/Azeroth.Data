@@ -14,17 +14,17 @@ namespace Azeroth.Nalu
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name { protected set; get; }
+        internal string name {private set; get; }
 
         public Column(Table table, string columnName)
         {
             this.table = table;
-            this.Name = columnName;
+            this.name = columnName;
         }
 
         public virtual string Parse(ParseSqlContext context)
         {
-            var str = $"{this.table.NameNick}.{this.Name}";
+            var str = $"{((ITable)this.table).NameNick}.{this.name}";
             return str;
         }
     }

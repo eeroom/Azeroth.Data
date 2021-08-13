@@ -49,9 +49,9 @@ namespace Azeroth.Nalu
             int rst = 0;
             if (this.selectNode.Count <= 0)
                 throw new ArgumentException("必须指定要新增赋值的列");
-            List<string> lstcolName = this.selectNode.Select(x => x.Name).ToList();
+            List<string> lstcolName = this.selectNode.Select(x => x.name).ToList();
             string strCol = string.Join(",", lstcolName);
-            var lstParameter= this.selectNode.Select(x => context.CreateParameter(x.Name, null,false)).ToArray();
+            var lstParameter= this.selectNode.Select(x => context.CreateParameter(x.name, null,false)).ToArray();
             var lstParameterName = lstParameter.Select(x => x.ParameterName).ToList();
             string strParamter = string.Join(",",lstParameterName);
             cmd.CommandText = string.Format("INSERT INTO {0} ({1}) VALUES ({2})", this.Name, strCol, strParamter);
