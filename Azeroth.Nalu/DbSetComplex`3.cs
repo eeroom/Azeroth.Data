@@ -45,13 +45,18 @@ namespace Azeroth.Nalu
         protected internal override void InitParseSqlContext(ParseSqlContext context, bool initLeftTable = false)
         {
             this.left.InitParseSqlContext(context, true);
+            this.right.InitParseSqlContext(context, false);
             context.WhereNode = this.AddWhereNode(context.WhereNode, this.whereNode);
             context.Having = this.AddWhereNode(context.Having, this.havingNode);
             context.JoinNode.Add(new Node.JoinNode(this.right, this.joinwh, JOIN.Inner));
             context.GroupbyNode.AddRange( this.groupbyNode);
             context.SelectNode.AddRange(this.selectNode);
             context.OrderbyNode.AddRange(this.orderbyNode);
-            this.right.InitParseSqlContext(context, false);
+            if (context.Skip >= 0 && context.Take > 0) {
+                context.Take = this.takerows;
+                context.Skip = this.skiprows;
+                context.SkipTake = true;
+            }
 
         }
     }

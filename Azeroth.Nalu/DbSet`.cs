@@ -43,6 +43,15 @@ namespace Azeroth.Nalu
                 this.identity = this.CreateInstance();
         }
 
+        protected int takerows { set; get; }
+
+        protected int skiprows { set; get; }
+        public DbSet<T> SkipTake(int skiprows,int takerows) {
+            this.skiprows = skiprows;
+            this.takerows = takerows;
+            return this;
+        }
+
         public Column<T, S> Col<S>(Expression<Func<T, S>> exp)
         {
             //join的where,having,orderby,group之后，需要确定这个col是属于哪个dbset
@@ -166,14 +175,26 @@ namespace Azeroth.Nalu
 
         public List<T> ToList()
         {
-           var lst= ((IDbContext)this.dbContext).ToList(this.Map, this.InitParseSqlContext);
-            return lst;
+           var wrapper= ((IDbContext)this.dbContext).ToList(this.Map, this.InitParseSqlContext);
+            return wrapper.Item1;
         }
 
         public List<M> ToList<M>(Func<T,M> select)
         {
-            var lst = ((IDbContext)this.dbContext).ToList(x=>select(this.Map(x)), this.InitParseSqlContext);
-            return lst;
+            var wrapper = ((IDbContext)this.dbContext).ToList(x=>select(this.Map(x)), this.InitParseSqlContext);
+            return wrapper.Item1;
+        }
+
+        public List<T> ToList(out int rowcount) {
+            var wrapper = ((IDbContext)this.dbContext).ToList(this.Map, this.InitParseSqlContext);
+            rowcount = wrapper.Item2;
+            return wrapper.Item1;
+        }
+
+        public List<M> ToList<M>(Func<T, M> select, out int rowcount) {
+            var wrapper = ((IDbContext)this.dbContext).ToList(x => select(this.Map(x)), this.InitParseSqlContext);
+            rowcount = wrapper.Item2;
+            return wrapper.Item1;
         }
 
         protected internal virtual void InitParseSqlContext(ParseSqlContext context,bool initLeftTable=false)
@@ -192,7 +213,12 @@ namespace Azeroth.Nalu
             this.selectNode.ForEach(x => x.nameNick = "c" + x.index.ToString());
             context.SelectNode.AddRange(this.selectNode);
             context.OrderbyNode.AddRange(this.orderbyNode);
-
+            if(context.Skip>=0 && context.Take > 0) {
+                context.Take = this.takerows;
+                context.Skip = this.skiprows;
+                context.SkipTake = true;
+            }
+        
         }
 
         protected WhereNode AddWhereNode(WhereNode left,WhereNode right)

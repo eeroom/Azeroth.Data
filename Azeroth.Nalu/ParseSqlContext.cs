@@ -52,13 +52,13 @@ namespace Azeroth.Nalu
         /// 列别名的序号
         /// </summary>
         /// <returns></returns>
-        public int NextColIndex()
+        internal int NextColIndex()
         {
             return this.colIndex++;
         }
 
         int tableIndex;
-        public int NextTableIndex()
+        internal int NextTableIndex()
         {
             return this.tableIndex++;
         }
@@ -68,7 +68,7 @@ namespace Azeroth.Nalu
         /// SQL参数的序号
         /// </summary>
         /// <returns></returns>
-        public int NextParameterIndex()
+        int NextParameterIndex()
         {
             return this.parameterIndex++;
         }
@@ -87,6 +87,12 @@ namespace Azeroth.Nalu
 
         public List<Node.OrderByNode> OrderbyNode { get; set; }
 
-        public List<Table> Tables { set; get; }
+        internal List<Table> Tables { set; get; }
+
+        public int Take { set; get; }
+
+        public int Skip { get; set; }
+
+        public bool SkipTake {set; get; }
     }
 }

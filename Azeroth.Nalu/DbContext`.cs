@@ -85,7 +85,7 @@ namespace Azeroth.Nalu
             return dbset;
         }
 
-        List<T> IDbContext.ToList<T>(Func<DbDataReader, T> map, Action<ParseSqlContext, bool> initParseSqlContext)
+        Tuple<List<T>,int> IDbContext.ToList<T>(Func<DbDataReader, T> map, Action<ParseSqlContext, bool> initParseSqlContext)
         {
             using (var cnn = this.CreateConnection())
             {
@@ -95,24 +95,30 @@ namespace Azeroth.Nalu
                     initParseSqlContext(parseSqlContext, true);
                     cmd.CommandText = this.Parse(parseSqlContext);
                     cnn.Open();
-                    using (var reader = cmd.ExecuteReader())
-                    {
+                    using (var reader = cmd.ExecuteReader()) {
                         List<T> lst = new List<T>();
-                        while (reader.Read())
-                        {
+                        int rowcounts = 0;
+                        if (parseSqlContext.SkipTake) {
+                            if (!reader.Read())
+                                return Tuple.Create(lst,rowcounts);
+                            lst.Add(map(reader));
+                            rowcounts = (int)reader[this.rowCountFiledName];
+                        }
+                        while (reader.Read()) {
                             lst.Add(map(reader));
                         }
-                        return lst;
+                        return Tuple.Create(lst, rowcounts);
                     }
                 }
             }
         }
 
+        protected string rowCountFiledName = "_rowsCount";
         protected virtual string Parse(ParseSqlContext context)
         {
             var lstselect = context.SelectNode.Select(x => x.Parse(context)).ToList();
-            string selectstr = $"select {string.Join(",", lstselect)}";
-            string fromstr = $"from {context.FromTable.Name} as {context.FromTable.NameNick}";
+            string selectstr = $"{string.Join(",", lstselect)}";
+            string fromstr = $"{context.FromTable.Name} as {context.FromTable.NameNick}";
             var lstjoin = context.JoinNode.Select(x => x.Parse(context)).ToList();
             var joinstr = string.Empty;
             if (lstjoin.Count > 0)
@@ -131,9 +137,13 @@ namespace Azeroth.Nalu
             string orderbystr = string.Empty;
             if (lstorderby.Count > 0)
                 orderbystr = $"order by {string.Join(",", lstorderby)}";
-            string cmdstr = $"{selectstr} \r\n{fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}\r\n{orderbystr}";
-            return cmdstr;
-
+            
+            if (!context.SkipTake)
+                return $"select {selectstr} \r\n from {fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}\r\n{orderbystr}";
+            string tmpRowIndex = "_theRowIndex";
+            string cmdstr = $"select {selectstr},ROW_NUMBER() OVER({orderbystr}) AS {tmpRowIndex} \r\n from {fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}";
+            string cmdstrskitak = $"with htt AS(\r\n{cmdstr}),\r\n hbb AS(\r\n select COUNT(0) AS {this.rowCountFiledName} from htt)\r\n select htt.*,hbb.* from htt,hbb WHERE htt.{tmpRowIndex} BETWEEN {context.Skip}AND {context.Skip+context.Take-1}";
+            return cmdstrskitak;
         }
 
         public virtual int SaveChange(System.Data.IsolationLevel isolationLevel = System.Data.IsolationLevel.Unspecified)

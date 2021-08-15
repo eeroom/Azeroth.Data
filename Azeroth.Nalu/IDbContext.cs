@@ -7,6 +7,6 @@ namespace Azeroth.Nalu
 {
     public interface IDbContext
     {
-        List<T> ToList<T>(Func<System.Data.Common.DbDataReader, T> map, Action<ParseSqlContext,bool> initParseSqlContext);
+        Tuple<List<T>, int> ToList<T>(Func<System.Data.Common.DbDataReader, T> map, Action<ParseSqlContext,bool> initParseSqlContext);
     }
 }
