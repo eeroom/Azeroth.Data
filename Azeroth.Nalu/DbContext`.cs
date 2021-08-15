@@ -142,7 +142,7 @@ namespace Azeroth.Nalu
                 return $"select {selectstr} \r\n from {fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}\r\n{orderbystr}";
             string tmpRowIndex = "_theRowIndex";
             string cmdstr = $"select {selectstr},ROW_NUMBER() OVER({orderbystr}) AS {tmpRowIndex} \r\n from {fromstr}\r\n{joinstr}\r\n{wherestr}\r\n{groupbystr}\r\n{havingstr}";
-            string cmdstrskitak = $"with htt AS(\r\n{cmdstr}),\r\n hbb AS(\r\n select COUNT(0) AS {this.rowCountFiledName} from htt)\r\n select htt.*,hbb.* from htt,hbb WHERE htt.{tmpRowIndex} BETWEEN {context.Skip}AND {context.Skip+context.Take-1}";
+            string cmdstrskitak = $"with htt AS(\r\n{cmdstr}),\r\n hbb AS(\r\n select COUNT(0) AS {this.rowCountFiledName} from htt)\r\n select htt.*,hbb.* from htt,hbb WHERE htt.{tmpRowIndex} BETWEEN {context.Skip} AND {context.Skip+context.Take-1}";
             return cmdstrskitak;
         }
 

@@ -52,7 +52,7 @@ namespace Azeroth.Nalu
             context.GroupbyNode.AddRange( this.groupbyNode);
             context.SelectNode.AddRange(this.selectNode);
             context.OrderbyNode.AddRange(this.orderbyNode);
-            if (context.Skip >= 0 && context.Take > 0) {
+            if (this.skiprows >= 0 && this.takerows > 0) {
                 context.Take = this.takerows;
                 context.Skip = this.skiprows;
                 context.SkipTake = true;
