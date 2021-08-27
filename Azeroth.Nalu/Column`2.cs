@@ -20,50 +20,50 @@ namespace Azeroth.Nalu
 
         public WhereNode<T, S> In(System.Collections.ICollection value)
         {
-            return new WhereNode<T, S>(this, WH.IN,value);
+            return new WhereNode<T, S>(this, WhereOpt.IN,value);
         }
 
         public WhereNode<T, S> In(params S[] value)
         {
-            return new WhereNode<T, S>(this, WH.IN, value);
+            return new WhereNode<T, S>(this, WhereOpt.IN, value);
         }
 
         public WhereNode<T, S> Range(object min,object max)
         {
-            return new WhereNode<T, S>(this, WH.BT, min,max);
+            return new WhereNode<T, S>(this, WhereOpt.BT, min,max);
         }
 
         public WhereNode<T, S> Null()
         {
-            return new WhereNode<T, S>(this, WH.NULL,string.Empty);
+            return new WhereNode<T, S>(this, WhereOpt.NULL,string.Empty);
         }
 
 
         public WhereNode<T, S> Like(string value)
         {
-            return new WhereNode<T, S>(this, WH.LIKE, value);
+            return new WhereNode<T, S>(this, WhereOpt.LIKE, value);
         }
 
 
 
         public Column<T, S> Max()
         {
-            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Max);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.SqlFunction.Max);
         }
 
         public Column<T, S> Min()
         {
-            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Min);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.SqlFunction.Min);
         }
 
         public Column<T, S> Sum()
         {
-            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Sum);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.SqlFunction.Sum);
         }
 
         public Column<T, S> Avg()
         {
-            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.Function.Avg);
+            return new ColumnByFunction<T, S>(this.table, this.name, Nalu.SqlFunction.Avg);
         }
 
         public Column<T,S> UserFunction(Func<Column<T, S>, ParseSqlContext, string> handler)
@@ -74,62 +74,62 @@ namespace Azeroth.Nalu
 
         public static WhereNode<T,S> operator >=(Column<T,S> col,S value)
         {
-            return new WhereNode<T, S>(col, WH.GTE,value);
+            return new WhereNode<T, S>(col, WhereOpt.GTE,value);
         }
 
         public static WhereNode<T, S> operator >(Column<T, S> col, S value)
         {
-            return new WhereNode<T, S>(col, WH.GT, value);
+            return new WhereNode<T, S>(col, WhereOpt.GT, value);
         }
 
         public static WhereNode<T, S> operator <=(Column<T, S> col, S value)
         {
-            return new WhereNode<T, S>(col, WH.LTE, value);
+            return new WhereNode<T, S>(col, WhereOpt.LTE, value);
         }
 
         public static WhereNode<T, S> operator <(Column<T, S> col, S value)
         {
-            return new WhereNode<T, S>(col, WH.LT, value);
+            return new WhereNode<T, S>(col, WhereOpt.LT, value);
         }
 
         public static WhereNode<T, S> operator ==(Column<T, S> col, S value)
         {
-            return new WhereNode<T, S>(col, WH.EQ, value);
+            return new WhereNode<T, S>(col, WhereOpt.EQ, value);
         }
 
         public static WhereNode<T, S> operator !=(Column<T, S> col, S value)
         {
-            return new WhereNode<T, S>(col, ~WH.EQ, value);
+            return new WhereNode<T, S>(col, ~WhereOpt.EQ, value);
         }
 
         public static WhereNode<T, S> operator >=(S value,Column<T, S> col)
         {
-            return new WhereNode<T, S>(col, WH.LTE, value);
+            return new WhereNode<T, S>(col, WhereOpt.LTE, value);
         }
 
         public static WhereNode<T, S> operator >( S value,Column<T, S> col)
         {
-            return new WhereNode<T, S>(col, WH.LT, value);
+            return new WhereNode<T, S>(col, WhereOpt.LT, value);
         }
 
         public static WhereNode<T, S> operator <=(S value,Column<T, S> col )
         {
-            return new WhereNode<T, S>(col, WH.GTE, value);
+            return new WhereNode<T, S>(col, WhereOpt.GTE, value);
         }
 
         public static WhereNode<T, S> operator <(S value,Column<T, S> col)
         {
-            return new WhereNode<T, S>(col, WH.GT, value);
+            return new WhereNode<T, S>(col, WhereOpt.GT, value);
         }
 
         public static WhereNode<T, S> operator ==(S value,Column<T, S> col)
         {
-            return new WhereNode<T, S>(col, WH.EQ, value);
+            return new WhereNode<T, S>(col, WhereOpt.EQ, value);
         }
 
         public static WhereNode<T, S> operator !=(S value, Column<T, S> col)
         {
-            return new WhereNode<T, S>(col, ~WH.EQ, value);
+            return new WhereNode<T, S>(col, ~WhereOpt.EQ, value);
         }
 
         public static WhereJoinOnNode operator !=(Column<T, S> col, Column col2)
@@ -149,7 +149,7 @@ namespace Azeroth.Nalu
 
         public WhereNode<T, S> Equals(S value)
         {
-            return new WhereNode<T, S>(this, WH.EQ, value);
+            return new WhereNode<T, S>(this, WhereOpt.EQ, value);
         }
 
         public override int GetHashCode()

@@ -24,11 +24,11 @@ namespace Azeroth.Nalu.Node
         /// <summary>
         /// 关系运算符
         /// </summary>
-        WH opt;
+        WhereOpt opt;
 
 
 
-        public WhereNode(Column<T,P> column,  WH opt, object value)
+        public WhereNode(Column<T,P> column,  WhereOpt opt, object value)
         {
             this.opt = opt;
             this.value = value;
@@ -41,7 +41,7 @@ namespace Azeroth.Nalu.Node
         /// <param name="column"></param>
         /// <param name="opt"></param>
         /// <param name="value"></param>
-        public WhereNode(Column<T, P> column, WH opt, System.Collections.ICollection value)
+        public WhereNode(Column<T, P> column, WhereOpt opt, System.Collections.ICollection value)
         {
             this.column = column;
             this.opt = opt;
@@ -52,7 +52,7 @@ namespace Azeroth.Nalu.Node
             }     
         }
 
-        public WhereNode(Column<T, P> column, WH opt,object min,object max)
+        public WhereNode(Column<T, P> column, WhereOpt opt,object min,object max)
         {
             this.column = column;
             this.opt = opt;
@@ -70,23 +70,23 @@ namespace Azeroth.Nalu.Node
         {
             switch (this.opt)
             {
-                case WH.IN:
+                case WhereOpt.IN:
                     return this.ToSQLWithIN(context);
-                case ~WH.IN:
+                case ~WhereOpt.IN:
                     return this.ToSQLWithIN(context);
-                case WH.BT:
+                case WhereOpt.BT:
                     return this.ToSQLWithBetween(context);
-                case ~WH.BT:
+                case ~WhereOpt.BT:
                     return this.ToSQLWithBetween(context);
-                case WH.NoParameter:
+                case WhereOpt.NoParameter:
                     return this.ToSQLWithNoParameter(context);
-                case WH.NULL:
+                case WhereOpt.NULL:
                     return this.ToSQLWithNULL(context);
-                case ~WH.NULL:
+                case ~WhereOpt.NULL:
                     return this.ToSQLWithNULL(context);
-                case WH.Exists:
+                case WhereOpt.Exists:
                     return this.ToSQLWithExists(context);
-                case ~WH.Exists:
+                case ~WhereOpt.Exists:
                     return this.ToSQLWithExists(context);
                 default:
                     break;

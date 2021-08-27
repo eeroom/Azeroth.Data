@@ -11,9 +11,9 @@ namespace Azeroth.Nalu.Node
         const string OR = "OR";
         WhereNode left;
         WhereNode right;
-        Logic opt;
+        LogicOpt opt;
 
-        public WhereSegmentNode(WhereNode left, Logic opt, WhereNode right)
+        public WhereSegmentNode(WhereNode left, LogicOpt opt, WhereNode right)
         {
             this.left = left;
             this.opt = opt;
@@ -22,7 +22,7 @@ namespace Azeroth.Nalu.Node
 
         public override string Parse(ParseSqlContext context)
         {
-            if (this.opt == Logic.And)
+            if (this.opt == LogicOpt.And)
                 return string.Format("{0} {1} {2}", this.left.Parse(context), AND, this.right.Parse(context));
             return string.Format("({0} {1} {2})", this.left.Parse(context), OR, this.right.Parse(context));
         }

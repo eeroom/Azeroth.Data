@@ -48,7 +48,7 @@ namespace Azeroth.Nalu
             this.right.InitParseSqlContext(context, false);
             context.WhereNode = this.AddWhereNode(context.WhereNode, this.whereNode);
             context.Having = this.AddWhereNode(context.Having, this.havingNode);
-            context.JoinNode.Add(new Node.JoinNode(this.right, this.joinwh, JOIN.Inner));
+            context.JoinNode.Add(new Node.JoinNode(this.right, this.joinwh, JoinOpt.Inner));
             context.GroupbyNode.AddRange( this.groupbyNode);
             context.SelectNode.AddRange(this.selectNode);
             context.OrderbyNode.AddRange(this.orderbyNode);

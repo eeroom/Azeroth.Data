@@ -12,71 +12,71 @@ namespace Azeroth.Nalu
         //public static string ParameterNameForPaginationStart = "Num_Start";
         
 
-        public static string ToSQL(this WH opt)
+        public static string ToSQL(this WhereOpt opt)
         {
             string rst = string.Empty;
             switch (opt)
             {
-                case WH.EQ:
+                case WhereOpt.EQ:
                     rst = "=";
                     break;
-                case ~WH.EQ:
+                case ~WhereOpt.EQ:
                     rst = "<>";
                     break;
-                case WH.LT:
+                case WhereOpt.LT:
                     rst = "<";
                     break;
-                case WH.LT | WH.EQ:
+                case WhereOpt.LT | WhereOpt.EQ:
                     rst = "<=";
                     break;
-                case ~WH.GT:
+                case ~WhereOpt.GT:
                     rst = "<=";
                     break;
-                case WH.GT:
+                case WhereOpt.GT:
                     rst = ">";
                     break;
-                case WH.GT | WH.EQ:
+                case WhereOpt.GT | WhereOpt.EQ:
                     rst = ">=";
                     break;
-                case ~WH.LT:
+                case ~WhereOpt.LT:
                     rst = ">=";
                     break;
-                case WH.IN:
+                case WhereOpt.IN:
                     rst = "IN";
                     break;
-                case ~WH.IN:
+                case ~WhereOpt.IN:
                     rst = "NOT IN";
                     break;
-                case WH.BT:
+                case WhereOpt.BT:
                     rst = "BETWEEN";
                     break;
-                case ~WH.BT:
+                case ~WhereOpt.BT:
                     rst = "NOT BETWEEN";
                     break;
-                case WH.LIKE:
+                case WhereOpt.LIKE:
                     rst = "LIKE";
                     break;
-                case ~WH.LIKE:
+                case ~WhereOpt.LIKE:
                     rst = "NOT LIKE";
                     break;
-                case WH.GTE:
+                case WhereOpt.GTE:
                     rst = ">=";
                     break;
-                case WH.LTE:
+                case WhereOpt.LTE:
                     rst = "<=";
                     break;
-                case WH.NoParameter:
+                case WhereOpt.NoParameter:
                     break;
-                case WH.NULL:
+                case WhereOpt.NULL:
                     rst = "IS NULL";
                     break;
-                case ~WH.NULL:
+                case ~WhereOpt.NULL:
                     rst = "IS NOT NULL";
                     break;
-                case WH.Exists:
+                case WhereOpt.Exists:
                     rst = "EXISTS";
                     break;
-                case ~WH.Exists:
+                case ~WhereOpt.Exists:
                     rst = "NOT EXISTS";
                     break;
                 default:
@@ -85,21 +85,21 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string ToSQL(this JOIN opt)
+        public static string ToSQL(this JoinOpt opt)
         {
             string rst = string.Empty;
             switch (opt)
             {
-                case JOIN.Inner:
+                case JoinOpt.Inner:
                     rst = "INNER JOIN";
                     break;
-                case JOIN.Left:
+                case JoinOpt.Left:
                     rst = "LEFT OUTER JOIN";
                     break;
-                case JOIN.Right:
+                case JoinOpt.Right:
                     rst = "RIGHT OUTER JOIN";
                     break;
-                case JOIN.None:
+                case JoinOpt.None:
                     break;
                 default:
                     throw new ArgumentException("未知的表连接运算符");
@@ -107,13 +107,13 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string ToSQL(this Order opt)
+        public static string ToSQL(this OrderOpt opt)
         {
             switch (opt)
             {
-                case Order.ASC:
+                case OrderOpt.ASC:
                     return " ASC";
-                case Order.DESC:
+                case OrderOpt.DESC:
                     return " DESC";
                 default:
                     throw new ArgumentException("未知的排序修饰符");

@@ -120,7 +120,7 @@ namespace Azeroth.Nalu
             return this;
         }
 
-        public DbSet<T> OrderBy<S>(Order opt, Expression<Func<T, S>> exp)
+        public DbSet<T> OrderBy<S>(OrderOpt opt, Expression<Func<T, S>> exp)
         {
             List<string> lstName = new List<string>();
             var colmem = exp.Body as MemberExpression;

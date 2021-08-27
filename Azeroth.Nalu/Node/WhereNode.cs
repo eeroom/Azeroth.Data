@@ -13,13 +13,13 @@ namespace Azeroth.Nalu.Node
 
         public static WhereNode operator &(WhereNode wh1,WhereNode wh2)
         {
-            WhereSegmentNode sm = new WhereSegmentNode(wh1, Logic.And,wh2);
+            WhereSegmentNode sm = new WhereSegmentNode(wh1, LogicOpt.And,wh2);
             return sm;
         }
 
         public static WhereNode operator |(WhereNode wh1, WhereNode wh2)
         {
-            WhereSegmentNode sm = new WhereSegmentNode(wh1, Logic.OR, wh2);
+            WhereSegmentNode sm = new WhereSegmentNode(wh1, LogicOpt.OR, wh2);
             return sm;
         }
 

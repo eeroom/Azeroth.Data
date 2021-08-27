@@ -8,7 +8,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 连接关系
     /// </summary>
-    public enum JOIN
+    public enum JoinOpt
     {
         /// <summary>
         /// 内连接
@@ -28,7 +28,7 @@ namespace Azeroth.Nalu
         None = 4,
     }
 
-    public enum Order
+    public enum OrderOpt
     {
         /// <summary>
         /// 顺序
@@ -44,7 +44,7 @@ namespace Azeroth.Nalu
     /// 关系运算符(where和having)
     /// </summary>
     [Flags]
-    public enum WH
+    public enum WhereOpt
     {
         /// <summary>
         /// 等于
@@ -91,7 +91,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 逻辑运算符
     /// </summary>
-    public enum Logic
+    public enum LogicOpt
     {
         And,
         OR
@@ -100,7 +100,7 @@ namespace Azeroth.Nalu
     /// <summary>
     /// 聚合函数，自定义函数等
     /// </summary>
-    public enum Function
+    public enum SqlFunction
     {
         NONE,
         Sum,

@@ -8,10 +8,10 @@ namespace Azeroth.Nalu.Node
 {
     public class OrderByNode:IParseSql
     {
-        Order opt;
+        OrderOpt opt;
 
         Column col;
-        public OrderByNode(Column col,Order opt)
+        public OrderByNode(Column col,OrderOpt opt)
         {
             this.col = col;
             this.opt = opt;

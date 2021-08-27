@@ -10,8 +10,8 @@ namespace Azeroth.Nalu.Node
     {
         ITable rightTable;
         WhereNode jw;
-        JOIN joption;
-        public JoinNode(Table rightTable,WhereNode jw,JOIN joption)
+        JoinOpt joption;
+        public JoinNode(Table rightTable,WhereNode jw,JoinOpt joption)
         {
             this.rightTable = rightTable;
             this.jw = jw;
