@@ -12,9 +12,8 @@ namespace Azeroth.Nalu.Excel
 
         Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>> dictMapHandlerByColIndex = new Dictionary<int, Action<NPOI.SS.UserModel.ICell, T>>();
 
-        public SheetWrapper<T> ToListByColIndex(NPOI.SS.UserModel.ISheet sheet,int startrow)
+        public List<T> ToListByColIndex(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
-            SheetWrapper<T> rt = new SheetWrapper<T>();
             if (dictMapHandlerByColIndex.Count < 1)
                 throw new ArgumentException("必须指定列索引和model之间的映射");
             //sheet.Workbook.MissingCellPolicy = NPOI.SS.UserModel.MissingCellPolicy.CREATE_NULL_AS_BLANK;
@@ -22,6 +21,8 @@ namespace Azeroth.Nalu.Excel
             //foreach (var kv in dictMapHandler)
             //    kv.Value.SetEvaHandler(eva);
             System.Collections.IEnumerator reader = sheet.GetRowEnumerator();
+            List<string> lstError = new List<string>();
+            List<T> lstdata = new List<T>();
             while (reader.MoveNext())
             {
                 var row= (NPOI.SS.UserModel.IRow)reader.Current;
@@ -36,13 +37,14 @@ namespace Azeroth.Nalu.Excel
                     }
                     catch (Exception ex)
                     {
-                        string msg=string.Format("第 {0} 行第 {1} 列附近发生错误，错误信息：{2}",row.RowNum,kv.Key,ex.Message);
-                        rt.AddMessage(msg);
+                        lstError.Add(string.Format("行列[{0},{1}]错误：{2}",row.RowNum,kv.Key,ex.Message));
                     }
                 }
-                rt.Value.Add(value);
+                lstdata.Add(value);
             }
-            return rt;
+            if (lstError.Count > 0)
+                throw new ArgumentException(string.Join(";", lstError));
+            return lstdata;
         }
 
         /// <summary>
@@ -51,23 +53,24 @@ namespace Azeroth.Nalu.Excel
         /// <param name="sheet"></param>
         /// <param name="callback">典型场景，数据校验</param>
         /// <returns></returns>
-        public SheetWrapper<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
+        public List<T> ToListByColName(NPOI.SS.UserModel.ISheet sheet,int startrow)
         {
             if (dictMapHandlerByColName == null)
                 throw new ArgumentException("必须指定列名称和model之间的映射");
-            SheetWrapper<T> rt = new SheetWrapper<T>();
             var row= sheet.GetRow(startrow);
             var lstIndexName = System.Linq.Enumerable.Range(0, row.Cells.Count).Select(x => new { Index=x,Name=row.GetCell(x).StringCellValue})
                 .Where(x=>dictMapHandlerByColName.Keys.Contains(x.Name)).ToList();
             var cf= lstIndexName.GroupBy(x => x.Name).Count(gp=>gp.Count()>1);
             if (cf > 0)
-                return rt.AddMessage("Excel中存在重复的列名称");
+                throw new ArgumentException("Excel中存在重复的列名称");
             var dictTmp= lstIndexName.ToDictionary(x=>x.Name,x=>x.Index);
             var lose = dictMapHandlerByColName.Count(x=>!dictTmp.ContainsKey(x.Key));
             if (lose > 0)
-                return rt.AddMessage("Excel中缺少必须的列");
+                throw new ArgumentException("Excel中缺少必须的列");
             var dictNameIndex= dictMapHandlerByColName.ToDictionary(kv=>kv.Key,kv=>dictTmp[kv.Key]);
             System.Collections.IEnumerator reader = sheet.GetRowEnumerator();
+            List<string> lstError = new List<string>();
+            List<T> lstdata = new List<T>();
             while (reader.MoveNext())
             {
                 row = (NPOI.SS.UserModel.IRow)reader.Current;
@@ -82,13 +85,14 @@ namespace Azeroth.Nalu.Excel
                     }
                     catch (Exception ex)
                     {
-                        string msg = string.Format("第 {0} 行第 {1} 列附近发生错误，错误信息：{2}", row.RowNum, kv.Key, ex.Message);
-                        rt.AddMessage(msg);
+                        lstError.Add(string.Format("行列[{0},{1}]错误：{2}", row.RowNum, kv.Key, ex.Message));
                     }
                 }
-                rt.Value.Add(value);
+                lstdata.Add(value);
             }
-            return rt;
+            if(lstError.Count>0)
+                throw new ArgumentException(string.Join(";", lstError));
+            return lstdata;
         }
 
         /// <summary>
