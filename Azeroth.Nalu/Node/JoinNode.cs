@@ -23,7 +23,7 @@ namespace Azeroth.Nalu.Node
 
         public string Parse(ParseSqlContext context)
         {
-            var str = $"{joption.ToSQL()} {this.rightTable.Name} AS {this.rightTable.NameNick} ON {this.jw.Parse(context)}";
+            var str = $"{joption.ToSql()} {this.rightTable.Name} AS {this.rightTable.NameNick} ON {this.jw.Parse(context)}";
             return str;    
         }
     }

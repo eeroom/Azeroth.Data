@@ -92,7 +92,7 @@ namespace Azeroth.Nalu.Node
                     break;
             }
             DbParameter parameter = context.CreateParameter(this.column.name, value);
-            string strwhere = string.Format("{0} {1} {2}", this.column.Parse(context), this.opt.ToSQL(), parameter.ParameterName); //表别名.列1=参数1
+            string strwhere = string.Format("{0} {1} {2}", this.column.Parse(context), this.opt.ToSql(), parameter.ParameterName); //表别名.列1=参数1
             context.DbParameters.Add(parameter);
             return strwhere;
         }
@@ -105,13 +105,13 @@ namespace Azeroth.Nalu.Node
         private string ToSQLWithExists(ParseSqlContext context)
         {
             var tmp= this.value as IParseSql;
-            string strwhere = string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(),tmp.Parse(context));
+            string strwhere = string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSql(),tmp.Parse(context));
             return strwhere;
         }
 
         private string ToSQLWithNULL(ParseSqlContext context)
         {
-            string strwhere = string.Format("{0} {1}", this.column.Parse(context), this.opt.ToSQL()); 
+            string strwhere = string.Format("{0} {1}", this.column.Parse(context), this.opt.ToSql()); 
             return strwhere;
         }
 
@@ -126,7 +126,7 @@ namespace Azeroth.Nalu.Node
             context.DbParameters.Add(parameter);
             System.Data.Common.DbParameter parameter2 = context.CreateParameter(this.column.name, value2);
             context.DbParameters.Add(parameter2);
-            return string.Format("{0} {3} {1} AND {2}", this.column.Parse(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSQL());
+            return string.Format("{0} {3} {1} AND {2}", this.column.Parse(context), parameter.ParameterName, parameter2.ParameterName, this.opt.ToSql());
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Azeroth.Nalu.Node
             var lstParameter= lstValue.Select(x => context.CreateParameter(this.column.name, x)).ToList();
             context.DbParameters.AddRange(lstParameter);
             var lstParameterName = lstParameter.Select(x => x.ParameterName).ToList();
-            return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSQL(), string.Join(",", lstParameterName));
+            return string.Format("{0} {1} ({2})", this.column.Parse(context), this.opt.ToSql(), string.Join(",", lstParameterName));
         }
 
 

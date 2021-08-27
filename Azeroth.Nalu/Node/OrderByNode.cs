@@ -20,7 +20,7 @@ namespace Azeroth.Nalu.Node
 
         public string Parse(ParseSqlContext context)
         {
-            var str = $"{this.col.Parse(context)} {opt.ToSQL()}";
+            var str = $"{this.col.Parse(context)} {opt.ToSql()}";
             return str;
         }
     }

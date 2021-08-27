@@ -6,13 +6,13 @@ using System.Text;
 
 namespace Azeroth.Nalu
 {
-    public static class Extension
+    public static class NaluExtension
     {
         //public static string ParameterNameForPaginationEnd = "Num_End";
         //public static string ParameterNameForPaginationStart = "Num_Start";
         
 
-        public static string ToSQL(this WhereOpt opt)
+        public static string ToSql(this WhereOpt opt)
         {
             string rst = string.Empty;
             switch (opt)
@@ -85,7 +85,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string ToSQL(this JoinOpt opt)
+        public static string ToSql(this JoinOpt opt)
         {
             string rst = string.Empty;
             switch (opt)
@@ -107,7 +107,7 @@ namespace Azeroth.Nalu
             return rst;
         }
 
-        public static string ToSQL(this OrderOpt opt)
+        public static string ToSql(this OrderOpt opt)
         {
             switch (opt)
             {
