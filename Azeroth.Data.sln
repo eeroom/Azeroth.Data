@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "T4", "T4\T4.csproj", "{0476
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu", "Azeroth.Nalu\Azeroth.Nalu.csproj", "{503A49CF-EBB5-40E4-81F7-D1612F316E64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.Nalu.Excel", "Azeroth.Nalu.Excel\Azeroth.Nalu.Excel.csproj", "{58B01816-B301-41AB-9F5E-E0A71D08A52E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azeroth.IO.Excel", "Azeroth.Nalu.Excel\Azeroth.IO.Excel.csproj", "{58B01816-B301-41AB-9F5E-E0A71D08A52E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityframworkMssqlserver", "EntityframworkMssqlserver\EntityframworkMssqlserver.csproj", "{DAE05A95-E60F-4C54-85EB-782A2EC94DDE}"
 EndProject

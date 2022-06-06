@@ -59,8 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SheetSet.cs" />
+    <Compile Include="ColumnMapper.cs" />
+    <Compile Include="SheetReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SheetWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

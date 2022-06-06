@@ -27,6 +27,26 @@ namespace EntityframworkMssqlserver {
         static int processing = 0;
         static void Main(string[] args)
         {
+            var dbcontext = new Model.DbContext();
+            System.Linq.Expressions.Expression<Func<Model.Log, string>> exp = x => x.Name;
+            var lst = new List<string>() { "zhaozehui", "aaa", "bbb" };
+            var lstexp = lst.Select(value =>
+            {
+                var likevalue = System.Linq.Expressions.Expression.Constant(value);
+                var likeexp = System.Linq.Expressions.Expression.Call(exp.Body, typeof(string).GetMethod("StartsWith", new Type[] { typeof(string) }), likevalue);
+                return System.Linq.Expressions.Expression.Lambda<Func<Model.Log, bool>>(likeexp, exp.Parameters);
+
+            }).ToList();
+            var tmpbody = lstexp[0].Body;
+            for (int i = 1; i < lstexp.Count; i++)
+            {
+                tmpbody = System.Linq.Expressions.Expression.Or(tmpbody, lstexp[i].Body);
+            }
+            var whereexp = System.Linq.Expressions.Expression.Lambda<Func<Model.Log, bool>>(tmpbody, exp.Parameters);
+            var lstlog= dbcontext.Log.Where(whereexp).ToList();
+
+
+
             try
             {
                 int* vptr = null;
